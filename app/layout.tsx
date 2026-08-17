@@ -1,12 +1,13 @@
-import { Geist, Geist_Mono, Roboto, Nunito_Sans } from "next/font/google"
+import { Geist_Mono, Nunito_Sans, Roboto } from "next/font/google";
 
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toast";
 
-const nunitoSansHeading = Nunito_Sans({subsets:['latin'],variable:'--font-heading'});
+const nunitoSansHeading = Nunito_Sans({ subsets: ['latin'], variable: '--font-heading' });
 
-const roboto = Roboto({subsets:['latin'],variable:'--font-sans'})
+const roboto = Roboto({ subsets: ['latin'], variable: '--font-sans' })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>
+        <Toaster />
       </body>
     </html>
   )
