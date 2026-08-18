@@ -1,2 +1,2 @@
-export * from "./schemas/user"
-export * from "./schemas/form"
+
+export * from "./schemas/forms"

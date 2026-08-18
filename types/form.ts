@@ -1,59 +1,105 @@
-import { FieldType } from "@/constants/form";
 
-export type FormField = {
+
+export type FieldWidth = "full" | "half";
+
+export type FieldValidation = {
+    required?: boolean;
+    minLength?: number;
+    maxLength?: number;
+    min?: number;
+    max?: number;
+    pattern?: string;
+};
+
+export type BaseField = {
     id: string;
-
-    type: FieldType;
-
     name: string;
-
     label: string;
 
     description?: string;
-
     placeholder?: string;
 
-    required?: boolean;
+    width?: FieldWidth;
+};
 
-    defaultValue?: unknown;
+export type TextField = BaseField & {
+    type: "text";
+    defaultValue?: string;
 
-    options?: {
+    validation?: Pick<
+        FieldValidation,
+        "required" | "minLength" | "maxLength" | "pattern"
+    >;
+};
+
+export type TextareaField = BaseField & {
+    type: "textarea";
+    defaultValue?: string;
+
+    validation?: Pick<
+        FieldValidation,
+        "required" | "minLength" | "maxLength" | "pattern"
+    >;
+};
+
+
+export type NumberField = BaseField & {
+    type: "number";
+
+    defaultValue?: number;
+
+    validation?: Pick<
+        FieldValidation,
+        "required" | "min" | "max"
+    >;
+};
+
+
+export type SelectField = BaseField & {
+    type: "select";
+
+    defaultValue?: string;
+
+    options: {
         label: string;
         value: string;
     }[];
 
-    validation?: {
-        minLength?: number;
-        maxLength?: number;
-        min?: number;
-        max?: number;
-        pattern?: string;
-    };
+    validation?: Pick<FieldValidation, "required">;
+};
 
-    width?: "full" | "half" | "third";
+export type CheckboxField = BaseField & {
+    type: "checkbox";
+
+    defaultValue?: boolean;
+
+    validation?: Pick<FieldValidation, "required">;
+};
+
+
+export type FormField =
+    | TextField
+    | TextareaField
+    | NumberField
+    | SelectField
+    | CheckboxField;
+
+
+
+export type FormSettings = {
+    submitLabel: string;
+    successMessage: string;
+    redirectUrl?: string;
 };
 
 export type FormDefinition = {
     version: number;
 
     name: string;
-
     description?: string;
 
     fields: FormField[];
 
-    settings: {
-        submitLabel: string;
-
-        successMessage: string;
-
-        redirectUrl?: string;
-    };
+    settings: FormSettings;
 };
 
-
-export type RequiredFieldType = {
-    label: string;
-    description?: string;
-    placeholder?: string;
-}

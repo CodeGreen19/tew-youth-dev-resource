@@ -20,11 +20,12 @@ const defaultFormStates: FormDefinition = {
     version: 1,
 
     fields: [],
+
     settings: {
         submitLabel: "Submit",
         successMessage: "Thanks for submitting!",
     },
-}
+};
 export function FormBuilder() {
 
     const [form, setForm] = useState<FormDefinition>(defaultFormStates);
@@ -56,17 +57,22 @@ export function FormBuilder() {
     ) {
         setForm((current) => ({
             ...current,
+            fields: current.fields.map((field) => {
+                if (field.id !== fieldId) return field;
 
-            fields: current.fields.map((field) =>
-                field.id === fieldId
-                    ? {
-                        ...field,
-                        ...updates,
-                    }
-                    : field
-            ),
+                const updatedValidation = updates.validation && 'validation' in field
+                    ? { ...field.validation, ...updates.validation }
+                    : updates.validation ?? ('validation' in field ? field.validation : undefined);
+
+                return {
+                    ...field,
+                    ...updates,
+                    ...(updatedValidation ? { validation: updatedValidation } : {}),
+                } as FormField;
+            }),
         }));
     }
+
 
     function updateForm(
         versionId: number,

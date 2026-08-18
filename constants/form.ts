@@ -1,13 +1,9 @@
 export const fieldTypes = [
     "text",
     "textarea",
-    "email",
     "number",
-    // "phone",
-    // "select",
-    // "radio",
-    // "checkbox",
-    // "date",
+    "select",
+    "checkbox",
 ] as const;
 
 export type FieldType = typeof fieldTypes[number];

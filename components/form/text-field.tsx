@@ -5,14 +5,16 @@ import {
     FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { FormField } from "@/types/form";
 import { useFieldContext } from "./use-app-form";
-import { RequiredFieldType } from "@/types/form";
+
+type TextFieldProps = Pick<FormField, "label" | "description" | "placeholder">;
 
 export function TextField({
     label,
     description,
     placeholder
-}: RequiredFieldType) {
+}: TextFieldProps) {
     const field = useFieldContext<string>();
     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
     return (

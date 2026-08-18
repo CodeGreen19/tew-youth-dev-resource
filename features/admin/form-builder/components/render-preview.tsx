@@ -1,11 +1,9 @@
 "use client"
-import { Button } from '@/components/ui/button';
-import { DynamicForm } from './dymamic-form'
-import { FormDefinition } from '@/types/form'
+import { FormDefinition } from '@/types/form';
 import { Eye } from 'lucide-react';
+import { DynamicForm } from './dymamic-form';
 
 export function RenderPreview({ definations }: { definations: FormDefinition }) {
-    console.log(definations, "defincations");
 
     return (
         <div className='space-y-3'>

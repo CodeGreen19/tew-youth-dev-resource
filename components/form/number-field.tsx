@@ -6,14 +6,19 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useFieldContext } from "./use-app-form";
-import { RequiredFieldType } from "@/types/form";
+import { FormField } from "@/types/form";
+
+
+type NumberFieldProps = Pick<FormField, "label" | "description" | "placeholder">;
+
+
 
 export function NumberField({
     label,
     placeholder,
     description,
 
-}: RequiredFieldType) {
+}: NumberFieldProps) {
     const field = useFieldContext<number | null>();
     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
     return (

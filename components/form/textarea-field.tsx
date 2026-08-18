@@ -4,15 +4,19 @@ import {
     FieldError,
     FieldLabel,
 } from "@/components/ui/field";
-import { RequiredFieldType } from "@/types/form";
 import { Textarea } from "../ui/textarea";
 import { useFieldContext } from "./use-app-form";
+import { FormField } from "@/types/form";
+
+type TextareaFieldProps = Pick<FormField, "label" | "description" | "placeholder">;
+
+
 
 export function TextareaField({
     label,
     description,
     placeholder
-}: RequiredFieldType) {
+}: TextareaFieldProps) {
     const field = useFieldContext<string>();
     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
     return (

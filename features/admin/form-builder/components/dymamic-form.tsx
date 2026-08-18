@@ -9,7 +9,12 @@ import { createFormSchema } from '../helpers/create-form-schema'
 import { toast } from '@/components/ui/toast'
 
 
-export function DynamicForm({ definations }: { definations: FormDefinition }) {
+export function DynamicForm({ definations, onSubmit, showSubmittedValue = false, isPending = false }: {
+    definations: FormDefinition,
+    onSubmit?: (v: Record<string, any>) => void,
+    showSubmittedValue?: boolean;
+    isPending?: boolean
+}) {
 
     const schema = createFormSchema(definations);
     const defaultValues = createDefaultValues(definations);
@@ -23,7 +28,10 @@ export function DynamicForm({ definations }: { definations: FormDefinition }) {
         },
 
         onSubmit: async ({ value }) => {
-            toast.add({
+            onSubmit?.(value);
+            form.reset();
+            // toast
+            showSubmittedValue && toast.add({
                 title: "Entered Values", description: <span className="text-xs font-mono">
                     {JSON.stringify(value, null, 2)}
                 </span>
@@ -49,20 +57,95 @@ export function DynamicForm({ definations }: { definations: FormDefinition }) {
                             form.handleSubmit();
 
                         }}
-                        className='space-y-3'
+                        className='space-y-5'
                     >
-                        {definations.fields.map((f) => (
-                            f.type === "text" ? <form.AppField key={f.id} name={f.name} children={(field) => <field.TextField placeholder={f.placeholder} label={f.name} description={f.description} />} />
-                                : f.type === "number" ? <form.AppField key={f.id} name={f.name} children={(field) => <field.NumberField placeholder={f.placeholder} label={f.name} description={f.description} />} />
-                                    : f.type === "email" ? <form.AppField key={f.id} name={f.name} children={(field) => <field.EmailField placeholder={f.placeholder} label={f.name} description={f.description} />} />
-                                        : f.type === "textarea" ? <form.AppField key={f.id} name={f.name} children={(field) => <field.TextareaField placeholder={f.placeholder} label={f.name} description={f.description} />} /> : null
-                        ))}
+                        {definations.fields.map((def_field) => {
+                            switch (def_field.type) {
+                                case "text":
+                                    return (
+                                        <form.AppField
+                                            key={def_field.id}
+                                            name={def_field.name}
+                                        >
+                                            {(field) => (
+                                                <field.TextField
+                                                    label={def_field.name}
+                                                    placeholder={def_field.placeholder}
+                                                    description={def_field.description}
+                                                />
+                                            )}
+                                        </form.AppField>
+                                    )
+                                case "textarea":
+                                    return (
+                                        <form.AppField
+                                            key={def_field.id}
+                                            name={def_field.name}
+                                        >
+                                            {(field) => (
+                                                <field.TextareaField
+                                                    label={def_field.name}
+                                                    placeholder={def_field.placeholder}
+                                                    description={def_field.description}
+                                                />
+                                            )}
+                                        </form.AppField>
+                                    )
+
+                                case "number":
+                                    return (
+                                        <form.AppField
+                                            key={def_field.id}
+                                            name={def_field.name}
+                                        >
+                                            {(field) => (
+                                                <field.NumberField
+                                                    label={def_field.name}
+                                                    placeholder={def_field.placeholder}
+                                                    description={def_field.description}
+                                                />
+                                            )}
+                                        </form.AppField>
+                                    )
+                                case "checkbox":
+                                    return (
+                                        <form.AppField
+                                            key={def_field.id}
+                                            name={def_field.name}
+                                        >
+                                            {(field) => (
+                                                <field.CheckboxField
+                                                    label={def_field.name}
+                                                    description={def_field.description}
+                                                />
+                                            )}
+                                        </form.AppField>
+                                    )
+                                case "select":
+                                    return (
+                                        <form.AppField
+                                            key={def_field.id}
+                                            name={def_field.name}
+                                        >
+                                            {(field) => (
+                                                <field.SelectField
+                                                    label={def_field.name}
+                                                    placeholder={def_field.placeholder}
+                                                    description={def_field.description}
+                                                    options={def_field.options}
+                                                />
+                                            )}
+                                        </form.AppField>
+                                    )
 
 
+                                default: return null;
+                            }
+                        })}
                     </form>
                 </CardContent>
                 <CardFooter className='px-0 flex items-center justify-end'>
-                    <Button variant={"secondary"} type='submit' form='dynamic-form'>{definations.settings.submitLabel}</Button>
+                    <Button disabled={isPending} variant={"secondary"} type='submit' form='dynamic-form'>{definations.settings.submitLabel}</Button>
                 </CardFooter>
             </Card>
         </div>

@@ -59,7 +59,6 @@ function EditFieldForm({ defaultValues: dv, updateField, onClose }: {
 
     },
   })
-  console.log("default-val=>", dv);
 
   return <div className="space-y-6">
     <form
@@ -72,7 +71,9 @@ function EditFieldForm({ defaultValues: dv, updateField, onClose }: {
       <FieldGroup>
         <form.AppField name="name" children={(field) => <field.TextField
           label="Name"
-          placeholder="Enter your field name" />}
+          placeholder="Enter your field name" />
+
+        }
 
         />
         <form.AppField name="placeholder" children={(field) => <field.TextField
