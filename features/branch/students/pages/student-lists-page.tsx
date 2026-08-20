@@ -3,18 +3,18 @@
 import { db } from '@/drizzle/db';
 import { Suspense } from 'react';
 
-export function StudentListsPage() {
+export function StudentsListPage() {
 
     return (
         <div>
             <Suspense fallback={<div>Pending...</div>}>
-                <StudentLists />
+                <StudentsList />
             </Suspense>
         </div>
     )
 }
 
-async function StudentLists() {
+async function StudentsList() {
     const form = await db.query.forms.findFirst({ where: { slug: "Dummy-Form" }, with: { versions: { with: { submissions: true } } } });
     return <div>
         {form?.versions[0].submissions.map((data) => (

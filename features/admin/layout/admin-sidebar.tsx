@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { GalleryVerticalEnd } from "lucide-react"
 
@@ -15,46 +17,16 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
+import { navData } from "../constants/nav"
 
 // This is sample data.
 
-type NavDataType = {
-    navMain: {
-        title: string,
-        items: { title: string, url: string }[]
 
-    }[]
-}
-const data: NavDataType = {
-    navMain: [
-        {
-            title: "Menu",
-
-            items: [
-                {
-                    title: "Dashboard",
-                    url: "/admin/dashboard",
-                },
-
-            ],
-        },
-        {
-            title: "Service",
-
-            items: [
-                {
-                    title: "Form Builder",
-                    url: "/admin/form-builder",
-                },
-
-            ],
-        },
-
-
-    ],
-}
 
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const pathname = usePathname();
     return (
         <Sidebar {...props}>
             <SidebarHeader>
@@ -65,7 +37,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                                 <GalleryVerticalEnd className="size-4" />
                             </div>
                             <div className="flex flex-col gap-0.5 leading-none">
-                                <span className="font-medium">Documentation</span>
+                                <span className="font-medium">Admin Dashboard</span>
                                 <span className="">v1.0.0</span>
                             </div>
                         </div>}>
@@ -77,7 +49,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarMenu>
-                        {data.navMain.map((item) => (
+                        {navData.navMain.map((item) => (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton className="font-medium uppercase text-muted-foreground hover:bg-transparent hover:text-muted-foreground">
                                     {item.title}
@@ -88,7 +60,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                                     <SidebarMenuSub>
                                         {item.items.map((item) => (
                                             <SidebarMenuSubItem key={item.title}>
-                                                <SidebarMenuSubButton className=" p-4" render={<Link href={item.url}>{item.title}</Link>}>
+                                                <SidebarMenuSubButton className={cn("p-4 hover:bg-primary/10 focus:bg-primary/10 active:bg-primary/10 rounded-full", item.url.startsWith(pathname) ? "bg-primary text-background hover:bg-primary focus:bg-primary hover:text-background active:text-background" : "")} render={<Link href={item.url}>{item.title}</Link>}>
 
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>

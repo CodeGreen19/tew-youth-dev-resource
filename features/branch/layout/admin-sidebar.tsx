@@ -33,7 +33,7 @@ const data: NavDataType = {
             items: [
                 {
                     title: "Student Lists",
-                    url: "/branch/student-lists",
+                    url: "/branch/students-list",
                 }, {
                     title: "Add Student",
                     url: "/branch/add-student",
