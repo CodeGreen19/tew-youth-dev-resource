@@ -14,7 +14,8 @@ export const navData: NavDataType = {
                 {
                     title: "Dashboard",
                     url: "/admin/dashboard",
-                }, {
+                },
+                {
                     title: "Branches",
                     url: "/admin/branches",
                 },
@@ -27,6 +28,10 @@ export const navData: NavDataType = {
             items: [
 
 
+                {
+                    title: "Courses",
+                    url: "/admin/courses",
+                },
                 {
                     title: "Form Builder",
                     url: "/admin/form-builder",

@@ -1,10 +1,10 @@
 import { Geist_Mono, Nunito_Sans, Roboto } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toast";
+import { TanstackQueryProvider } from "@/lib/tanstack-query/tanstack-query-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toast";
-import ProgressProviders from "@/lib/progress-provider";
 
 const nunitoSansHeading = Nunito_Sans({ subsets: ['latin'], variable: '--font-heading' });
 
@@ -28,9 +28,9 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <ProgressProviders>
+          <TanstackQueryProvider>
             {children}
-          </ProgressProviders>
+          </TanstackQueryProvider>
         </ThemeProvider>
         <Toaster />
       </body>

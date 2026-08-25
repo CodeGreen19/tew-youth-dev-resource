@@ -21,7 +21,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { navData } from "../constants/nav"
 
-// This is sample data.
+
 
 
 
@@ -33,7 +33,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" render={<div>
-                            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-background text-sidebar-background-foreground bg-primary text-background">
                                 <GalleryVerticalEnd className="size-4" />
                             </div>
                             <div className="flex flex-col gap-0.5 leading-none">
@@ -60,7 +60,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                                     <SidebarMenuSub>
                                         {item.items.map((item) => (
                                             <SidebarMenuSubItem key={item.title}>
-                                                <SidebarMenuSubButton className={cn("p-4 hover:bg-primary/10 focus:bg-primary/10 active:bg-primary/10 rounded-full", item.url.startsWith(pathname) ? "bg-primary text-background hover:bg-primary focus:bg-primary hover:text-background active:text-background" : "")} render={<Link href={item.url}>{item.title}</Link>}>
+                                                <SidebarMenuSubButton className={cn("p-4 hover:bg-background/10 focus:bg-background/10 active:bg-background/10 rounded-full", item.url.startsWith(pathname) ? "bg-background hover:bg-background focus:bg-background " : "")} render={<Link href={item.url}>{item.title}</Link>}>
 
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
