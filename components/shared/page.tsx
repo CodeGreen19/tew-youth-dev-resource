@@ -1,6 +1,8 @@
 "use client"
 
 import { cn } from '@/lib/utils'
+import { ChevronLeft } from 'lucide-react'
+import Link from 'next/link'
 import { ComponentProps, ReactNode } from 'react'
 
 // Page Component
@@ -30,13 +32,14 @@ export function PageHeader({ children, className, ...props }: PageHeaderProps) {
 }
 // PageTitle Component
 export interface PageTitleProps extends ComponentProps<'div'> {
-    children: ReactNode
+    children: ReactNode,
+    backTo?: string
 }
 
-export function PageTitle({ children, className, ...props }: PageTitleProps) {
+export function PageTitle({ children, className, backTo, ...props }: PageTitleProps) {
     return (
-        <div className={cn('text-2xl md:text-3xl font-bold', className)} {...props}>
-            {children}
+        <div className={cn('text-xl md:text-2xl font-bold', className)} {...props}>
+            {backTo ? <Link className='flex items-center gap-1' href={backTo}><ChevronLeft /> {children}</Link> : <span>{children}</span>}
         </div>
     )
 }

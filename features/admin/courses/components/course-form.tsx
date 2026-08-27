@@ -8,6 +8,7 @@ import { Course, courseSchema } from '../schemas/courses'
 import { AddCourse, UpdateCourse } from '../server/actions'
 import { useRouter } from 'next/navigation'
 import { getQueryClient } from '@/lib/tanstack-query/get-query-client'
+import { useSelector } from '@tanstack/react-form'
 
 export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: "UPDATE" | "ADD", existedValue?: Course & { id: string }, onCancel?: () => void, onSuccess?: () => void }) {
     const router = useRouter();
@@ -15,7 +16,9 @@ export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: 
     const defaultValues: Course = existedValue ?? { name: "", code: "", description: "" }
     const form = useAppForm({
         defaultValues, validators: {
-            onSubmit: courseSchema
+            onSubmit: courseSchema,
+            onBlur: courseSchema,
+            onChange: courseSchema
         },
         onSubmit: async ({ value }) => {
             if (type === "ADD") {
@@ -32,6 +35,8 @@ export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: 
             router.refresh();
         }
     })
+
+    const isSubmitting = useSelector(form.store, (state) => state.isSubmitting)
     return (
         <Card>
             <CardHeader>
@@ -55,7 +60,7 @@ export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: 
                         form.reset();
                         onCancel?.()
                     }} variant={"ghost"}>Cancel</Button>
-                    <Button disabled={form.state.isSubmitting} form={"course-form"} type='submit'>{type === "ADD" ? "Submit" : " Update"}</Button>
+                    <Button disabled={isSubmitting} form={"course-form"} type='submit'>{type === "ADD" ? "Submit" : " Update"}</Button>
                 </Field>
             </CardFooter>
         </Card>
