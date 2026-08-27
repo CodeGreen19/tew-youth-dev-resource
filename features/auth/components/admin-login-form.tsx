@@ -7,8 +7,11 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { loginSchema, LoginSchemaType } from '../schemas/admin'
 import { toast } from '@/components/ui/toast'
 import { useSelector } from '@tanstack/react-form'
+import { authClient } from '@/lib/auth-client'
+import { useRouter } from 'next/navigation'
 
 export function AdminLoginForm() {
+    const router = useRouter();
     const defaultValues: LoginSchemaType = { email: "", password: "" }
     const form = useAppForm({
         defaultValues,
@@ -18,8 +21,14 @@ export function AdminLoginForm() {
             onSubmit: loginSchema
         },
         onSubmit: async ({ value }) => {
-            await new Promise(res => setTimeout(res, 2000));
-            toast.add({ title: "Works fine" })
+            const res = await authClient.signIn.email({ ...value });
+            if (res.error) {
+                toast.add({ title: res.error.message || res.error.statusText, type: "error" });
+            }
+            if (res.data) {
+                toast.add({ title: "Logged in successfully", type: "success" });
+                router.push("/admin/dashboard")
+            }
         }
     })
     const isSubmitting = useSelector(form.store, (state) => state.isSubmitting);

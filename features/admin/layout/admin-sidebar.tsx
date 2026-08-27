@@ -6,6 +6,7 @@ import { GalleryVerticalEnd } from "lucide-react"
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarHeader,
     SidebarMenu,
@@ -20,6 +21,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { navData } from "../constants/nav"
+import { authClient } from "@/lib/auth-client"
+import { AdminNavUser } from "./admin-nav-user"
 
 
 
@@ -27,6 +30,7 @@ import { navData } from "../constants/nav"
 
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname();
+    const session = authClient.useSession();
     return (
         <Sidebar {...props}>
             <SidebarHeader>
@@ -71,8 +75,12 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                         ))}
                     </SidebarMenu>
                 </SidebarGroup>
+
             </SidebarContent>
             <SidebarRail />
+            <SidebarFooter>
+                <AdminNavUser isPending={session.isPending} user={{ name: session.data?.user.name, email: session.data?.user.email }} />
+            </SidebarFooter>
         </Sidebar>
     )
 }

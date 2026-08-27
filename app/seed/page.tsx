@@ -9,7 +9,7 @@ export default function page() {
     return (
         <div>
             <Button onClick={async () => {
-                const res = await authClient.signUp.email({ name: "Ahmed", email: "email@gmail.com", password: "passcode" });
+                const res = await authClient.signUp.email({ name: "User", email: "user@gmail.com", password: "passcode", });
 
                 console.log(res);
 
@@ -18,6 +18,10 @@ export default function page() {
             <div>
                 {JSON.stringify(session.data?.user || null)}
             </div>
+            <Button onClick={async () => {
+                await authClient.signOut();
+
+            }}>Signout</Button>
         </div>
     )
 }
