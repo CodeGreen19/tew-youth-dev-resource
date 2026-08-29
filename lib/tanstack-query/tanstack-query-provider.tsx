@@ -5,8 +5,8 @@ import { ReactNode } from "react";
 import { getQueryClient } from "./get-query-client";
 // Create a client
 
-const queryClient = getQueryClient();
 export function TanstackQueryProvider({ children }: { children: ReactNode }) {
+    const queryClient = getQueryClient();
     return (
         // Provide the client to your App
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

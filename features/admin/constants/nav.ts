@@ -39,6 +39,20 @@ export const navData: NavDataType = {
 
             ],
         },
+        {
+            title: "Manage",
+
+            items: [
+
+
+                {
+                    title: "Users",
+                    url: "/admin/users",
+                },
+
+
+            ],
+        },
 
 
     ],

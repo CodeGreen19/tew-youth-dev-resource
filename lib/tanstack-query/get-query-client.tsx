@@ -24,7 +24,11 @@ function makeQueryClient() {
                     // with better digests.
                     return false;
                 },
+                // serializeData: (data) => superjson.serialize(data)
             },
+            hydrate: {
+                // deserializeData: (data) => superjson.deserialize(data)
+            }
         },
     });
 }

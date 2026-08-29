@@ -8,7 +8,7 @@ import { updateTag } from "next/cache";
 import { Course, courseSchema } from "../schemas/courses";
 
 
-export async function AddCourse(course: Course): Promise<ActionResponse> {
+export async function addCourse(course: Course): Promise<ActionResponse> {
 
     const result = courseSchema.safeParse(course);
     if (!result.success) {
@@ -16,12 +16,13 @@ export async function AddCourse(course: Course): Promise<ActionResponse> {
     }
 
     await db.insert(courses).values(result.data);
+
     updateTag("courses")
     return { success: true, message: "New Course Added" };
 }
 
 
-export async function UpdateCourse(course: Course & { id: string }): Promise<ActionResponse> {
+export async function updateCourse(course: Course & { id: string }): Promise<ActionResponse> {
 
     const result = courseSchema.safeParse(course);
     if (!result.success) {
@@ -37,15 +38,17 @@ export async function UpdateCourse(course: Course & { id: string }): Promise<Act
         return { success: false, message: "Course not found or no changes made" };
     }
 
+    updateTag("courses")
     return { success: true, message: "Course updated successfully" };
 }
 
 
-export async function DeleteCourse(id: string): Promise<ActionResponse> {
+export async function deleteCourse(id: string): Promise<ActionResponse> {
 
     await db
         .delete(courses)
         .where(eq(courses.id, id));
 
+    updateTag("courses")
     return { success: true, message: "Course deleted successfully" };
 }

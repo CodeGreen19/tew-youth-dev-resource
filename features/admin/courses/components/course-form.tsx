@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Field, FieldGroup } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
 import { Course, courseSchema } from '../schemas/courses'
-import { AddCourse, UpdateCourse } from '../server/actions'
+import { addCourse, updateCourse } from '../server/actions'
 import { useRouter } from 'next/navigation'
 import { getQueryClient } from '@/lib/tanstack-query/get-query-client'
 import { useSelector } from '@tanstack/react-form'
@@ -17,22 +17,22 @@ export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: 
     const form = useAppForm({
         defaultValues, validators: {
             onSubmit: courseSchema,
-            onBlur: courseSchema,
-            onChange: courseSchema
+
         },
         onSubmit: async ({ value }) => {
             if (type === "ADD") {
-                const res = await AddCourse(value);
+                const res = await addCourse(value);
                 toast.add({ title: res.message });
-                await qc.invalidateQueries({ queryKey: ["courses"] });
-                onSuccess?.()
+                qc.invalidateQueries({ queryKey: ["courses"] });
+                form.reset();
+                onSuccess?.();
             }
             if (type === "UPDATE" && existedValue) {
-                const res = await UpdateCourse({ ...value, id: existedValue.id });
+                const res = await updateCourse({ ...value, id: existedValue.id });
                 toast.add({ title: res.message });
                 onSuccess?.()
             }
-            router.refresh();
+
         }
     })
 

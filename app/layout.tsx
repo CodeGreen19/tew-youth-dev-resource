@@ -27,11 +27,11 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", roboto.variable, nunitoSansHeading.variable)}
     >
       <body>
-        <ThemeProvider>
-          <TanstackQueryProvider>
-            {children}
-          </TanstackQueryProvider>
-        </ThemeProvider>
+
+        <TanstackQueryProvider>
+          {children}
+        </TanstackQueryProvider>
+
         <Toaster />
       </body>
     </html>

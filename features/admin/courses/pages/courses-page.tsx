@@ -1,14 +1,26 @@
+"use cache"
+import { Page } from '@/components/shared/page';
+import { getQueryClient } from '@/lib/tanstack-query/get-query-client';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { Suspense } from 'react';
+import { ErrorBoundary } from "react-error-boundary";
+import { CourseHeader } from '../components/header';
+import { ShowCourses } from '../components/show-courses';
+import { getCourses } from '../server/queries';
 
-import { Page } from '@/components/shared/page'
-import { CourseHeader } from '../components/header'
-
-export function CoursesPage() {
+export async function CoursesPage() {
+    const qc = getQueryClient();
+    qc.prefetchQuery({ queryKey: ["courses"], queryFn: () => getCourses() })
     return (
         <Page>
             <CourseHeader />
-            <div>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, error nemo. Dolorum at fugiat accusantium expedita impedit corporis amet, neque id ab quis excepturi laboriosam mollitia! Temporibus iusto distinctio assumenda!
-            </div>
+            <HydrationBoundary state={dehydrate(qc)}>
+                <ErrorBoundary fallback={<div>Error</div>}>
+                    <Suspense fallback={<div>Course Loading...</div>}>
+                        <ShowCourses />
+                    </Suspense>
+                </ErrorBoundary>
+            </HydrationBoundary>
         </Page>
     )
 }
