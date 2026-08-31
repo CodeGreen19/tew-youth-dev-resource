@@ -8,7 +8,7 @@ import "./globals.css";
 
 const nunitoSansHeading = Nunito_Sans({ subsets: ['latin'], variable: '--font-heading' });
 
-const roboto = Roboto({ subsets: ['latin'], variable: '--font-sans' })
+const roboto = Roboto({subsets:['latin'],variable:'--font-sans'})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],

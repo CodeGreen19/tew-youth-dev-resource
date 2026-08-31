@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from "react-error-boundary";
 import { CourseHeader } from '../components/header';
 import { ShowCourses } from '../components/show-courses';
-import { getCourses } from '../server/queries';
+import { getCourses } from '../queries';
 
 export async function CoursesPage() {
     const qc = getQueryClient();

@@ -5,10 +5,10 @@ import { courses } from "@/drizzle/schema";
 import { ActionResponse } from "@/types/server";
 import { eq } from "drizzle-orm";
 import { updateTag } from "next/cache";
-import { Course, courseSchema } from "../schemas/courses";
+import { CourseSchemaType, courseSchema } from "./schemas";
 
 
-export async function addCourse(course: Course): Promise<ActionResponse> {
+export async function addCourse(course: CourseSchemaType): Promise<ActionResponse> {
 
     const result = courseSchema.safeParse(course);
     if (!result.success) {
@@ -22,7 +22,7 @@ export async function addCourse(course: Course): Promise<ActionResponse> {
 }
 
 
-export async function updateCourse(course: Course & { id: string }): Promise<ActionResponse> {
+export async function updateCourse(course: CourseSchemaType & { id: string }): Promise<ActionResponse> {
 
     const result = courseSchema.safeParse(course);
     if (!result.success) {

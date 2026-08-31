@@ -8,4 +8,4 @@ export const courseSchema = z.object({
 
 
 
-export type Course = z.infer<typeof courseSchema>;
+export type CourseSchemaType = z.infer<typeof courseSchema>;

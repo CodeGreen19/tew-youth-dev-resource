@@ -4,8 +4,9 @@ import { getQueryClient } from '@/lib/tanstack-query/get-query-client';
 import { dehydrate, HydrationBoundary, queryOptions } from '@tanstack/react-query';
 import { ShowUsers } from '../components/show-users';
 import { UsersHeader } from '../components/users-header';
-import { getUsers } from '../server/queries';
+import { getUsers } from '../queries';
 import { headers } from 'next/headers';
+import { User } from '../types';
 
 // export const userOptions = queryOptions({ queryKey: ["users"], queryFn: () => getUsers() })
 
@@ -21,7 +22,7 @@ export async function UsersPage() {
 
         <Page>
             <UsersHeader />
-            <ShowUsers data={data} />
+            <ShowUsers users={data.users} />
         </Page>
 
         // </HydrationBoundary>
