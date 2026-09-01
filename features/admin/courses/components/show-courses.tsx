@@ -1,15 +1,15 @@
 "use client"
 
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { getCourses } from "../queries"
 import { DataTable } from "@/components/table/data-table"
+import { Course } from "../types"
 import { columns } from "./columns"
 
-export function ShowCourses() {
-    const { data } = useSuspenseQuery({ queryKey: ["courses"], queryFn: () => getCourses() })
+export function ShowCourses({ courses }: { courses: Course[] }) {
+
+
     return (
         <div>
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={courses} />
         </div>
     )
 }

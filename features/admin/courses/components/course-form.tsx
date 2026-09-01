@@ -1,19 +1,18 @@
 "use client"
+import { useRouter } from 'next/navigation'
+
 import { useAppForm } from '@/components/form/use-app-form'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
-import { Course, courseSchema } from '../schemas/courses'
-import { addCourse, updateCourse } from '../server/actions'
-import { useRouter } from 'next/navigation'
-import { getQueryClient } from '@/lib/tanstack-query/get-query-client'
 import { useSelector } from '@tanstack/react-form'
+import { addCourse, updateCourse } from '../actions'
+import { courseSchema, CourseSchemaType } from '../schemas'
 
-export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: "UPDATE" | "ADD", existedValue?: Course & { id: string }, onCancel?: () => void, onSuccess?: () => void }) {
+export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: "UPDATE" | "ADD", existedValue?: CourseSchemaType & { id: string }, onCancel?: () => void, onSuccess?: () => void }) {
     const router = useRouter();
-    const qc = getQueryClient();
-    const defaultValues: Course = existedValue ?? { name: "", code: "", description: "" }
+    const defaultValues: CourseSchemaType = existedValue ?? { name: "", code: "", description: "" }
     const form = useAppForm({
         defaultValues, validators: {
             onSubmit: courseSchema,
@@ -23,7 +22,6 @@ export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: 
             if (type === "ADD") {
                 const res = await addCourse(value);
                 toast.add({ title: res.message });
-                qc.invalidateQueries({ queryKey: ["courses"] });
                 form.reset();
                 onSuccess?.();
             }

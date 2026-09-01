@@ -19,6 +19,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Course } from "../types"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import DeleteCourseDialog from "./delete-course-dialog"
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<DataTableFeatures, Course>()
@@ -54,30 +57,34 @@ export const columns = columnHelper.columns([
     columnHelper.display({
         id: "actions",
         cell: ({ row }) => {
-            const payment = row.original
-
+            const router = useRouter();
+            const [deleteDialogInfo, setDeleteDialogInfo] = useState<Course | null>(null)
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger
-                        render={<Button variant="ghost" className="h-8 w-8 p-0" />}
-                    >
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuGroup>
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() => navigator.clipboard.writeText(payment.id)}
-                            >
-                                Copy payment ID
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>View customer</DropdownMenuItem>
-                            <DropdownMenuItem>View payment details</DropdownMenuItem>
-                        </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            render={<Button variant="ghost" className="h-8 w-8 p-0" />}
+                        >
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuGroup>
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem
+
+                                    onClick={() => router.push(`/admin/courses/${row.original.id}/update`)}
+                                >
+                                    Edit Course
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/admin/courses/${row.original.id}/details`)}>View In Detail</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => setDeleteDialogInfo(row.original)} variant="destructive">Delete</DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DeleteCourseDialog deleteDialogInfo={deleteDialogInfo} setDeleteDialogInfo={setDeleteDialogInfo} />
+                </div>
             )
         },
     }),
