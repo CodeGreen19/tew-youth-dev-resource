@@ -1,9 +1,10 @@
-import { CoursesPage } from '@/features/admin/courses/pages/courses-page'
-import React, { Suspense } from 'react'
+import { CoursesPage } from '@/features/admin/courses/pages/courses-page';
+import { getCourses } from '@/features/admin/courses/queries';
 
-export default function page() {
+export default async function page() {
+    const courses = await getCourses();
     return (
-        <CoursesPage />
+        <CoursesPage courses={courses} />
 
     )
 }

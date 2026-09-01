@@ -4,7 +4,7 @@ import { createColumnHelper } from "@tanstack/react-table"
 
 
 
-import { MoreHorizontal } from "lucide-react"
+import { Check, ChevronLeft, MoreHorizontal } from "lucide-react"
 
 import { DataTableFeatures } from "@/components/table/data-table-features"
 import { Button } from "@/components/ui/button"
@@ -16,12 +16,21 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Course } from "../types"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import DeleteCourseDialog from "./delete-course-dialog"
+import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
+import { Badge } from "@/components/ui/badge"
+import { courseStatuses } from "@/constants/course"
+import { useMutation } from "@tanstack/react-query"
+import { changeCourseStatus } from "../actions"
+import { toast } from "@/components/ui/toast"
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<DataTableFeatures, Course>()
@@ -50,15 +59,32 @@ export const columns = columnHelper.columns([
         enableHiding: false,
     }),
     columnHelper.accessor("name", {
-        header: "Course Name",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Name" />
+        ),
     }),
 
+    columnHelper.accessor("code", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Code" />
+        ),
+    }),
+
+    columnHelper.accessor("status", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Status" />
+        ),
+        cell: ({ row }) => (
+            <Badge variant={"secondary"}>{row.original.status}</Badge>
+        )
+    }),
 
     columnHelper.display({
         id: "actions",
         cell: ({ row }) => {
             const router = useRouter();
-            const [deleteDialogInfo, setDeleteDialogInfo] = useState<Course | null>(null)
+            const [deleteDialogInfo, setDeleteDialogInfo] = useState<Course | null>(null);
+            const mutation = useMutation({ mutationFn: changeCourseStatus })
             return (
                 <div>
                     <DropdownMenu>
@@ -77,6 +103,21 @@ export const columns = columnHelper.columns([
                                 >
                                     Edit Course
                                 </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>
+                                    Status
+                                </DropdownMenuSubTrigger>
+                                <DropdownMenuSubContent>
+                                    <DropdownMenuGroup>
+                                        {courseStatuses.map((status) => (
+                                            <DropdownMenuItem onClick={() => mutation.mutate({ id: row.original.id, status })} className={"flex items-center justify-between"} key={status}> <span>{status}</span> {row.original.status === status && <Check />}</DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuGroup>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+                            <DropdownMenuGroup>
+
                                 <DropdownMenuItem onClick={() => router.push(`/admin/courses/${row.original.id}/details`)}>View In Detail</DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => setDeleteDialogInfo(row.original)} variant="destructive">Delete</DropdownMenuItem>

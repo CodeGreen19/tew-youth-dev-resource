@@ -9,10 +9,12 @@ import { toast } from '@/components/ui/toast'
 import { useSelector } from '@tanstack/react-form'
 import { addCourse, updateCourse } from '../actions'
 import { courseSchema, CourseSchemaType } from '../schemas'
+import { courseStatuses } from '@/constants/course'
+import { capitalize } from '@/lib/helpers'
 
 export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: "UPDATE" | "ADD", existedValue?: CourseSchemaType & { id: string }, onCancel?: () => void, onSuccess?: () => void }) {
     const router = useRouter();
-    const defaultValues: CourseSchemaType = existedValue ?? { name: "", code: "", description: "" }
+    const defaultValues: CourseSchemaType = existedValue ?? { name: "", code: "", description: "", status: "active" }
     const form = useAppForm({
         defaultValues, validators: {
             onSubmit: courseSchema,
@@ -21,14 +23,25 @@ export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: 
         onSubmit: async ({ value }) => {
             if (type === "ADD") {
                 const res = await addCourse(value);
-                toast.add({ title: res.message });
-                form.reset();
-                onSuccess?.();
+                if (res.success) {
+                    toast.add({ title: res.message, type: "success" });
+                    onSuccess?.();
+                    form.reset();
+
+                } else {
+                    toast.add({ title: res.message, type: "error" });
+                }
             }
             if (type === "UPDATE" && existedValue) {
                 const res = await updateCourse({ ...value, id: existedValue.id });
-                toast.add({ title: res.message });
-                onSuccess?.()
+                if (res.success) {
+                    toast.add({ title: res.message, type: "success" });
+                    onSuccess?.();
+
+
+                } else {
+                    toast.add({ title: res.message, type: "error" });
+                }
             }
 
         }
@@ -48,6 +61,7 @@ export function CourseForm({ type, existedValue, onCancel, onSuccess }: { type: 
                     <FieldGroup>
                         <form.AppField name='name' children={(field) => <field.TextField label='Course Name' />} />
                         <form.AppField name='code' children={(field) => <field.TextField label='Course Code' />} />
+                        <form.AppField name='status' children={(field) => <field.SelectField options={courseStatuses.map((v) => ({ label: capitalize(v), value: v }))} label='Course Code' />} />
                         <form.AppField name='description' children={(field) => <field.TextareaField label='Course Description (optional)' />} />
                     </FieldGroup>
                 </form>

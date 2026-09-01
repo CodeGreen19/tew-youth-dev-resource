@@ -2,9 +2,9 @@
 
 import {
     useTable,
-    type ColumnVisibilityState,
     type ColumnDef,
     type ColumnFiltersState,
+    type ColumnVisibilityState,
     type RowData,
     type SortingState
 } from "@tanstack/react-table"
@@ -18,25 +18,26 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import React from "react"
 import { features, type DataTableFeatures } from "./data-table-features"
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { DataTablePagination } from "./data-table-pagination"
+import { DataTableSelectAction } from "./data-table-select-action"
+import { DataTableViewOptions } from "./data-table-view-options"
 interface DataTableProps<TData extends RowData> {
     columns: ColumnDef<DataTableFeatures, TData>[]
-    data: TData[]
+    data: TData[],
+    searchBy?: "name" | "email",
+    searchPlaceholder?: string,
+    BulkActionComponent?: React.ComponentType<{ data: TData[] }>
 }
 
 export function DataTable<TData extends RowData>({
     columns,
     data,
+    searchBy,
+    searchPlaceholder,
+    BulkActionComponent
 }: DataTableProps<TData>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -65,43 +66,30 @@ export function DataTable<TData extends RowData>({
         }
     })
 
+
+
+    // test
+    const selectedRows = table.getSelectedRowModel().rows
+
+
+    const selectedData = selectedRows.map((row) => row.original)
+
+
     return (
         <div>
-            <div className="flex items-center py-4">
+            <div className="flex items-center justify-between  gap-2 py-4">
+
                 <Input
-                    placeholder="Filter emails..."
-                    value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+                    placeholder={searchPlaceholder || "Search..."}
+                    value={(table.getColumn(searchBy || "")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("email")?.setFilterValue(event.target.value)
+                        table.getColumn(searchBy || "")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
                 />
-                <DropdownMenu>
-                    <DropdownMenuTrigger render={<Button variant="outline" className="ml-auto" />}>
-                        Columns
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter(
-                                (column) => column.getCanHide()
-                            )
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
+
+
+                <DataTableViewOptions table={table} />
             </div>
             <div className="overflow-hidden  border-y">
                 <Table>
@@ -144,24 +132,12 @@ export function DataTable<TData extends RowData>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    <ChevronLeft />  Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next <ChevronRight />
-                </Button>
+            <div className=" py-4">
+                <DataTablePagination table={table} />
+
             </div>
+            <DataTableSelectAction table={table} BulkActionComponent={BulkActionComponent} />
+
         </div>
 
 
