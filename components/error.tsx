@@ -1,10 +1,8 @@
+"use client" // Error boundaries must be Client Components
 
-
-'use client' // Error boundaries must be Client Components
-
-import { useEffect } from 'react'
-import { Button } from './ui/button'
-import { AlertCircle } from 'lucide-react'
+import { useEffect } from "react"
+import { Button } from "./ui/button"
+import { AlertCircle } from "lucide-react"
 
 export function Error({
     error,
@@ -19,11 +17,13 @@ export function Error({
     }, [error])
 
     return (
-
-        <div className='p-6 flex items-center justify-center flex-col gap-4'>
-            <div className='flex items-center justify-center gap-2 text-destructive'>
+        <div className="p-6 flex items-center justify-center flex-col gap-4">
+            <div className="flex items-center justify-center gap-2 text-destructive">
                 <AlertCircle />
-                <span>Something went wrong</span>
+                <span>
+                    {error.message ||
+                        "Something went wrong"}
+                </span>
             </div>
             <Button
                 variant={"ghost"}
@@ -35,7 +35,5 @@ export function Error({
                 Try again
             </Button>
         </div>
-
-
     )
 }

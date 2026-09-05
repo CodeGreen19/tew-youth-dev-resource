@@ -1,31 +1,16 @@
-
-import { Page } from '@/components/shared/page';
-import { getQueryClient } from '@/lib/tanstack-query/get-query-client';
-import { dehydrate, HydrationBoundary, queryOptions } from '@tanstack/react-query';
-import { ShowUsers } from '../components/show-users';
-import { UsersHeader } from '../components/users-header';
-import { getUsers } from '../queries';
-import { headers } from 'next/headers';
-import { User } from '../types';
-
-// export const userOptions = queryOptions({ queryKey: ["users"], queryFn: () => getUsers() })
+import { Page } from "@/components/shared/page"
+import { headers } from "next/headers"
+import { ShowUsers } from "../components/show-users"
+import { UsersHeader } from "../components/users-header"
+import { getUsers } from "../queries"
 
 export async function UsersPage() {
-    // const qc = getQueryClient();
-    // await qc.prefetchQuery(userOptions)
-    const s = performance.now()
-    const data = await getUsers(await headers());
-    const e = performance.now();
-    console.log(`query tooke ${Math.ceil(e - s)} ms`)
-    return (
-        // <HydrationBoundary state={dehydrate(qc)}>
+    const data = await getUsers(await headers())
 
+    return (
         <Page>
             <UsersHeader />
             <ShowUsers users={data.users} />
         </Page>
-
-        // </HydrationBoundary>
     )
 }
-

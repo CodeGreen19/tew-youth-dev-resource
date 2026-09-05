@@ -2,8 +2,6 @@
 
 import { createColumnHelper } from "@tanstack/react-table"
 
-
-
 import { MoreHorizontal } from "lucide-react"
 
 import { DataTableFeatures } from "@/components/table/data-table-features"
@@ -22,7 +20,10 @@ import { User } from "../types"
 import { Badge } from "@/components/ui/badge"
 
 // Use `accessor` for data columns and `display` for columns without one.
-const columnHelper = createColumnHelper<DataTableFeatures, User>()
+const columnHelper = createColumnHelper<
+    DataTableFeatures,
+    User
+>()
 
 export const columns = columnHelper.columns([
     columnHelper.display({
@@ -31,16 +32,21 @@ export const columns = columnHelper.columns([
             <Checkbox
                 checked={table.getIsAllPageRowsSelected()}
                 indeterminate={
-                    table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected()
+                    table.getIsSomePageRowsSelected() &&
+                    !table.getIsAllPageRowsSelected()
                 }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                onCheckedChange={(value) =>
+                    table.toggleAllPageRowsSelected(!!value)
+                }
                 aria-label="Select all"
             />
         ),
         cell: ({ row }) => (
             <Checkbox
                 checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                onCheckedChange={(value) =>
+                    row.toggleSelected(!!value)
+                }
                 aria-label="Select row"
             />
         ),
@@ -60,15 +66,20 @@ export const columns = columnHelper.columns([
         header: "Role",
         cell: ({ row }) => {
             return <Badge>{row.original.role}</Badge>
-        }
+        },
     }),
     columnHelper.accessor("createdAt", {
         header: "Joined At",
         cell: ({ row }) => {
-            return <span>{new Date(row.original.createdAt).toLocaleDateString()}</span>
-        }
+            return (
+                <span>
+                    {new Date(
+                        row.original.createdAt,
+                    ).toLocaleDateString()}
+                </span>
+            )
+        },
     }),
-
 
     columnHelper.display({
         id: "actions",
@@ -78,22 +89,39 @@ export const columns = columnHelper.columns([
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger
-                        render={<Button variant="ghost" className="h-8 w-8 p-0" />}
+                        render={
+                            <Button
+                                variant="ghost"
+                                className="h-8 w-8 p-0"
+                            />
+                        }
                     >
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">
+                            Open menu
+                        </span>
                         <MoreHorizontal className="h-4 w-4" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuGroup>
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>
+                                Actions
+                            </DropdownMenuLabel>
                             <DropdownMenuItem
-                                onClick={() => navigator.clipboard.writeText(payment.id)}
+                                onClick={() =>
+                                    navigator.clipboard.writeText(
+                                        payment.id,
+                                    )
+                                }
                             >
                                 Copy payment ID
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>View customer</DropdownMenuItem>
-                            <DropdownMenuItem>View payment details</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                View customer
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                View payment details
+                            </DropdownMenuItem>
                         </DropdownMenuGroup>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -101,5 +129,3 @@ export const columns = columnHelper.columns([
         },
     }),
 ])
-
-

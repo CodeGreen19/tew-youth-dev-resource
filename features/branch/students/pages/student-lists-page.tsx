@@ -1,10 +1,7 @@
-
-
-import { db } from '@/drizzle/db';
-import { Suspense } from 'react';
+import { db } from "@/drizzle/db"
+import { Suspense } from "react"
 
 export function StudentsListPage() {
-
     return (
         <div>
             <Suspense fallback={<div>Pending...</div>}>
@@ -15,10 +12,17 @@ export function StudentsListPage() {
 }
 
 async function StudentsList() {
-    const form = await db.query.forms.findFirst({ where: { slug: "Dummy-Form" }, with: { versions: { with: { submissions: true } } } });
-    return <div>
-        {form?.versions[0].submissions.map((data) => (
-            <div key={data.id}>{JSON.stringify(data.data)}</div>
-        ))}
-    </div>
+    const form = await db.query.forms.findFirst({
+        where: { slug: "Dummy-Form" },
+        with: { versions: { with: { submissions: true } } },
+    })
+    return (
+        <div>
+            {form?.versions[0].submissions.map((data) => (
+                <div key={data.id}>
+                    {JSON.stringify(data.data)}
+                </div>
+            ))}
+        </div>
+    )
 }

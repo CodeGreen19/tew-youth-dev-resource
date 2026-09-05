@@ -1,6 +1,5 @@
+import { BranchesPage } from "@/features/admin/branches/pages/branches-page"
 
 export default function page() {
-    return (
-        <div>branches pagepage </div>
-    )
+    return <BranchesPage />
 }

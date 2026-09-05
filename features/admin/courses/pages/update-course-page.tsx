@@ -1,20 +1,25 @@
-"use client"
-import { Page, PageHeader, PageTitle } from '@/components/shared/page'
-import { CourseForm } from '../components/course-form'
-import { useRouter } from 'next/navigation'
-import { Course } from '../types';
+import {
+    Page,
+    PageHeader,
+    PageTitle,
+} from "@/components/shared/page"
+import { UpdateCourse } from "../components/update-course"
+import { getCourseById } from "../queries"
 
-export function UpdateCoursePage({ course }: { course: Course }) {
+export async function UpdateCoursePage(
+    props: PageProps<"/admin/courses/[id]/update">,
+) {
+    const id = await props.params.then((v) => v.id)
+    const course = await getCourseById(id)
 
-    const router = useRouter();
     return (
         <Page>
             <PageHeader>
-                <PageTitle backTo='/admin/courses'>Update Course</PageTitle>
+                <PageTitle backTo="/admin/courses">
+                    Update Course
+                </PageTitle>
             </PageHeader>
-            <div className='max-w-lg m-auto'>
-                <CourseForm type='UPDATE' existedValue={course} onSuccess={() => router.push("/admin/courses")} />
-            </div>
+            <UpdateCourse course={course} />
         </Page>
     )
 }

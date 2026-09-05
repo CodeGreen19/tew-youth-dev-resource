@@ -1,34 +1,24 @@
-"use client"
-import { Page, PageHeader, PageTitle } from '@/components/shared/page';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Course } from '../types';
+import {
+    Page,
+    PageHeader,
+    PageTitle,
+} from "@/components/shared/page"
+import CourseDetails from "../components/course-details"
+import { getCourseById } from "../queries"
 
-export function CourseDetailsPage({ course }: { course: Course }) {
-
+export async function CourseDetailsPage(
+    props: PageProps<"/admin/courses/[id]/details">,
+) {
+    const id = await props.params.then((v) => v.id)
+    const course = await getCourseById(id)
     return (
         <Page>
             <PageHeader>
-                <PageTitle backTo='/admin/courses'>Course Details</PageTitle>
+                <PageTitle backTo="/admin/courses">
+                    Course Details
+                </PageTitle>
             </PageHeader>
-            <div className='max-w-lg m-auto'>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            {course.name}
-                        </CardTitle>
-                        <CardDescription>
-                            {course.description}
-                        </CardDescription>
-
-                    </CardHeader>
-                    <CardContent>
-                        <div className='aspect-video rounded-2xl bg-accent w-full'></div>
-                    </CardContent>
-                    <CardFooter>
-                        <div>Created At : {course.createdAt.toLocaleDateString()}</div>
-                    </CardFooter>
-                </Card>
-            </div>
+            <CourseDetails course={course} />
         </Page>
     )
 }

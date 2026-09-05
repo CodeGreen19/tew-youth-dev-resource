@@ -1,17 +1,32 @@
-"use cache"
+import { db } from "@/drizzle/db"
+import { withPermission } from "@/lib/dal"
+import { cacheTag } from "next/cache"
 
-import { db } from "@/drizzle/db";
-import { cacheLife, cacheTag } from "next/cache";
+export async function getCourses_s() {
+    // cacheTag("courses")
 
-export async function getCourses() {
-    cacheTag("courses");
-    cacheLife("max")
-    return await db.query.courses.findMany({ orderBy: { createdAt: "desc" } });
+    return await db.query.courses.findMany({
+        orderBy: { createdAt: "desc" },
+    })
 }
+export const getCourses = withPermission(
+    { course: ["view"] },
+    async () => {
+        "use cache"
+        cacheTag("courses")
+
+        return await db.query.courses.findMany({
+            orderBy: { createdAt: "desc" },
+        })
+    },
+)
 
 export async function getCourseById(id: string) {
+    "use cache"
     cacheTag(`course:${id}`)
-    const res = await db.query.courses.findFirst({ where: { id } });
+    const res = await db.query.courses.findFirst({
+        where: { id },
+    })
     if (!res) {
         throw new Error("Not Found!")
     }
