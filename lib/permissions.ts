@@ -20,9 +20,9 @@ const statement = {
 export const ac = createAccessControl(statement)
 
 export const admin = ac.newRole({
-    dashboard: statement.dashboard,
+    dashboard: ["view"],
     branch: statement.branch,
-    course: statement.course,
+    course: ["view", "create", "delete", "update"],
     ...adminAc.statements,
 })
 export const manager = ac.newRole({

@@ -2,7 +2,11 @@
 
 import { createColumnHelper } from "@tanstack/react-table"
 
-import { MoreHorizontal } from "lucide-react"
+import {
+    Expand,
+    MoreHorizontal,
+    SquareArrowOutUpRight,
+} from "lucide-react"
 
 import { DataTableFeatures } from "@/components/table/data-table-features"
 import { Button } from "@/components/ui/button"
@@ -18,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { User } from "../types"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<
@@ -84,47 +89,19 @@ export const columns = columnHelper.columns([
     columnHelper.display({
         id: "actions",
         cell: ({ row }) => {
-            const payment = row.original
-
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger
-                        render={
-                            <Button
-                                variant="ghost"
-                                className="h-8 w-8 p-0"
-                            />
-                        }
-                    >
-                        <span className="sr-only">
-                            Open menu
-                        </span>
-                        <MoreHorizontal className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuGroup>
-                            <DropdownMenuLabel>
-                                Actions
-                            </DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() =>
-                                    navigator.clipboard.writeText(
-                                        payment.id,
-                                    )
-                                }
-                            >
-                                Copy payment ID
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                View customer
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                View payment details
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <Button
+                    nativeButton={false}
+                    render={
+                        <Link
+                            href={`/admin/users/${row.original.id}`}
+                        />
+                    }
+                    variant={"ghost"}
+                    size={"icon"}
+                >
+                    <SquareArrowOutUpRight />
+                </Button>
             )
         },
     }),

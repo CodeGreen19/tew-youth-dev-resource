@@ -1,56 +1,103 @@
 "use client"
 
-import { cn } from '@/lib/utils'
-import { ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
-import { ComponentProps, ReactNode } from 'react'
+import { cn } from "@/lib/utils"
+import { ChevronLeft } from "lucide-react"
+import Link from "next/link"
+import { ComponentProps, ReactNode } from "react"
 
 // Page Component
-export interface PageProps extends ComponentProps<'div'> {
+export interface PageProps extends ComponentProps<"div"> {
     children: ReactNode
 }
 
-export function Page({ children, className, ...props }: PageProps) {
+export function Page({
+    children,
+    className,
+    ...props
+}: PageProps) {
     return (
-        <div className={cn('space-y-5', className)} {...props}>
+        <div
+            className={cn("space-y-5", className)}
+            {...props}
+        >
             {children}
         </div>
     )
 }
 
 // PageHeader Component
-export interface PageHeaderProps extends ComponentProps<'div'> {
+export interface PageHeaderProps extends ComponentProps<"div"> {
     children: ReactNode
 }
 
-export function PageHeader({ children, className, ...props }: PageHeaderProps) {
+export function PageHeader({
+    children,
+    className,
+    ...props
+}: PageHeaderProps) {
     return (
-        <div className={cn('flex items-center justify-between', className)} {...props}>
+        <div
+            className={cn(
+                "flex items-center justify-between",
+                className,
+            )}
+            {...props}
+        >
             {children}
         </div>
     )
 }
 // PageTitle Component
-export interface PageTitleProps extends ComponentProps<'div'> {
-    children: ReactNode,
+export interface PageTitleProps extends ComponentProps<"div"> {
+    children: ReactNode
     backTo?: string
 }
 
-export function PageTitle({ children, className, backTo, ...props }: PageTitleProps) {
+export function PageTitle({
+    children,
+    className,
+    backTo,
+    ...props
+}: PageTitleProps) {
     return (
-        <div className={cn('text-xl md:text-2xl font-bold', className)} {...props}>
-            {backTo ? <Link className='flex items-center gap-1' href={backTo}><ChevronLeft /> {children}</Link> : <span>{children}</span>}
+        <div
+            className={cn(
+                "text-xl md:text-2xl font-bold",
+                className,
+            )}
+            {...props}
+        >
+            {backTo ? (
+                <Link
+                    className="flex items-center gap-1"
+                    href={backTo}
+                >
+                    <ChevronLeft /> {children}
+                </Link>
+            ) : (
+                <span>{children}</span>
+            )}
         </div>
     )
 }
 // PageTitle Component
-export interface PageTitleProps extends ComponentProps<'div'> {
+export interface PageTitleProps extends ComponentProps<"div"> {
     children: ReactNode
 }
 
-export function PageAction({ children, className, ...props }: PageTitleProps) {
+export function PageAction({
+    children,
+    className,
+    ...props
+}: PageTitleProps) {
     return (
-        <div className={cn('flex items-center gap-1', className)} {...props}>
+        <div
+            className={cn(
+                "flex items-center gap-1",
+                className,
+            )}
+            {...props}
+        >
             {children}
         </div>
     )

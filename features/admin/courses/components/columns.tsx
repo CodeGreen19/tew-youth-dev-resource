@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Course } from "../types"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import DeleteCourseDialog from "./delete-course-dialog"
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
 import { Badge } from "@/components/ui/badge"
@@ -111,11 +111,16 @@ export const columns = columnHelper.columns([
                 mutationFn: changeCourseStatus,
             })
 
-            const session = authClient.useSession()
+            const { data } = authClient.useSession()
             const canUpdate =
                 authClient.admin.checkRolePermission({
-                    role: "admin",
+                    role: data?.user.role as "admin",
                     permissions: { course: ["update"] },
+                })
+            const canDelete =
+                authClient.admin.checkRolePermission({
+                    role: data?.user.role as "admin",
+                    permissions: { course: ["delete"] },
                 })
 
             return (
@@ -211,17 +216,21 @@ export const columns = columnHelper.columns([
                                 >
                                     View In Detail
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                    onClick={() =>
-                                        setDeleteDialogInfo(
-                                            row.original,
-                                        )
-                                    }
-                                    variant="destructive"
-                                >
-                                    Delete
-                                </DropdownMenuItem>
+                                {canDelete && (
+                                    <Fragment>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                            onClick={() =>
+                                                setDeleteDialogInfo(
+                                                    row.original,
+                                                )
+                                            }
+                                            variant="destructive"
+                                        >
+                                            Delete
+                                        </DropdownMenuItem>
+                                    </Fragment>
+                                )}
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>

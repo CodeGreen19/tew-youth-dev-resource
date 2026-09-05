@@ -13,7 +13,7 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { toast } from "@/components/ui/toast"
 import { capitalize } from "@/lib/helpers"
 import { useMutation } from "@tanstack/react-query"
-import { createUser, updateUser } from "../actions"
+import { createUser } from "../actions"
 import { userSchema, UserSchemaType } from "../schemas"
 
 export function UserForm({
@@ -45,17 +45,6 @@ export function UserForm({
             toast.add({ title: message, type: "error" }),
     })
 
-    const updateMutation = useMutation({
-        mutationFn: updateUser,
-        onSuccess: ({ message }) => {
-            toast.add({ title: message, type: "success" })
-            onSuccess?.()
-            form.reset()
-        },
-        onError: ({ message }) =>
-            toast.add({ title: message, type: "error" }),
-    })
-
     const form = useAppForm({
         defaultValues,
         validators: {
@@ -65,17 +54,10 @@ export function UserForm({
             if (type === "ADD") {
                 addMutation.mutate(value)
             }
-            if (type === "UPDATE" && existedValue) {
-                updateMutation.mutate({
-                    ...value,
-                    id: existedValue.id,
-                })
-            }
         },
     })
 
-    const isSubmitting =
-        updateMutation.isPending || addMutation.isPending
+    const isSubmitting = addMutation.isPending
     return (
         <Card>
             <CardHeader>
