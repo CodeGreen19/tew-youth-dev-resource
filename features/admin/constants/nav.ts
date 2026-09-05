@@ -14,10 +14,10 @@ export const navData: NavDataType = {
                     title: "Dashboard",
                     url: "/admin/dashboard",
                 },
-                {
-                    title: "Branches",
-                    url: "/admin/branches",
-                },
+                // {
+                //     title: "Branches",
+                //     url: "/admin/branches",
+                // },
             ],
         },
         {
@@ -28,10 +28,10 @@ export const navData: NavDataType = {
                     title: "Courses",
                     url: "/admin/courses",
                 },
-                {
-                    title: "Form Builder",
-                    url: "/admin/form-builder",
-                },
+                // {
+                //     title: "Form Builder",
+                //     url: "/admin/form-builder",
+                // },
             ],
         },
         {

@@ -6,6 +6,8 @@ import {
 
 const statement = {
     ...defaultStatements,
+    dashboard: ["view"] as const,
+    branch: ["view"] as const,
     course: [
         "create",
         "view",
@@ -17,40 +19,16 @@ const statement = {
 
 export const ac = createAccessControl(statement)
 
-export const user = ac.newRole({
-    course: ["view"],
-})
-
 export const admin = ac.newRole({
-    course: ["create", "delete", "view"],
-
+    dashboard: statement.dashboard,
+    branch: statement.branch,
+    course: statement.course,
     ...adminAc.statements,
 })
-
-export const superAdmin = ac.newRole({
-    course: ["view", "change-status"],
+export const manager = ac.newRole({
+    course: statement.course,
 })
 
-export const testingPermissions = {
-    course: [
-        "create",
-        "view",
-        "change-status",
-        "update",
-        "delete",
-    ] as const,
-    branches: [
-        "create",
-        "view",
-        "change-status",
-        "update",
-        "delete",
-    ] as const,
-    users: [
-        "create",
-        "view",
-        "change-status",
-        "update",
-        "delete",
-    ] as const,
-}
+export const moderator = ac.newRole({
+    course: ["view"],
+})

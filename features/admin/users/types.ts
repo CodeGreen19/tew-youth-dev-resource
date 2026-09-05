@@ -1,3 +1,5 @@
-import { getUsers } from "./queries";
+import { getUsers } from "./queries"
 
-export type User = Awaited<ReturnType<typeof getUsers>>["users"][number]
+export type User = Awaited<
+    ReturnType<typeof getUsers>
+>["users"][number]

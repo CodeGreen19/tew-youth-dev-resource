@@ -113,6 +113,7 @@ export function AdminSidebar({
                     user={{
                         name: session.data?.user.name,
                         email: session.data?.user.email,
+                        role: session.data?.user.role,
                     }}
                 />
             </SidebarFooter>

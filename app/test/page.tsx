@@ -1,27 +1,22 @@
-import React from "react";
+"use client"
+
+import { Button } from "@/components/ui/button"
+import { authClient } from "@/lib/auth-client"
 
 export default function page() {
-  return (
-    <div>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum tempora
-      placeat doloribus consequuntur quo assumenda. Dolor, voluptates repellat
-      tempora rerum commodi voluptas beatae error quas ipsa recusandae iusto
-      perferendis tempore?
-    </div>
-  );
+    return (
+        <div>
+            <Button
+                onClick={async () => {
+                    await authClient.signUp.email({
+                        email: "ahmed@gmail.com",
+                        name: "Ahmed",
+                        password: "passcode",
+                    })
+                }}
+            >
+                Create Admin
+            </Button>
+        </div>
+    )
 }
-
-function add(a: number, b: number): number {
-  return a + b;
-}
-
-function wrapper(
-  action: (a: number, b: number) => number,
-): (a: number, b: number) => number {
-  return (...args: [number, number]) => {
-    console.log("before", args);
-    return action(...args);
-  };
-}
-
-const wrapperAdd = wrapper((a, b) => a + b);
