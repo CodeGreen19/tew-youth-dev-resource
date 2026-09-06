@@ -2,7 +2,6 @@ export const courseStatuses = [
     "active",
     "in-active",
     "up-coming",
+] as const
 
-] as const;
-
-export type CourseStatus = typeof courseStatuses[number];
+export type CourseStatus = (typeof courseStatuses)[number]

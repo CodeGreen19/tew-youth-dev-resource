@@ -1,7 +1,57 @@
-import { defineRelations } from "drizzle-orm";
-import * as schema from "./schema";
+import { defineRelations } from "drizzle-orm"
+import * as schema from "./schema"
 
 export const relations = defineRelations(schema, (r) => ({
+    users: {
+        accounts: r.many.accounts(),
+        sessions: r.many.sessions(),
+        members: r.many.members(),
+        invitations: r.many.invitations(),
+    },
+
+    sessions: {
+        user: r.one.users({
+            from: r.sessions.userId,
+            to: r.users.id,
+        }),
+    },
+
+    accounts: {
+        user: r.one.users({
+            from: r.accounts.userId,
+            to: r.users.id,
+        }),
+    },
+
+    organizations: {
+        members: r.many.members(),
+        invitations: r.many.invitations(),
+    },
+
+    members: {
+        organization: r.one.organizations({
+            from: r.members.organizationId,
+            to: r.organizations.id,
+        }),
+
+        user: r.one.users({
+            from: r.members.userId,
+            to: r.users.id,
+        }),
+    },
+
+    invitations: {
+        organization: r.one.organizations({
+            from: r.invitations.organizationId,
+            to: r.organizations.id,
+        }),
+
+        user: r.one.users({
+            from: r.invitations.inviterId,
+            to: r.users.id,
+        }),
+    },
+
     forms: {
         versions: r.many.formVersions(),
     },
@@ -11,6 +61,7 @@ export const relations = defineRelations(schema, (r) => ({
             from: r.formVersions.formId,
             to: r.forms.id,
         }),
+
         submissions: r.many.formSubmissions(),
     },
 
@@ -20,20 +71,4 @@ export const relations = defineRelations(schema, (r) => ({
             to: r.formVersions.id,
         }),
     },
-
-    user: {
-        accounts: r.many.account(),
-        sessions: r.many.session()
-    },
-    account: {
-        user: r.one.user({
-            from: r.account.userId,
-            to: r.user.id
-        })
-    }, session: {
-        user: r.one.user({
-            from: r.session.userId,
-            to: r.user.id
-        })
-    }
-}));
+}))

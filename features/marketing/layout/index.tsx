@@ -1,10 +1,10 @@
-import { Navbar } from "./navbar";
+import { Navbar } from "./navbar"
 
-export function MarketingLayout(props: LayoutProps<"/">) {
+export function MarketingLayot(props: LayoutProps<"/">) {
     return (
         <div>
             <Navbar />
-
-            {props.children}</div>
+            {props.children}
+        </div>
     )
 }

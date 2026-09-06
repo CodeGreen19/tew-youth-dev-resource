@@ -1,13 +1,42 @@
-import { Logo } from '@/components/logo'
-import { Button } from '@/components/ui/button'
-import React from 'react'
+"use client"
+
+import { Logo } from "@/components/logo"
+import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import { authClient } from "@/lib/auth-client"
+import Link from "next/link"
 
 export function Navbar() {
+    const { data: session, isPending } =
+        authClient.useSession()
+
     return (
-        <div className='border-b'>
-            <div className='max-w-7xl m-auto flex items-center justify-between h-16 px-4 xl:px-0'>
+        <div className="h-20 border-b bg-background">
+            <div className="flex items-center h-full justify-between px-4 max-w-7xl xl:px-0 m-auto">
                 <Logo />
-                <Button variant={"ghost"}>Sign in</Button>
+                <div>
+                    {isPending ? (
+                        <Skeleton className="h-10 w-24" />
+                    ) : session ? (
+                        <Button
+                            nativeButton={false}
+                            render={
+                                <Link href="/company/overviews" />
+                            }
+                            variant="default"
+                        >
+                            Dashboard
+                        </Button>
+                    ) : (
+                        <Button
+                            nativeButton={false}
+                            render={<Link href="/login" />}
+                            variant="ghost"
+                        >
+                            Login
+                        </Button>
+                    )}
+                </div>
             </div>
         </div>
     )

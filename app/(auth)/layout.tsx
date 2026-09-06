@@ -1,8 +1,5 @@
-import { AuthLayout } from '@/features/auth/layout'
-import React from 'react'
+import { AuthLayout } from "@/features/auth/layout"
 
 export default function layout(props: LayoutProps<"/">) {
-  return (
-    <AuthLayout {...props} />
-  )
+    return <AuthLayout {...props} />
 }

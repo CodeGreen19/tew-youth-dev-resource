@@ -1,8 +1,5 @@
-import { MarketingLayout } from '@/features/marketing/layout'
-import React from 'react'
+import { MarketingLayot } from "@/features/marketing/layout"
 
 export default function layout(props: LayoutProps<"/">) {
-    return (
-        <MarketingLayout {...props} />
-    )
+    return <MarketingLayot {...props} />
 }
