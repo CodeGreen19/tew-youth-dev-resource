@@ -26,8 +26,15 @@ export const relations = defineRelations(schema, (r) => ({
     organizations: {
         members: r.many.members(),
         invitations: r.many.invitations(),
+        organizationRoles: r.many.organizationRoles(),
     },
 
+    organizationRoles: {
+        organization: r.one.organizations({
+            from: r.organizationRoles.organizationId,
+            to: r.organizations.id,
+        }),
+    },
     members: {
         organization: r.one.organizations({
             from: r.members.organizationId,

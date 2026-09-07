@@ -61,7 +61,6 @@ export const accounts = pgTable(
     "accounts",
     {
         id: text("id").primaryKey(),
-        issuer: text("issuer").notNull(),
         accountId: text("account_id").notNull(),
         providerId: text("provider_id").notNull(),
         userId: text("user_id")
@@ -88,10 +87,6 @@ export const accounts = pgTable(
             .notNull(),
     },
     (table) => [
-        uniqueIndex("accounts_issuer_accountId_uidx").on(
-            table.issuer,
-            table.accountId,
-        ),
         index("accounts_userId_idx").on(table.userId),
     ],
 )
@@ -126,6 +121,32 @@ export const organizations = pgTable("organizations", {
     createdAt: timestamp("created_at").notNull(),
     metadata: text("metadata"),
 })
+
+export const organizationRoles = pgTable(
+    "organization_roles",
+    {
+        id: text("id").primaryKey(),
+        organizationId: text("organization_id")
+            .notNull()
+            .references(() => organizations.id, {
+                onDelete: "cascade",
+            }),
+        role: text("role").notNull(),
+        permission: text("permission").notNull(),
+        createdAt: timestamp("created_at")
+            .defaultNow()
+            .notNull(),
+        updatedAt: timestamp("updated_at").$onUpdate(
+            () => /* @__PURE__ */ new Date(),
+        ),
+    },
+    (table) => [
+        index("organizationRoles_organizationId_idx").on(
+            table.organizationId,
+        ),
+        index("organizationRoles_role_idx").on(table.role),
+    ],
+)
 
 export const members = pgTable(
     "members",

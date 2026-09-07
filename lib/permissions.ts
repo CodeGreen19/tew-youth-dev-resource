@@ -28,6 +28,6 @@ export const admin = ac.newRole({
     ...adminAc.statements,
 })
 export const owner = ac.newRole({
-    course: ["delete"],
+    course: ["view", "create", "update"],
     ...ownerAc.statements,
 })
