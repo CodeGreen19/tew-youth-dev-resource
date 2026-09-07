@@ -22,6 +22,10 @@ export const users = pgTable("users", {
         .defaultNow()
         .$onUpdate(() => /* @__PURE__ */ new Date())
         .notNull(),
+    role: text("role"),
+    banned: boolean("banned").default(false),
+    banReason: text("ban_reason"),
+    banExpires: timestamp("ban_expires"),
 })
 
 export const sessions = pgTable(
@@ -46,6 +50,7 @@ export const sessions = pgTable(
         activeOrganizationId: text(
             "active_organization_id",
         ),
+        impersonatedBy: text("impersonated_by"),
     },
     (table) => [
         index("sessions_userId_idx").on(table.userId),

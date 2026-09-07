@@ -1,14 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
 
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
-    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
@@ -17,12 +15,13 @@ import {
     SidebarMenuSubItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
+import { authClient } from "@/lib/auth-client"
+import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
 import { navData } from "../constants"
-import { authClient } from "@/lib/auth-client"
 import { AppNavUser } from "./app-nav-user"
+import { AppSidebarHeader } from "./app-sidebar-header"
 
 export function AppSidebar({
     ...props
@@ -33,27 +32,7 @@ export function AppSidebar({
 
     return (
         <Sidebar {...props}>
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton
-                            size="lg"
-                            render={
-                                <div>
-                                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-background text-sidebar-background-foreground bg-primary text-background">
-                                        <GalleryVerticalEnd className="size-4" />
-                                    </div>
-                                    <div className="flex flex-col gap-0.5 leading-none">
-                                        <span className="font-medium text-lg">
-                                            {org.data?.name}
-                                        </span>
-                                    </div>
-                                </div>
-                            }
-                        ></SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
+            <AppSidebarHeader />
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarMenu>
@@ -111,6 +90,7 @@ export function AppSidebar({
                     user={{
                         name: session.data?.user.name,
                         email: session.data?.user.email,
+                        role: session.data?.user.role,
                     }}
                 />
             </SidebarFooter>
