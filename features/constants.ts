@@ -20,5 +20,15 @@ export const navData: NavDataType = {
                 },
             ],
         },
+        {
+            title: "Manage",
+
+            items: [
+                {
+                    title: "Branch Applications",
+                    url: "/company/branch-applications",
+                },
+            ],
+        },
     ],
 }

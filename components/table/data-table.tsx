@@ -6,7 +6,7 @@ import {
     type ColumnFiltersState,
     type ColumnVisibilityState,
     type RowData,
-    type SortingState
+    type SortingState,
 } from "@tanstack/react-table"
 
 import {
@@ -20,16 +20,21 @@ import {
 
 import { Input } from "@/components/ui/input"
 import React from "react"
-import { features, type DataTableFeatures } from "./data-table-features"
+import {
+    features,
+    type DataTableFeatures,
+} from "./data-table-features"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableSelectAction } from "./data-table-select-action"
 import { DataTableViewOptions } from "./data-table-view-options"
 interface DataTableProps<TData extends RowData> {
     columns: ColumnDef<DataTableFeatures, TData>[]
-    data: TData[],
-    searchBy?: "name" | "email",
-    searchPlaceholder?: string,
-    BulkActionComponent?: React.ComponentType<{ data: TData[] }>
+    data: TData[]
+    searchBy?: "name" | "email" | "branchName"
+    searchPlaceholder?: string
+    BulkActionComponent?: React.ComponentType<{
+        data: TData[]
+    }>
 }
 
 export function DataTable<TData extends RowData>({
@@ -37,16 +42,18 @@ export function DataTable<TData extends RowData>({
     data,
     searchBy,
     searchPlaceholder,
-    BulkActionComponent
+    BulkActionComponent,
 }: DataTableProps<TData>) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+    const [sorting, setSorting] =
+        React.useState<SortingState>([])
+    const [columnFilters, setColumnFilters] =
+        React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] =
         React.useState<ColumnVisibilityState>({})
 
-    const [rowSelection, setRowSelection] = React.useState({})
+    const [rowSelection, setRowSelection] = React.useState(
+        {},
+    )
 
     const table = useTable({
         features,
@@ -57,74 +64,113 @@ export function DataTable<TData extends RowData>({
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
 
-
         state: {
             sorting,
             columnFilters: columnFilters,
             columnVisibility,
-            rowSelection
-        }
+            rowSelection,
+        },
     })
-
-
 
     // test
     const selectedRows = table.getSelectedRowModel().rows
 
-
-    const selectedData = selectedRows.map((row) => row.original)
-
+    const selectedData = selectedRows.map(
+        (row) => row.original,
+    )
 
     return (
         <div>
             <div className="flex items-center justify-between  gap-2 py-4">
-
                 <Input
-                    placeholder={searchPlaceholder || "Search..."}
-                    value={(table.getColumn(searchBy || "")?.getFilterValue() as string) ?? ""}
+                    placeholder={
+                        searchPlaceholder || "Search..."
+                    }
+                    value={
+                        (table
+                            .getColumn(searchBy || "")
+                            ?.getFilterValue() as string) ??
+                        ""
+                    }
                     onChange={(event) =>
-                        table.getColumn(searchBy || "")?.setFilterValue(event.target.value)
+                        table
+                            .getColumn(searchBy || "")
+                            ?.setFilterValue(
+                                event.target.value,
+                            )
                     }
                     className="max-w-sm"
                 />
-
 
                 <DataTableViewOptions table={table} />
             </div>
             <div className="overflow-hidden  border-y">
                 <Table>
                     <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder ? null : (
-                                                <table.FlexRender header={header} />
-                                            )}
-                                        </TableHead>
-                                    )
-                                })}
-                            </TableRow>
-                        ))}
+                        {table
+                            .getHeaderGroups()
+                            .map((headerGroup) => (
+                                <TableRow
+                                    key={headerGroup.id}
+                                >
+                                    {headerGroup.headers.map(
+                                        (header) => {
+                                            return (
+                                                <TableHead
+                                                    key={
+                                                        header.id
+                                                    }
+                                                >
+                                                    {header.isPlaceholder ? null : (
+                                                        <table.FlexRender
+                                                            header={
+                                                                header
+                                                            }
+                                                        />
+                                                    )}
+                                                </TableHead>
+                                            )
+                                        },
+                                    )}
+                                </TableRow>
+                            ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            <table.FlexRender cell={cell} />
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
+                        {table.getRowModel().rows
+                            ?.length ? (
+                            table
+                                .getRowModel()
+                                .rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected() &&
+                                            "selected"
+                                        }
+                                    >
+                                        {row
+                                            .getVisibleCells()
+                                            .map((cell) => (
+                                                <TableCell
+                                                    key={
+                                                        cell.id
+                                                    }
+                                                >
+                                                    <table.FlexRender
+                                                        cell={
+                                                            cell
+                                                        }
+                                                    />
+                                                </TableCell>
+                                            ))}
+                                    </TableRow>
+                                ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
                                     No results.
                                 </TableCell>
                             </TableRow>
@@ -134,14 +180,11 @@ export function DataTable<TData extends RowData>({
             </div>
             <div className=" py-4">
                 <DataTablePagination table={table} />
-
             </div>
-            <DataTableSelectAction table={table} BulkActionComponent={BulkActionComponent} />
-
+            <DataTableSelectAction
+                table={table}
+                BulkActionComponent={BulkActionComponent}
+            />
         </div>
-
-
     )
 }
-
-

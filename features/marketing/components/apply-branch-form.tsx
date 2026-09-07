@@ -11,59 +11,52 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup } from "@/components/ui/field"
-import { loginSchema, LoginSchemaType } from "../schemas"
 import { toast } from "@/components/ui/toast"
-import { useSelector } from "@tanstack/react-form"
-import { authClient } from "@/lib/auth-client"
+import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { applyForBranch } from "../actions"
+import {
+    branchApplicationSchema,
+    BranchApplicationSchemaType,
+} from "../schemas"
 
-export function LoginForm() {
+export function ApplyBranchForm() {
     const router = useRouter()
-    const defaultValues: LoginSchemaType = {
-        email: "",
-        password: "",
+    const defaultValues: BranchApplicationSchemaType = {
+        ownerName: "",
+        branchName: "",
     }
+
+    const applyBranchMutation = useMutation({
+        mutationFn: applyForBranch,
+        onSuccess: ({ message }) => {
+            toast.add({ title: message, type: "success" })
+
+            form.reset()
+        },
+        onError: ({ message }) =>
+            toast.add({ title: message, type: "error" }),
+    })
     const form = useAppForm({
         defaultValues,
         validators: {
-            onChange: loginSchema,
+            onChange: branchApplicationSchema,
         },
-        onSubmit: async ({ value }) => {
-            const res = await authClient.signIn.email({
-                ...value,
-            })
-            if (res.error) {
-                toast.add({
-                    title:
-                        res.error.message ||
-                        res.error.statusText,
-                    type: "error",
-                })
-            }
-            if (res.data) {
-                toast.add({
-                    title: "Logged in successfully",
-                    type: "success",
-                })
-                router.push("/company/overviews")
-            }
-        },
+        onSubmit: async ({ value }) =>
+            applyBranchMutation.mutate(value),
     })
-    const isSubmitting = useSelector(
-        form.store,
-        (state) => state.isSubmitting,
-    )
+    const isSubmitting = applyBranchMutation.isPending
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Login</CardTitle>
+                <CardTitle>Branch</CardTitle>
                 <CardDescription>
-                    Enter your credentials to login in
+                    Enter your branch details
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <form
-                    id="login-form"
+                    id="branch-form"
                     onSubmit={(e) => {
                         e.preventDefault()
                         form.handleSubmit()
@@ -71,20 +64,20 @@ export function LoginForm() {
                 >
                     <FieldGroup>
                         <form.AppField
-                            name="email"
+                            name="ownerName"
                             children={(field) => (
                                 <field.TextField
-                                    label="Email Address"
-                                    placeholder="Enter your email address"
+                                    label="Owner Name"
+                                    placeholder="Enter owner name"
                                 />
                             )}
                         />
                         <form.AppField
-                            name="password"
+                            name="branchName"
                             children={(field) => (
                                 <field.TextField
-                                    label="Password"
-                                    placeholder="********"
+                                    label="Branch Name"
+                                    placeholder="Enter branch name"
                                 />
                             )}
                         />
@@ -96,7 +89,7 @@ export function LoginForm() {
                     <Button
                         disabled={isSubmitting}
                         type="submit"
-                        form="login-form"
+                        form="branch-form"
                     >
                         Submit
                     </Button>

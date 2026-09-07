@@ -36,7 +36,7 @@ import { useTransition } from "react"
 import { authClient } from "@/lib/auth-client"
 import { Badge } from "@/components/ui/badge"
 
-export function DashboardNavUser({
+export function AppNavUser({
     user,
     isPending,
 }: {

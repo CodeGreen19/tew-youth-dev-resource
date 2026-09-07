@@ -22,9 +22,9 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { navData } from "../constants"
 import { authClient } from "@/lib/auth-client"
-import { DashboardNavUser } from "./dashboard-nav-user"
+import { AppNavUser } from "./app-nav-user"
 
-export function DashboardSidebar({
+export function AppSidebar({
     ...props
 }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname()
@@ -106,7 +106,7 @@ export function DashboardSidebar({
             </SidebarContent>
             <SidebarRail />
             <SidebarFooter>
-                <DashboardNavUser
+                <AppNavUser
                     isPending={session.isPending}
                     user={{
                         name: session.data?.user.name,

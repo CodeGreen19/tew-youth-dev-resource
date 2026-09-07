@@ -28,13 +28,26 @@ export function Navbar() {
                             Dashboard
                         </Button>
                     ) : (
-                        <Button
-                            nativeButton={false}
-                            render={<Link href="/login" />}
-                            variant="ghost"
-                        >
-                            Login
-                        </Button>
+                        <div>
+                            <Button
+                                nativeButton={false}
+                                render={
+                                    <Link href="/apply-branch" />
+                                }
+                                variant="outline"
+                            >
+                                Apply for Branch
+                            </Button>
+                            <Button
+                                nativeButton={false}
+                                render={
+                                    <Link href="/login" />
+                                }
+                                variant="ghost"
+                            >
+                                Login
+                            </Button>
+                        </div>
                     )}
                 </div>
             </div>

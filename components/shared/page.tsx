@@ -102,3 +102,22 @@ export function PageAction({
         </div>
     )
 }
+
+export interface PageContentProps extends ComponentProps<"div"> {
+    children: ReactNode
+}
+
+export function PageContent({
+    children,
+    className,
+    ...props
+}: PageContentProps) {
+    return (
+        <div
+            className={cn("space-y-6", className)}
+            {...props}
+        >
+            {children}
+        </div>
+    )
+}

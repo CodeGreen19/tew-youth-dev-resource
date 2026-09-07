@@ -10,7 +10,7 @@ import {
 import { usePathname } from "next/navigation"
 import { navData } from "../constants"
 
-export function DashboardBreadcrumb() {
+export function AppBreadcrumb() {
     const pathname = usePathname()
     return (
         <Breadcrumb>

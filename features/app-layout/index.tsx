@@ -4,21 +4,21 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Suspense } from "react"
-import { DashboardBreadcrumb } from "./dashboard-breadcrumb"
-import { DashboardSidebar } from "./dashboard-sidebar"
+import { AppBreadcrumb } from "./app-breadcrumb"
+import { AppSidebar } from "./app-sidebar"
 
-export function DashboardLayout(props: LayoutProps<"/">) {
+export function AppLayout(props: LayoutProps<"/">) {
     return (
         <SidebarProvider>
             <Suspense>
-                <DashboardSidebar variant="inset" />
+                <AppSidebar variant="inset" />
             </Suspense>
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2">
                     <div className="flex items-center gap-2 px-3">
                         <SidebarTrigger />
                         <Suspense>
-                            <DashboardBreadcrumb />
+                            <AppBreadcrumb />
                         </Suspense>
                     </div>
                 </header>
