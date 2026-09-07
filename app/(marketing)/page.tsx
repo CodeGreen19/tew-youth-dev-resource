@@ -1,5 +1,6 @@
+import { HomePage } from "@/features/marketing/pages/home-page"
 import React from "react"
 
 export default function page() {
-    return <div>home page</div>
+    return <HomePage />
 }
