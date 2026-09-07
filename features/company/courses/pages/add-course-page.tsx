@@ -13,7 +13,7 @@ export function AddCoursePage() {
     return (
         <Page>
             <PageHeader>
-                <PageTitle backTo="/admin/courses">
+                <PageTitle backTo="/company/courses">
                     Add Course
                 </PageTitle>
             </PageHeader>
@@ -21,7 +21,7 @@ export function AddCoursePage() {
                 <CourseForm
                     type="ADD"
                     onSuccess={() =>
-                        router.push("/admin/courses")
+                        router.push("/company/courses")
                     }
                 />
             </div>

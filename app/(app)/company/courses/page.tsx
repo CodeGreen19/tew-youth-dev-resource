@@ -1,5 +1,5 @@
-import { ApplicationsPage } from "@/features/company/branch-applications/pages/applications-page"
+import { CoursesPage } from "@/features/company/courses/pages/courses-page"
 
 export default function page() {
-    return <ApplicationsPage />
+    return <CoursesPage />
 }

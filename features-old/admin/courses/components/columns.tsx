@@ -150,7 +150,7 @@ export const columns = columnHelper.columns([
                                     <DropdownMenuItem
                                         onClick={() =>
                                             router.push(
-                                                `/admin/courses/${row.original.id}/update`,
+                                                `/company/courses/${row.original.id}/update`,
                                             )
                                         }
                                     >
@@ -210,7 +210,7 @@ export const columns = columnHelper.columns([
                                 <DropdownMenuItem
                                     onClick={() =>
                                         router.push(
-                                            `/admin/courses/${row.original.id}/details`,
+                                            `/company/courses/${row.original.id}/details`,
                                         )
                                     }
                                 >

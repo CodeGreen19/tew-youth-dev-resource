@@ -16,7 +16,7 @@ export function UpdateCourse({
                 type="UPDATE"
                 existedValue={course}
                 onSuccess={() =>
-                    router.push("/admin/courses")
+                    router.push("/company/courses")
                 }
             />
         </div>

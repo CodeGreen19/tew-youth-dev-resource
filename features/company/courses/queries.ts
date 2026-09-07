@@ -1,30 +1,34 @@
 import { db } from "@/drizzle/db"
-import { withPermission } from "@/lib/dal"
-import { cacheTag } from "next/cache"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
-export const getCourses = withPermission(
-    { course: ["view"] },
-    async () => {
-        "use cache"
-        cacheTag("courses")
+export async function getCourses() {
+    const data = await auth.api.hasPermission({
+        body: {
+            permissions: {
+                course: ["view"],
+            },
+        },
+        headers: await headers(),
+    })
+    if (!data.success) {
+        throw new Error("Error occurs")
+    }
+    return await db.query.courses.findMany({
+        orderBy: (courses, { desc }) => [
+            desc(courses.createdAt),
+        ],
+    })
+}
 
-        return await db.query.courses.findMany({
-            orderBy: { createdAt: "desc" },
-        })
-    },
-)
+export async function getCourseById(id: string) {
+    const res = await db.query.courses.findFirst({
+        where: { id },
+    })
 
-export const getCourseById = withPermission(
-    { course: ["view"] },
-    async (_, id: string) => {
-        "use cache"
-        cacheTag(`course:${id}`)
-        const res = await db.query.courses.findFirst({
-            where: { id },
-        })
-        if (!res) {
-            throw new Error("Not Found!")
-        }
-        return res
-    },
-)
+    if (!res) {
+        throw new Error("Not Found!")
+    }
+
+    return res
+}

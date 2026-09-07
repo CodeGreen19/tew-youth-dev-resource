@@ -6,6 +6,7 @@ import {
     organization,
     admin as adminPlugin,
 } from "better-auth/plugins"
+import { ac, owner, admin, member } from "./permissions"
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -16,5 +17,15 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    plugins: [organization(), adminPlugin()],
+    plugins: [
+        organization({
+            ac,
+            roles: {
+                owner,
+                admin,
+                member,
+            },
+        }),
+        adminPlugin(),
+    ],
 })

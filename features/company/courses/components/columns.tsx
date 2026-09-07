@@ -112,16 +112,6 @@ export const columns = columnHelper.columns([
             })
 
             const { data } = authClient.useSession()
-            const canUpdate =
-                authClient.admin.checkRolePermission({
-                    role: data?.user.role as "admin",
-                    permissions: { course: ["update"] },
-                })
-            const canDelete =
-                authClient.admin.checkRolePermission({
-                    role: data?.user.role as "admin",
-                    permissions: { course: ["delete"] },
-                })
 
             return (
                 <div>
@@ -145,92 +135,88 @@ export const columns = columnHelper.columns([
                                     Actions
                                 </DropdownMenuLabel>
                             </DropdownMenuGroup>
-                            {canUpdate && (
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem
-                                        onClick={() =>
-                                            router.push(
-                                                `/admin/courses/${row.original.id}/update`,
-                                            )
-                                        }
-                                    >
-                                        Edit Course
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            )}
-                            {canUpdate && (
-                                <DropdownMenuSub>
-                                    <DropdownMenuSubTrigger>
-                                        Status
-                                    </DropdownMenuSubTrigger>
-                                    <DropdownMenuSubContent>
-                                        <DropdownMenuGroup>
-                                            {courseStatuses.map(
-                                                (
-                                                    status,
-                                                ) => (
-                                                    <DropdownMenuItem
-                                                        onClick={() =>
-                                                            mutation.mutate(
-                                                                {
-                                                                    id: row
-                                                                        .original
-                                                                        .id,
-                                                                    status,
-                                                                },
-                                                            )
-                                                        }
-                                                        className={
-                                                            "flex items-center justify-between"
-                                                        }
-                                                        key={
-                                                            status
-                                                        }
-                                                    >
-                                                        {" "}
-                                                        <span>
-                                                            {
-                                                                status
-                                                            }
-                                                        </span>{" "}
-                                                        {row
-                                                            .original
-                                                            .status ===
-                                                            status && (
-                                                            <Check />
-                                                        )}
-                                                    </DropdownMenuItem>
-                                                ),
-                                            )}
-                                        </DropdownMenuGroup>
-                                    </DropdownMenuSubContent>
-                                </DropdownMenuSub>
-                            )}
+
                             <DropdownMenuGroup>
                                 <DropdownMenuItem
                                     onClick={() =>
                                         router.push(
-                                            `/admin/courses/${row.original.id}/details`,
+                                            `/company/courses/${row.original.id}/update`,
+                                        )
+                                    }
+                                >
+                                    Edit Course
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>
+                                    Status
+                                </DropdownMenuSubTrigger>
+                                <DropdownMenuSubContent>
+                                    <DropdownMenuGroup>
+                                        {courseStatuses.map(
+                                            (status) => (
+                                                <DropdownMenuItem
+                                                    onClick={() =>
+                                                        mutation.mutate(
+                                                            {
+                                                                id: row
+                                                                    .original
+                                                                    .id,
+                                                                status,
+                                                            },
+                                                        )
+                                                    }
+                                                    className={
+                                                        "flex items-center justify-between"
+                                                    }
+                                                    key={
+                                                        status
+                                                    }
+                                                >
+                                                    {" "}
+                                                    <span>
+                                                        {
+                                                            status
+                                                        }
+                                                    </span>{" "}
+                                                    {row
+                                                        .original
+                                                        .status ===
+                                                        status && (
+                                                        <Check />
+                                                    )}
+                                                </DropdownMenuItem>
+                                            ),
+                                        )}
+                                    </DropdownMenuGroup>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.push(
+                                            `/company/courses/${row.original.id}/details`,
                                         )
                                     }
                                 >
                                     View In Detail
                                 </DropdownMenuItem>
-                                {canDelete && (
-                                    <Fragment>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                            onClick={() =>
-                                                setDeleteDialogInfo(
-                                                    row.original,
-                                                )
-                                            }
-                                            variant="destructive"
-                                        >
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </Fragment>
-                                )}
+
+                                <Fragment>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            setDeleteDialogInfo(
+                                                row.original,
+                                            )
+                                        }
+                                        variant="destructive"
+                                    >
+                                        Delete
+                                    </DropdownMenuItem>
+                                </Fragment>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>

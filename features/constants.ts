@@ -21,6 +21,16 @@ export const navData: NavDataType = {
             ],
         },
         {
+            title: "Feature",
+
+            items: [
+                {
+                    title: "Courses",
+                    url: "/company/courses",
+                },
+            ],
+        },
+        {
             title: "Manage",
 
             items: [
