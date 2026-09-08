@@ -29,6 +29,8 @@ export function BranchDetailsForm({
         branchEmail: "",
         branchAge: 0,
         noOfComputers: 1,
+        nidPdf: null,
+        another: null,
     }
 
     const form = useAppForm({
@@ -61,6 +63,12 @@ export function BranchDetailsForm({
                     }}
                 >
                     <FieldGroup>
+                        <form.AppField
+                            name="nidPdf"
+                            children={(field) => (
+                                <field.AvatarField label="Thumbnail" />
+                            )}
+                        />
                         <form.AppField
                             name="branchName"
                             children={(field) => (
@@ -97,6 +105,19 @@ export function BranchDetailsForm({
                                 <field.NumberField
                                     label="Branch Age"
                                     placeholder="Enter branch age"
+                                />
+                            )}
+                        />
+                        <form.AppField
+                            name="another"
+                            children={(field) => (
+                                <field.FileField
+                                    label="Branch Age"
+                                    accept={{
+                                        "application/pdf": [
+                                            ".pdf",
+                                        ],
+                                    }}
                                 />
                             )}
                         />

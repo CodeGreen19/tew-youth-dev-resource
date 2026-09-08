@@ -1,7 +1,6 @@
 "use client"
 import { AddressDetailsForm } from "../components/apply-branch/address-details-form"
 import { BranchDetailsForm } from "../components/apply-branch/branch-details-form"
-import { DocumentsForm } from "../components/apply-branch/documents-form"
 import { OnboardingNavigation } from "../components/apply-branch/onboarding-navigation"
 import { OnboardingSteps } from "../components/apply-branch/onboardong-steps"
 import { OwnerInfoForm } from "../components/apply-branch/owner-info-form"

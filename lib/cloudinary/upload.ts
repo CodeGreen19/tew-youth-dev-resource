@@ -1,0 +1,63 @@
+import "server-only"
+import { cloudinary } from "./config"
+
+type UploadResult = {
+    publicId: string
+    url: string
+    secureUrl: string
+    resourceType: string
+    format: string
+    bytes: number
+}
+
+type UploadOptions = {
+    folder?: string
+    publicId?: string
+    resourceType?: "image" | "video" | "raw" | "auto"
+    tags?: string[]
+}
+
+export async function uploadToCloudinary(
+    file: File,
+    options: UploadOptions = {},
+): Promise<UploadResult> {
+    const buffer = Buffer.from(await file.arrayBuffer())
+
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                resource_type:
+                    options.resourceType ?? "auto",
+                folder: options.folder,
+                public_id: options.publicId,
+                tags: options.tags,
+            },
+            (error, result) => {
+                if (error) {
+                    reject(error)
+                    return
+                }
+
+                if (!result) {
+                    reject(
+                        new Error(
+                            "Cloudinary upload failed",
+                        ),
+                    )
+                    return
+                }
+
+                resolve({
+                    publicId: result.public_id,
+                    url: result.url,
+                    secureUrl: result.secure_url,
+                    resourceType: result.resource_type,
+                    format: result.format,
+                    bytes: result.bytes,
+                })
+            },
+        )
+
+        stream.end(buffer)
+    })
+}

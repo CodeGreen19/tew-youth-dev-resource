@@ -1,24 +1,5 @@
 import { z } from "zod"
 
-// Helper for single file validation (PDF only, max 5MB)
-const pdfFileSchema = z
-    .custom<File>(
-        (val) => val instanceof File,
-        "File is required",
-    )
-    .refine(
-        (file) => file.type === "application/pdf",
-        "Only PDF files are allowed",
-    )
-    .refine(
-        (file) => file.size <= 5 * 1024 * 1024,
-        "File size must be 5MB or less",
-    )
-
-// ==========================================
-// 1. Part Schemas
-// ==========================================
-
 // Part 1: Branch Details Schema
 export const branchDetailsSchema = z.object({
     branchName: z
@@ -40,6 +21,8 @@ export const branchDetailsSchema = z.object({
         .number("Number of computers must be a number")
         .int("Must be a whole number")
         .min(1, "Minimum 1 computer required"),
+    nidPdf: z.instanceof(File).nullable(),
+    another: z.instanceof(File).nullable(),
 })
 
 // Part 2: Owner Info Schema
@@ -90,19 +73,19 @@ export const addressDetailsSchema = z.object({
 
 // Part 4: Documents Schema
 export const documentsSchema = z.object({
-    electricityBillPdf: pdfFileSchema,
-    nidPdf: pdfFileSchema,
-    tradeLicensePdf: pdfFileSchema,
+    electricityBillPdf: z.instanceof(File).nullable(),
+    nidPdf: z.instanceof(File).nullable(),
+    tradeLicensePdf: z.instanceof(File).nullable(),
 })
 
 // ==========================================
 // 2. Merged Full Form Schema
 // ==========================================
 
-export const branchApplicationSchema = branchDetailsSchema
-    .merge(ownerInfoSchema)
-    .merge(addressDetailsSchema)
-    .merge(documentsSchema)
+// export const branchApplicationSchema = branchDetailsSchema
+//     .extend(ownerInfoSchema)
+//     .extend(addressDetailsSchema)
+//     .extend(documentsSchema)
 
 // ==========================================
 // 3. Inferred TypeScript Types
@@ -121,6 +104,6 @@ export type DocumentsSchemaType = z.infer<
     typeof documentsSchema
 >
 
-export type BranchApplicationSchemaType = z.infer<
-    typeof branchApplicationSchema
->
+// export type BranchApplicationSchemaType = z.infer<
+//     typeof branchApplicationSchema
+// >
