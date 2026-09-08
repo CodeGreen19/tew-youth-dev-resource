@@ -13,10 +13,10 @@ export function Navbar() {
         authClient.useSession()
 
     return (
-        <div className="h-20 ">
+        <div className="h-24 bg-linear-to-b from-background/70 dark:from-background/10 to-accent from-70% to-100%">
             <div className="flex items-center h-full justify-between px-4 max-w-7xl xl:px-0 m-auto">
                 <Logo />
-                <div className="hidden lg:block">
+                <div className="hidden">
                     <NavMenu />
                 </div>
                 <div>

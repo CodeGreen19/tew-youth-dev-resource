@@ -10,6 +10,7 @@ export function Logo() {
                     height={70}
                     width={60}
                     alt="main-log"
+                    loading="eager"
                 />
             </Link>
         </div>

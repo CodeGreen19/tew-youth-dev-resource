@@ -1,0 +1,35 @@
+import { OnboardingStep } from "./types"
+
+export const onboardingSteps = [
+    {
+        id: "branch",
+        title: "Branch",
+        description: "Branch information",
+        formId: "branch-details-form",
+    },
+    {
+        id: "owner",
+        title: "Owner",
+        description: "Owner details",
+        formId: "owner-info-form",
+    },
+
+    {
+        id: "address",
+        title: "Address",
+        description: "Address of branch",
+        formId: "address-details-form",
+    },
+    {
+        id: "documents",
+        title: "Docs",
+        description: "Valid documents",
+        formId: "branch-details-form",
+    },
+    {
+        id: "review",
+        title: "Review",
+        description: "Confirm details",
+        formId: "branch-details-form",
+    },
+] satisfies readonly OnboardingStep[]

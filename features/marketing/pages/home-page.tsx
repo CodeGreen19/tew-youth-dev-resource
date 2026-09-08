@@ -6,6 +6,7 @@ export function HomePage() {
             <h1 className="text-4xl font-semibold ">
                 The Earn Way Youth Development Resource
             </h1>
+            <div className="h-[200vh]"></div>
         </div>
     )
 }
