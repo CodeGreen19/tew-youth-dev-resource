@@ -24,13 +24,13 @@ export const onboardingSteps = [
         id: "documents",
         title: "Docs",
         description: "Valid documents",
-        formId: "branch-details-form",
+        formId: "branch-docs-form",
     },
     {
-        id: "review",
-        title: "Review",
+        id: "preview",
+        title: "Preview",
         description: "Confirm details",
-        formId: "branch-details-form",
+        formId: "branch-preview-form",
     },
 ] satisfies readonly OnboardingStep[]
 

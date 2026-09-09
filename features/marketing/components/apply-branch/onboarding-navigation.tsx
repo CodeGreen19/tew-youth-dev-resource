@@ -8,10 +8,12 @@ export function OnboardingNavigation({
     formId,
     onSubmit,
     showSubmitButton,
+    submitPending,
 }: {
     formId: string
     showSubmitButton: boolean
     onSubmit: () => void
+    submitPending: boolean
 }) {
     const { currentStep, previousStep } =
         useOnboardingStore()
@@ -32,6 +34,7 @@ export function OnboardingNavigation({
             </Button>
             {showSubmitButton ? (
                 <Button
+                    disabled={submitPending}
                     onClick={onSubmit}
                     variant="default"
                     type="submit"

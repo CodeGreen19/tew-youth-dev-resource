@@ -13,6 +13,9 @@ import {
 } from "../schemas"
 import { DocumentsForm } from "../components/apply-branch/documents-form"
 import { ApplicationFormPreview } from "../components/apply-branch/application-form-preview"
+import { useMutation } from "@tanstack/react-query"
+import { applyForBranch } from "../actions"
+import { toast } from "@/components/ui/toast"
 
 export function ApplyBranchPage() {
     const { currentStep, nextStep } = useOnboardingStore()
@@ -23,6 +26,17 @@ export function ApplyBranchPage() {
         })
 
     const formId = onboardingSteps[currentStep].formId
+
+    const mutation = useMutation({
+        mutationFn: applyForBranch,
+        onSuccess: ({ message }) => {
+            setApplicationForm(branchApplicationDefaults)
+            toast.add({ title: message, type: "success" })
+        },
+        onError: ({ message }) => {
+            toast.add({ title: message, type: "error" })
+        },
+    })
 
     return (
         <div className="space-y-8  mt-6 pb-10">
@@ -101,11 +115,9 @@ export function ApplyBranchPage() {
                             onboardingSteps.length
                         }
                         onSubmit={() =>
-                            console.log(
-                                applicationForm,
-                                "data",
-                            )
+                            mutation.mutate(applicationForm)
                         }
+                        submitPending={mutation.isPending}
                         formId={formId}
                     />
                 </div>

@@ -6,15 +6,35 @@ import {
     BranchApplicationSchemaType,
 } from "./schemas"
 import { branchApplications } from "@/drizzle/schema"
+import { uploadToCloudinary } from "@/lib/cloudinary/upload"
 
 export async function applyForBranch(
     inputs: BranchApplicationSchemaType,
 ) {
-    const res = branchApplicationSchema.safeParse(inputs)
-    if (!res.success) {
+    const { data, success } =
+        branchApplicationSchema.safeParse(inputs)
+    if (!success) {
         throw new Error("Invalid Data")
     }
-    await db.insert(branchApplications).values(res.data)
+
+    const [
+        electricityBill,
+        nidDocument,
+        tradeLicense,
+        logo,
+    ] = await Promise.all([
+        uploadToCloudinary(data.electricityBill),
+        uploadToCloudinary(data.nidDocument),
+        uploadToCloudinary(data.tradeLicense),
+        data.logo && uploadToCloudinary(data.logo),
+    ])
+    await db.insert(branchApplications).values({
+        ...data,
+        electricityBill,
+        nidDocument,
+        tradeLicense,
+        logo,
+    })
     return {
         message: "Your form has submitted successfully",
     }

@@ -3,11 +3,9 @@ import { cloudinary } from "./config"
 
 type UploadResult = {
     publicId: string
-    url: string
     secureUrl: string
     resourceType: string
     format: string
-    bytes: number
 }
 
 type UploadOptions = {
@@ -49,11 +47,9 @@ export async function uploadToCloudinary(
 
                 resolve({
                     publicId: result.public_id,
-                    url: result.url,
                     secureUrl: result.secure_url,
                     resourceType: result.resource_type,
                     format: result.format,
-                    bytes: result.bytes,
                 })
             },
         )

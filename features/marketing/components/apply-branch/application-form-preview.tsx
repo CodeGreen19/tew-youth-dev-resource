@@ -24,6 +24,11 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 import { BranchApplicationSchemaType } from "../../schemas"
+import {
+    getDistrictById,
+    getDivisionById,
+    getUpazilaById,
+} from "../../helpers"
 
 export function ApplicationFormPreview({
     applicationForm,
@@ -161,15 +166,21 @@ export function ApplicationFormPreview({
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             <Info
                                 label="Division"
-                                value={divisionId}
+                                value={getDivisionById(
+                                    divisionId,
+                                )}
                             />
                             <Info
                                 label="District"
-                                value={districtId}
+                                value={getDistrictById(
+                                    districtId,
+                                )}
                             />
                             <Info
                                 label="Upazila"
-                                value={upazilaId}
+                                value={getUpazilaById(
+                                    upazilaId,
+                                )}
                             />
                             <Info
                                 label="Area / Address"
