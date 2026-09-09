@@ -1,27 +1,22 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 import {
     Field,
     FieldDescription,
     FieldError,
     FieldLabel,
 } from "@/components/ui/field"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { FormField } from "@/types/form"
-import { useFieldContext } from "./use-app-form"
+import { CheckCircle, Upload, X } from "lucide-react"
+import { useState } from "react"
 import {
     useDropzone,
     type Accept,
     type FileRejection,
 } from "react-dropzone"
-import {
-    Upload,
-    X,
-    FileIcon,
-    CheckCircle,
-} from "lucide-react"
-import { useState } from "react"
-import { cn } from "@/lib/utils"
+import { useFieldContext } from "./use-app-form"
 
 type FileFieldProps = Pick<
     FormField,

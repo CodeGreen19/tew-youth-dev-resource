@@ -9,54 +9,48 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
+
 import {
+    BranchApplicationSchemaType,
     branchDetailsSchema,
     BranchDetailsSchemaType,
 } from "../../schemas"
-import { useOnboardingStore } from "../../hooks/use-onboarding-store"
-import { useRouter } from "next/navigation"
 
 export function BranchDetailsForm({
-    nextStepId,
+    onSuccess,
+    formId,
+    existedValues,
 }: {
-    nextStepId?: string
+    onSuccess: (v: BranchDetailsSchemaType) => void
+    formId: string
+    existedValues: BranchApplicationSchemaType
 }) {
-    const { nextStep } = useOnboardingStore()
-    const router = useRouter()
     const defaultValues: BranchDetailsSchemaType = {
-        branchName: "",
-        branchMobile: "",
-        branchEmail: "",
-        branchAge: 0,
-        noOfComputers: 1,
-        nidPdf: null,
-        another: null,
+        ...existedValues,
     }
-
     const form = useAppForm({
         defaultValues,
         validators: {
             onChange: branchDetailsSchema,
         },
         onSubmit: async ({ value }) => {
-            console.log(value)
-            nextStep(nextStepId, router.push)
+            onSuccess(value)
         },
     })
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Branch Details</CardTitle>
+                <CardTitle>Branch Information</CardTitle>
                 <CardDescription>
-                    Provide the basic information about your
-                    branch.
+                    Enter the basic information and
+                    facilities of your branch.
                 </CardDescription>
             </CardHeader>
 
             <CardContent>
                 <form
-                    id="branch-details-form"
+                    id={formId}
                     onSubmit={(e) => {
                         e.preventDefault()
                         form.handleSubmit()
@@ -64,70 +58,58 @@ export function BranchDetailsForm({
                 >
                     <FieldGroup>
                         <form.AppField
-                            name="nidPdf"
+                            name="logo"
                             children={(field) => (
-                                <field.AvatarField label="Thumbnail" />
+                                <field.AvatarField label="Branch Logo" />
                             )}
                         />
+
                         <form.AppField
                             name="branchName"
                             children={(field) => (
                                 <field.TextField
                                     label="Branch Name"
-                                    placeholder="Enter branch name"
+                                    placeholder="Enter the official branch name"
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="branchMobile"
+                            name="mobile"
                             children={(field) => (
                                 <field.TextField
-                                    label="Branch Mobile"
-                                    placeholder="01XXXXXXXXX"
+                                    label="Contact Number"
+                                    placeholder="Enter branch contact number"
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="branchEmail"
+                            name="email"
                             children={(field) => (
                                 <field.TextField
-                                    label="Branch Email"
-                                    placeholder="branch@example.com"
+                                    label="Email Address"
+                                    placeholder="Enter branch email address"
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="branchAge"
+                            name="age"
                             children={(field) => (
                                 <field.NumberField
                                     label="Branch Age"
-                                    placeholder="Enter branch age"
-                                />
-                            )}
-                        />
-                        <form.AppField
-                            name="another"
-                            children={(field) => (
-                                <field.FileField
-                                    label="Branch Age"
-                                    accept={{
-                                        "application/pdf": [
-                                            ".pdf",
-                                        ],
-                                    }}
+                                    placeholder="Enter how many years the branch has operated"
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="noOfComputers"
+                            name="computerCount"
                             children={(field) => (
                                 <field.NumberField
                                     label="Number of Computers"
-                                    placeholder="Enter number of computers"
+                                    placeholder="Enter the number of available computers"
                                 />
                             )}
                         />

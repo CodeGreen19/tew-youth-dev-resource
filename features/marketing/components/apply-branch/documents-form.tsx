@@ -9,16 +9,24 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
+
 import {
+    BranchApplicationSchemaType,
     documentsSchema,
     DocumentsSchemaType,
 } from "../../schemas"
 
-export function DocumentsForm() {
+export function DocumentsForm({
+    onSuccess,
+    formId,
+    existedValues,
+}: {
+    onSuccess: (v: DocumentsSchemaType) => void
+    formId: string
+    existedValues: BranchApplicationSchemaType
+}) {
     const defaultValues: DocumentsSchemaType = {
-        electricityBillPdf: undefined as unknown as File,
-        nidPdf: undefined as unknown as File,
-        tradeLicensePdf: undefined as unknown as File,
+        ...existedValues,
     }
 
     const form = useAppForm({
@@ -27,7 +35,7 @@ export function DocumentsForm() {
             onChange: documentsSchema,
         },
         onSubmit: async ({ value }) => {
-            console.log(value)
+            onSuccess(value)
         },
     })
 
@@ -37,19 +45,86 @@ export function DocumentsForm() {
                 <CardTitle>Required Documents</CardTitle>
                 <CardDescription>
                     Upload the required documents in PDF
-                    format. Maximum size is 5MB per file.
+                    format. Each file must not exceed 5MB.
                 </CardDescription>
             </CardHeader>
 
             <CardContent>
                 <form
-                    id="documents-form"
+                    id={formId}
                     onSubmit={(e) => {
                         e.preventDefault()
                         form.handleSubmit()
                     }}
                 >
-                    <FieldGroup></FieldGroup>
+                    <FieldGroup>
+                        <form.AppField
+                            name="electricityBill"
+                            children={(field) => (
+                                <field.FileField
+                                    label="Electricity Bill"
+                                    accept={{
+                                        "application/pdf": [
+                                            ".pdf",
+                                        ],
+                                        "image/jpeg": [
+                                            ".jpeg",
+                                            ".jpg",
+                                        ],
+                                    }}
+                                    description="Upload a recent electricity bill"
+                                    maxSize={
+                                        5 * 1024 * 1024
+                                    }
+                                />
+                            )}
+                        />
+
+                        <form.AppField
+                            name="nidDocument"
+                            children={(field) => (
+                                <field.FileField
+                                    label="National ID Document"
+                                    accept={{
+                                        "application/pdf": [
+                                            ".pdf",
+                                        ],
+                                        "image/jpeg": [
+                                            ".jpeg",
+                                            ".jpg",
+                                        ],
+                                    }}
+                                    description="Upload the owner's NID document"
+
+                                    maxSize={
+                                        5 * 1024 * 1024
+                                    }
+                                />
+                            )}
+                        />
+
+                        <form.AppField
+                            name="tradeLicense"
+                            children={(field) => (
+                                <field.FileField
+                                    label="Trade License"
+                                    accept={{
+                                        "application/pdf": [
+                                            ".pdf",
+                                        ],
+                                        "image/jpeg": [
+                                            ".jpeg",
+                                            ".jpg",
+                                        ],
+                                    }}
+                                    description="Upload a valid trade license"
+                                    maxSize={
+                                        5 * 1024 * 1024
+                                    }
+                                />
+                            )}
+                        />
+                    </FieldGroup>
                 </form>
             </CardContent>
         </Card>

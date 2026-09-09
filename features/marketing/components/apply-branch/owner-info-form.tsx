@@ -9,27 +9,27 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
+
+import { capitalize } from "@/lib/helpers"
+import { BLOOD_GROUPS, GENDER } from "../../constants"
 import {
+    branchApplicationDefaults,
+    BranchApplicationSchemaType,
     ownerInfoSchema,
     OwnerInfoSchemaType,
 } from "../../schemas"
-import { useOnboardingStore } from "../../hooks/use-onboarding-store"
-import { useRouter } from "next/navigation"
 
 export function OwnerInfoForm({
-    nextStepId,
+    onSuccess,
+    formId,
+    existedValues,
 }: {
-    nextStepId?: string
+    onSuccess: (v: OwnerInfoSchemaType) => void
+    formId: string
+    existedValues: BranchApplicationSchemaType
 }) {
-    const { nextStep } = useOnboardingStore()
-    const router = useRouter()
     const defaultValues: OwnerInfoSchemaType = {
-        ownerName: "",
-        fatherName: "",
-        motherName: "",
-        bloodGroup: "A+",
-        nidNo: "",
-        gender: "Male",
+        ...existedValues,
     }
 
     const form = useAppForm({
@@ -38,8 +38,7 @@ export function OwnerInfoForm({
             onChange: ownerInfoSchema,
         },
         onSubmit: async ({ value }) => {
-            console.log(value)
-            nextStep(nextStepId, router.push)
+            onSuccess(value)
         },
     })
 
@@ -48,14 +47,14 @@ export function OwnerInfoForm({
             <CardHeader>
                 <CardTitle>Owner Information</CardTitle>
                 <CardDescription>
-                    Provide the personal information of the
-                    branch owner.
+                    Provide the personal and identification
+                    details of the branch owner.
                 </CardDescription>
             </CardHeader>
 
             <CardContent>
                 <form
-                    id="owner-info-form"
+                    id={formId}
                     onSubmit={(e) => {
                         e.preventDefault()
                         form.handleSubmit()
@@ -66,8 +65,8 @@ export function OwnerInfoForm({
                             name="ownerName"
                             children={(field) => (
                                 <field.TextField
-                                    label="Owner Name"
-                                    placeholder="Enter owner's full name"
+                                    label="Full Name"
+                                    placeholder="Enter the owner's full name"
                                 />
                             )}
                         />
@@ -77,7 +76,7 @@ export function OwnerInfoForm({
                             children={(field) => (
                                 <field.TextField
                                     label="Father's Name"
-                                    placeholder="Enter father's name"
+                                    placeholder="Enter the owner's father's full name"
                                 />
                             )}
                         />
@@ -87,17 +86,17 @@ export function OwnerInfoForm({
                             children={(field) => (
                                 <field.TextField
                                     label="Mother's Name"
-                                    placeholder="Enter mother's name"
+                                    placeholder="Enter the owner's mother's full name"
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="nidNo"
+                            name="nidNumber"
                             children={(field) => (
                                 <field.TextField
-                                    label="NID Number"
-                                    placeholder="Enter NID number"
+                                    label="National ID Number"
+                                    placeholder="Enter the 10, 13, or 17-digit NID number"
                                 />
                             )}
                         />
@@ -107,41 +106,15 @@ export function OwnerInfoForm({
                             children={(field) => (
                                 <field.SelectField
                                     label="Blood Group"
-                                    placeholder="Select blood group"
-                                    options={[
-                                        {
-                                            label: "A+",
-                                            value: "A+",
-                                        },
-                                        {
-                                            label: "A-",
-                                            value: "A-",
-                                        },
-                                        {
-                                            label: "B+",
-                                            value: "B+",
-                                        },
-                                        {
-                                            label: "B-",
-                                            value: "B-",
-                                        },
-                                        {
-                                            label: "AB+",
-                                            value: "AB+",
-                                        },
-                                        {
-                                            label: "AB-",
-                                            value: "AB-",
-                                        },
-                                        {
-                                            label: "O+",
-                                            value: "O+",
-                                        },
-                                        {
-                                            label: "O-",
-                                            value: "O-",
-                                        },
-                                    ]}
+                                    placeholder="Select the blood group"
+                                    options={BLOOD_GROUPS.map(
+                                        (b) => ({
+                                            label: capitalize(
+                                                b,
+                                            ),
+                                            value: b,
+                                        }),
+                                    )}
                                 />
                             )}
                         />
@@ -151,21 +124,15 @@ export function OwnerInfoForm({
                             children={(field) => (
                                 <field.SelectField
                                     label="Gender"
-                                    placeholder="Select gender"
-                                    options={[
-                                        {
-                                            label: "Male",
-                                            value: "Male",
-                                        },
-                                        {
-                                            label: "Female",
-                                            value: "Female",
-                                        },
-                                        {
-                                            label: "Other",
-                                            value: "Other",
-                                        },
-                                    ]}
+                                    placeholder="Select the owner's gender"
+                                    options={GENDER.map(
+                                        (g) => ({
+                                            label: capitalize(
+                                                g,
+                                            ),
+                                            value: g,
+                                        }),
+                                    )}
                                 />
                             )}
                         />

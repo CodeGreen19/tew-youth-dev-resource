@@ -9,26 +9,30 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
+
+import {
+    DISTRICTS,
+    DIVISIONS,
+    UPAZILAS,
+} from "@/constants/bd-locations"
+import { useSelector } from "@tanstack/react-form"
 import {
     addressDetailsSchema,
     AddressDetailsSchemaType,
+    BranchApplicationSchemaType,
 } from "../../schemas"
-import { useRouter } from "next/navigation"
-import { useOnboardingStore } from "../../hooks/use-onboarding-store"
 
 export function AddressDetailsForm({
-    nextStepId,
+    onSuccess,
+    formId,
+    existedValues,
 }: {
-    nextStepId?: string
+    onSuccess: (v: AddressDetailsSchemaType) => void
+    formId: string
+    existedValues: BranchApplicationSchemaType
 }) {
-    const { nextStep } = useOnboardingStore()
-    const router = useRouter()
     const defaultValues: AddressDetailsSchemaType = {
-        division: "",
-        district: "",
-        upazila: "",
-        area: "",
-        postalCode: "",
+        ...existedValues,
     }
 
     const form = useAppForm({
@@ -37,24 +41,38 @@ export function AddressDetailsForm({
             onChange: addressDetailsSchema,
         },
         onSubmit: async ({ value }) => {
-            console.log(value)
-            nextStep(nextStepId, router.push)
+            onSuccess(value)
         },
     })
+
+    const divisionId = useSelector(
+        form.store,
+        (state) => state.values.divisionId,
+    )
+    const districtsId = useSelector(
+        form.store,
+        (state) => state.values.districtId,
+    )
+    const districts = DISTRICTS.filter(
+        (d) => d.division_id === divisionId,
+    )
+    const upazilas = UPAZILAS.filter(
+        (d) => d.district_id === districtsId,
+    )
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Address Details</CardTitle>
+                <CardTitle>Branch Address</CardTitle>
                 <CardDescription>
-                    Provide the complete address of the
-                    branch.
+                    Provide the complete location and postal
+                    address of the branch.
                 </CardDescription>
             </CardHeader>
 
             <CardContent>
                 <form
-                    id="address-details-form"
+                    id={formId}
                     onSubmit={(e) => {
                         e.preventDefault()
                         form.handleSubmit()
@@ -62,31 +80,56 @@ export function AddressDetailsForm({
                 >
                     <FieldGroup>
                         <form.AppField
-                            name="division"
+                            name="divisionId"
                             children={(field) => (
-                                <field.TextField
+                                <field.SelectField
                                     label="Division"
-                                    placeholder="Enter division"
+                                    placeholder="Select or enter the division"
+                                    options={DIVISIONS.map(
+                                        (d) => ({
+                                            label: d.name,
+                                            value: d.id,
+                                        }),
+                                    )}
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="district"
+                            name="districtId"
+
                             children={(field) => (
-                                <field.TextField
+                                <field.SelectField
                                     label="District"
-                                    placeholder="Enter district"
+                                    placeholder="Select or enter the district"
+                                    options={districts.map(
+                                        (d) => ({
+                                            label: d.name,
+                                            value: d.id,
+                                        }),
+                                    )}
+                                    disabled={
+                                        !districts.length
+                                    }
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="upazila"
+                            name="upazilaId"
                             children={(field) => (
-                                <field.TextField
+                                <field.SelectField
                                     label="Upazila"
-                                    placeholder="Enter upazila"
+                                    placeholder="Select or enter the upazila"
+                                    options={upazilas.map(
+                                        (u) => ({
+                                            label: u.name,
+                                            value: u.id,
+                                        }),
+                                    )}
+                                    disabled={
+                                        !upazilas.length
+                                    }
                                 />
                             )}
                         />
@@ -94,9 +137,9 @@ export function AddressDetailsForm({
                         <form.AppField
                             name="area"
                             children={(field) => (
-                                <field.TextField
-                                    label="Area"
-                                    placeholder="Enter area/village"
+                                <field.TextareaField
+                                    label="Area / Village"
+                                    placeholder="Enter the area, village, or locality"
                                 />
                             )}
                         />
@@ -106,7 +149,7 @@ export function AddressDetailsForm({
                             children={(field) => (
                                 <field.TextField
                                     label="Postal Code"
-                                    placeholder="Enter 4-digit postal code"
+                                    placeholder="Enter the 4-digit postal code"
                                 />
                             )}
                         />

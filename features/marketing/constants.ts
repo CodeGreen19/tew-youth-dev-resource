@@ -33,3 +33,15 @@ export const onboardingSteps = [
         formId: "branch-details-form",
     },
 ] satisfies readonly OnboardingStep[]
+
+export const BLOOD_GROUPS = [
+    "A+",
+    "A-",
+    "B+",
+    "B-",
+    "AB+",
+    "AB-",
+    "O+",
+    "O-",
+]
+export const GENDER = ["Male", "Female", "Other"]

@@ -3,21 +3,21 @@
 import { Button } from "@/components/ui/button"
 import { MoveLeft, MoveRight } from "lucide-react"
 import { useOnboardingStore } from "../../hooks/use-onboarding-store"
-import { useRouter, usePathname } from "next/navigation"
 
 export function OnboardingNavigation({
     formId,
+    onSubmit,
+    showSubmitButton,
 }: {
     formId: string
+    showSubmitButton: boolean
+    onSubmit: () => void
 }) {
     const { currentStep, previousStep } =
         useOnboardingStore()
-    const router = useRouter()
-    const pathname = usePathname()
 
     const handleBack = () => {
         previousStep()
-        router.replace(pathname)
     }
 
     return (
@@ -30,13 +30,24 @@ export function OnboardingNavigation({
             >
                 <MoveLeft /> Back
             </Button>
-            <Button
-                variant="outline"
-                type="submit"
-                form={formId}
-            >
-                Next <MoveRight />
-            </Button>
+            {showSubmitButton ? (
+                <Button
+                    onClick={onSubmit}
+                    variant="default"
+                    type="submit"
+                    form={formId}
+                >
+                    Submit Form
+                </Button>
+            ) : (
+                <Button
+                    variant="outline"
+                    type="submit"
+                    form={formId}
+                >
+                    Next <MoveRight />
+                </Button>
+            )}
         </div>
     )
 }
