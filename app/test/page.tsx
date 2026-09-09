@@ -1,24 +1,22 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { signIn } from "./action"
 import { authClient } from "@/lib/auth-client"
 
 export default function page() {
+    const res = authClient.useSession()
     return (
         <div>
             <Button
                 onClick={async () => {
-                    const res =
-                        await authClient.signUp.email({
-                            name: "ahmed",
-                            email: "ahmed@gmail.com",
-                            password: "ahmed123",
-                        })
-                    console.log(res)
+                    const res = await signIn()
+                    console.log("res", res)
                 }}
             >
                 Sign up
             </Button>
+            {JSON.stringify(res)}
         </div>
     )
 }
