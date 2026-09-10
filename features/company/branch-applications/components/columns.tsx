@@ -2,14 +2,18 @@
 
 import { createColumnHelper } from "@tanstack/react-table"
 
-import { SquareArrowOutUpRight } from "lucide-react"
-
 import { DataTableFeatures } from "@/components/table/data-table-features"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 
-import Link from "next/link"
+import { CellNavigateTo } from "@/components/table/cells/cell-navigate-to"
+import { createSelectColumn } from "@/components/table/columns/create-select-column"
+import { Badge } from "@/components/ui/badge"
 import { BranchApplication } from "../types"
+import Image from "next/image"
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -17,41 +21,36 @@ const columnHelper = createColumnHelper<
 >()
 
 export const columns = columnHelper.columns([
-    columnHelper.display({
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllPageRowsSelected()}
-                indeterminate={
-                    table.getIsSomePageRowsSelected() &&
-                    !table.getIsAllPageRowsSelected()
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) =>
-                    row.toggleSelected(!!value)
-                }
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
+    createSelectColumn<BranchApplication>(),
+
+    columnHelper.accessor("logo", {
+        header: "Logo",
+        cell: ({ row }) => {
+            return (
+                <Avatar>
+                    <AvatarImage
+                        src={row.original.logo?.secureUrl}
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+            )
+        },
     }),
-    columnHelper.accessor("id", {
-        header: "ID",
-    }),
+
     columnHelper.accessor("branchName", {
         header: "Branch Name",
     }),
     columnHelper.accessor("ownerName", {
         header: "Owner Name",
+    }),
+    columnHelper.accessor("mobile", {
+        header: "Mobile Number",
+    }),
+    columnHelper.accessor("status", {
+        header: "Status",
+        cell: ({ row }) => {
+            return <Badge>{row.original.status}</Badge>
+        },
     }),
     columnHelper.accessor("createdAt", {
         header: "Created At",
@@ -68,21 +67,10 @@ export const columns = columnHelper.columns([
 
     columnHelper.display({
         id: "actions",
-        cell: ({ row }) => {
-            return (
-                <Button
-                    nativeButton={false}
-                    render={
-                        <Link
-                            href={`/company/branches/${row.original.id}`}
-                        />
-                    }
-                    variant={"ghost"}
-                    size={"icon"}
-                >
-                    <SquareArrowOutUpRight />
-                </Button>
-            )
-        },
+        cell: ({ row }) => (
+            <CellNavigateTo
+                href={`/company/branch-applications/${row.original.id}`}
+            />
+        ),
     }),
 ])

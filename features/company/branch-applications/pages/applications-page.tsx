@@ -6,10 +6,10 @@ import {
 } from "@/components/shared/page"
 import { DataTable } from "@/components/table/data-table"
 import { columns } from "../components/columns"
-import { getBrancheApplications } from "../queries"
+import { getBranchApplications } from "../queries"
 
 export async function ApplicationsPage() {
-    const branches = await getBrancheApplications()
+    const branches = await getBranchApplications()
     return (
         <Page>
             <PageHeader>

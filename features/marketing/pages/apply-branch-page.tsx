@@ -18,7 +18,8 @@ import { applyForBranch } from "../actions"
 import { toast } from "@/components/ui/toast"
 
 export function ApplyBranchPage() {
-    const { currentStep, nextStep } = useOnboardingStore()
+    const { currentStep, nextStep, setStep } =
+        useOnboardingStore()
 
     const [applicationForm, setApplicationForm] =
         useState<BranchApplicationSchemaType>({
@@ -31,6 +32,7 @@ export function ApplyBranchPage() {
         mutationFn: applyForBranch,
         onSuccess: ({ message }) => {
             setApplicationForm(branchApplicationDefaults)
+            setStep(0)
             toast.add({ title: message, type: "success" })
         },
         onError: ({ message }) => {

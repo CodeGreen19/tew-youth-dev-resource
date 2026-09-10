@@ -1,5 +1,11 @@
-import { getBrancheApplications } from "./queries"
+import {
+    getBranchApplicationById,
+    getBranchApplications,
+} from "./queries"
 
 export type BranchApplication = Awaited<
-    ReturnType<typeof getBrancheApplications>
+    ReturnType<typeof getBranchApplications>
 >[number]
+export type BranchApplicationById = Awaited<
+    ReturnType<typeof getBranchApplicationById>
+>

@@ -15,7 +15,7 @@ export const branchApplicationStatus = pgEnum(
     ["pending", "approved", "rejected"],
 )
 
-type FileType = {
+export type FileType = {
     secureUrl: string
     publicId: string
     resourceType: string
