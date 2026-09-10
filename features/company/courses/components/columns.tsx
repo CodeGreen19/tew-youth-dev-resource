@@ -34,6 +34,12 @@ import { useMutation } from "@tanstack/react-query"
 import { changeCourseStatus } from "../actions"
 import { toast } from "@/components/ui/toast"
 import { authClient } from "@/lib/auth-client"
+import { createSelectColumn } from "@/components/table/columns/create-select-column"
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<
@@ -42,32 +48,19 @@ const columnHelper = createColumnHelper<
 >()
 
 export const columns = columnHelper.columns([
-    columnHelper.display({
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllPageRowsSelected()}
-                indeterminate={
-                    table.getIsSomePageRowsSelected() &&
-                    !table.getIsAllPageRowsSelected()
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) =>
-                    row.toggleSelected(!!value)
-                }
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
+    createSelectColumn<Course>(),
+    columnHelper.accessor("banner", {
+        header: "Banner",
+        cell: ({ row }) => {
+            return (
+                <Avatar>
+                    <AvatarImage
+                        src={row.original.banner.secureUrl}
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+            )
+        },
     }),
     columnHelper.accessor("name", {
         header: ({ column }) => (

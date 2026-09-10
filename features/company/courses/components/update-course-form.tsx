@@ -14,30 +14,31 @@ import { toast } from "@/components/ui/toast"
 import { courseStatuses } from "@/constants/course"
 import { capitalize } from "@/lib/helpers"
 import { useMutation } from "@tanstack/react-query"
-import { addCourse } from "../actions"
-import { courseSchema, CourseSchemaType } from "../schemas"
+import { updateCourse } from "../actions"
+import {
+    updateCourseSchema,
+    UpdateCourseSchemaType,
+} from "../schemas"
+import Image from "next/image"
+import { useState } from "react"
 
-export function CourseForm({
+export function UpdateCourseForm({
+    existedValue,
     onCancel,
     onSuccess,
 }: {
+    existedValue: UpdateCourseSchemaType & { id: string }
     onCancel?: () => void
     onSuccess?: () => void
 }) {
-    const defaultValues: CourseSchemaType = {
-        name: "",
-        code: "",
-        description: "",
-        status: "active",
-        banner: null as unknown as File,
-    }
+    const defaultValues: UpdateCourseSchemaType =
+        existedValue
 
-    const addMutation = useMutation({
-        mutationFn: addCourse,
+    const updateMutation = useMutation({
+        mutationFn: updateCourse,
         onSuccess: ({ message }) => {
             toast.add({ title: message, type: "success" })
             onSuccess?.()
-            form.reset()
         },
         onError: ({ message }) =>
             toast.add({ title: message, type: "error" }),
@@ -46,34 +47,68 @@ export function CourseForm({
     const form = useAppForm({
         defaultValues,
         validators: {
-            onSubmit: courseSchema,
+            onSubmit: updateCourseSchema,
         },
         onSubmit: async ({ value }) => {
-            addMutation.mutate(value)
+            updateMutation.mutate({
+                ...value,
+                id: existedValue.id,
+            })
         },
     })
 
-    const isSubmitting = addMutation.isPending
+    const [changeBanner, setChangeBanner] = useState(false)
+
+    const isSubmitting = updateMutation.isPending
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Add Course</CardTitle>
+                <CardTitle>Update Course</CardTitle>
             </CardHeader>
             <CardContent>
                 <form
-                    id="course-form"
+                    id="update-course-form"
                     onSubmit={(e) => {
                         e.preventDefault()
                         form.handleSubmit()
                     }}
                 >
                     <FieldGroup>
-                        <form.AppField
-                            name="banner"
-                            children={(field) => (
-                                <field.FileField label="Banner" />
-                            )}
-                        />
+                        {changeBanner ? (
+                            <form.AppField
+                                name="banner"
+                                children={(field) => (
+                                    <field.FileField label="Banner" />
+                                )}
+                            />
+                        ) : (
+                            <div className="space-y-1.5">
+                                <Image
+                                    className="w-full rounded-sm aspect-video object-cover"
+                                    src={
+                                        existedValue
+                                            .existingBanner
+                                            .secureUrl
+                                    }
+                                    height={100}
+                                    width={200}
+                                    alt="banner-img"
+                                />
+                                <Button
+                                    onClick={() =>
+                                        setChangeBanner(
+                                            true,
+                                        )
+                                    }
+                                    variant={"ghost"}
+                                    className={
+                                        "text-destructive"
+                                    }
+                                >
+                                    Change
+                                </Button>
+                            </div>
+                        )}
                         <form.AppField
                             name="name"
                             children={(field) => (
@@ -119,6 +154,7 @@ export function CourseForm({
                     <Button
                         onClick={() => {
                             form.reset()
+                            setChangeBanner(false)
                             onCancel?.()
                         }}
                         variant={"ghost"}
@@ -127,10 +163,10 @@ export function CourseForm({
                     </Button>
                     <Button
                         disabled={isSubmitting}
-                        form={"course-form"}
+                        form={"update-course-form"}
                         type="submit"
                     >
-                        Submit
+                        Update
                     </Button>
                 </Field>
             </CardFooter>

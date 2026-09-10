@@ -19,7 +19,6 @@ export function AddCoursePage() {
             </PageHeader>
             <div className="max-w-lg m-auto">
                 <CourseForm
-                    type="ADD"
                     onSuccess={() =>
                         router.push("/company/courses")
                     }

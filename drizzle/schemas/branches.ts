@@ -9,18 +9,12 @@ import {
 } from "drizzle-orm/pg-core"
 
 import { createdAt, id, updatedAt } from "../helpers"
+import { FileType } from "../types"
 
 export const branchApplicationStatus = pgEnum(
     "branch_application_status",
     ["pending", "approved", "rejected"],
 )
-
-export type FileType = {
-    secureUrl: string
-    publicId: string
-    resourceType: string
-    format: string
-}
 
 export const branchApplications = snakeCase.table(
     "branch_applications",

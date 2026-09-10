@@ -74,9 +74,13 @@ export default function DeleteCourseDialog({
                             disabled={mutation.isPending}
                             onClick={() =>
                                 deleteDialogInfo &&
-                                mutation.mutate(
-                                    deleteDialogInfo.id,
-                                )
+                                mutation.mutate({
+                                    id: deleteDialogInfo.id,
+                                    bannerPublicId:
+                                        deleteDialogInfo
+                                            .banner
+                                            .publicId,
+                                })
                             }
                             variant={"destructive"}
                         >

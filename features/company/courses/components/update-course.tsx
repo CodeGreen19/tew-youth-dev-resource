@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { Course } from "../types"
-import { CourseForm } from "./course-form"
+import { UpdateCourseForm } from "./update-course-form"
 
 export function UpdateCourse({
     course,
@@ -12,9 +12,12 @@ export function UpdateCourse({
     const router = useRouter()
     return (
         <div className="max-w-lg m-auto">
-            <CourseForm
-                type="UPDATE"
-                existedValue={course}
+            <UpdateCourseForm
+                existedValue={{
+                    ...course,
+                    existingBanner: course.banner,
+                    banner: null,
+                }}
                 onSuccess={() =>
                     router.push("/company/courses")
                 }
