@@ -42,6 +42,10 @@ export const navData: NavDataType = {
                     title: "Users",
                     url: "/company/users",
                 },
+                {
+                    title: "Roles & Permissions",
+                    url: "/company/roles-permissions",
+                },
             ],
         },
     ],
