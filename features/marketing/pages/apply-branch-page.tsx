@@ -2,31 +2,65 @@
 import { useState } from "react"
 import { AddressDetailsForm } from "../components/apply-branch/address-details-form"
 import { BranchDetailsForm } from "../components/apply-branch/branch-details-form"
-import { OnboardingNavigation } from "../components/apply-branch/onboarding-navigation"
-import { OnboardingSteps } from "../components/apply-branch/onboardong-steps"
 import { OwnerInfoForm } from "../components/apply-branch/owner-info-form"
-import { onboardingSteps } from "../constants"
-import { useOnboardingStore } from "../hooks/use-onboarding-store"
+
+import { FormSteps } from "@/components/shared/form-steps"
+import { FormStepsNavigation } from "@/components/shared/form-steps-navigation"
+import { toast } from "@/components/ui/toast"
+import { useFormStepsStore } from "@/hooks/use-form-steps-store"
+import { FormStepsType } from "@/types/steps"
+import { useMutation } from "@tanstack/react-query"
+import { applyForBranch } from "../actions"
+import { ApplicationFormPreview } from "../components/apply-branch/application-form-preview"
+import { DocumentsForm } from "../components/apply-branch/documents-form"
 import {
     branchApplicationDefaults,
     BranchApplicationSchemaType,
 } from "../schemas"
-import { DocumentsForm } from "../components/apply-branch/documents-form"
-import { ApplicationFormPreview } from "../components/apply-branch/application-form-preview"
-import { useMutation } from "@tanstack/react-query"
-import { applyForBranch } from "../actions"
-import { toast } from "@/components/ui/toast"
+const formSteps = [
+    {
+        id: "branch",
+        title: "Branch",
+        description: "Branch information",
+        formId: "branch-details-form",
+    },
+    {
+        id: "owner",
+        title: "Owner",
+        description: "Owner details",
+        formId: "owner-info-form",
+    },
+
+    {
+        id: "address",
+        title: "Address",
+        description: "Address of branch",
+        formId: "address-details-form",
+    },
+    {
+        id: "documents",
+        title: "Docs",
+        description: "Valid documents",
+        formId: "branch-docs-form",
+    },
+    {
+        id: "preview",
+        title: "Preview",
+        description: "Confirm details",
+        formId: "branch-preview-form",
+    },
+] satisfies readonly FormStepsType[]
 
 export function ApplyBranchPage() {
     const { currentStep, nextStep, setStep } =
-        useOnboardingStore()
+        useFormStepsStore()
 
     const [applicationForm, setApplicationForm] =
         useState<BranchApplicationSchemaType>({
             ...branchApplicationDefaults,
         })
 
-    const formId = onboardingSteps[currentStep].formId
+    const formId = formSteps[currentStep].formId
 
     const mutation = useMutation({
         mutationFn: applyForBranch,
@@ -43,7 +77,7 @@ export function ApplyBranchPage() {
     return (
         <div className="space-y-8  mt-6 pb-10">
             <div className="max-w-7xl m-auto">
-                <OnboardingSteps steps={onboardingSteps} />
+                <FormSteps steps={formSteps} />
             </div>
             <div className="max-w-lg m-auto pt-6 px-4 lg:px-0">
                 <div className="space-y-8">
@@ -111,10 +145,10 @@ export function ApplyBranchPage() {
                         />
                     ) : null}
 
-                    <OnboardingNavigation
+                    <FormStepsNavigation
                         showSubmitButton={
                             currentStep + 1 ===
-                            onboardingSteps.length
+                            formSteps.length
                         }
                         onSubmit={() =>
                             mutation.mutate(applicationForm)

@@ -4,19 +4,20 @@
 
 import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useOnboardingStore } from "../../hooks/use-onboarding-store"
-import { OnboardingStep } from "../../types"
 
-type OnboardingStepsProps = {
-    steps: readonly OnboardingStep[]
+import { useFormStepsStore } from "@/hooks/use-form-steps-store"
+import { FormStepsType } from "@/types/steps"
+
+type FormStepsProps = {
+    steps: readonly FormStepsType[]
     className?: string
 }
 
-export function OnboardingSteps({
+export function FormSteps({
     steps,
     className,
-}: OnboardingStepsProps) {
-    const currentStep = useOnboardingStore(
+}: FormStepsProps) {
+    const currentStep = useFormStepsStore(
         (state) => state.currentStep,
     )
 

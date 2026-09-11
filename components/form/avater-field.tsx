@@ -9,11 +9,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { FormField } from "@/types/form"
-import { ImagePlus, X } from "lucide-react"
-import { useCallback, useState } from "react"
+import { ImagePlus } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
 import Cropper, { type Area } from "react-easy-crop"
 import { useFieldContext } from "./use-app-form"
 import { Button } from "../ui/button"
+import NextImage from "next/image"
 
 type AvatarFieldProps = Pick<
     FormField,
@@ -33,15 +34,13 @@ export function AvatarField({
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [zoom, setZoom] = useState(1)
     const [error, setError] = useState<string>()
+    const [cropArea, setCropArea] = useState<Area>()
+    const [croppedFile, setCroppedFile] =
+        useState<File | null>(null)
 
     const isInvalid =
         field.state.meta.isTouched &&
         !field.state.meta.isValid
-
-    const onCropComplete = useCallback(
-        (_: Area, area: Area) => {},
-        [],
-    )
 
     const handleChange = (file?: File) => {
         if (!file) return
@@ -65,6 +64,22 @@ export function AvatarField({
         field.handleChange(file)
     }
 
+    console.log("crop", cropArea)
+
+    useEffect(() => {
+        const file = field.state.value
+
+        if (!file) {
+            setImage(undefined)
+            return
+        }
+
+        const url = URL.createObjectURL(file)
+        setImage(url)
+
+        return () => URL.revokeObjectURL(url)
+    }, [field.state.value])
+
     return (
         <Field data-invalid={isInvalid}>
             {label && (
@@ -72,6 +87,33 @@ export function AvatarField({
                     {label}
                 </FieldLabel>
             )}
+            {/* testing */}
+            <div>
+                <Button
+                    onClick={async () => {
+                        const file = field.state.value
+                        if (!file || !cropArea) return
+                        const res = await getCroppedFile(
+                            file,
+                            cropArea,
+                        )
+                        setCroppedFile(res)
+                    }}
+                >
+                    Apply changes
+                </Button>
+
+                {croppedFile && (
+                    <NextImage
+                        src={URL.createObjectURL(
+                            croppedFile,
+                        )}
+                        height={100}
+                        width={100}
+                        alt="cropped image"
+                    />
+                )}
+            </div>
 
             {image ? (
                 <div className="space-y-4">
@@ -81,14 +123,13 @@ export function AvatarField({
                                 image={image}
                                 crop={crop}
                                 zoom={zoom}
-                                aspect={1}
+                                aspect={1 / 1}
                                 cropShape="round"
+
                                 showGrid={false}
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
-                                onCropComplete={
-                                    onCropComplete
-                                }
+                                onCropComplete={setCropArea}
                             />
                         </div>
                         <Button
@@ -170,6 +211,58 @@ export function AvatarField({
             )}
         </Field>
     )
+}
+
+async function getCroppedFile(
+    file: File,
+    crop: Area,
+): Promise<File> {
+    const image = await loadImage(URL.createObjectURL(file))
+
+    const canvas = document.createElement("canvas")
+    const ctx = canvas.getContext("2d")
+
+    if (!ctx) {
+        throw new Error("Could not create canvas context.")
+    }
+
+    canvas.width = crop.width
+    canvas.height = crop.height
+
+    ctx.drawImage(
+        image,
+        crop.x,
+        crop.y,
+        crop.width,
+        crop.height,
+        0,
+        0,
+        crop.width,
+        crop.height,
+    )
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, file.type, 0.9),
+    )
+
+    if (!blob) {
+        throw new Error("Could not create cropped image.")
+    }
+
+    return new File([blob], file.name, {
+        type: file.type,
+        lastModified: Date.now(),
+    })
+}
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+        const image = new Image()
+
+        image.onload = () => resolve(image)
+        image.onerror = reject
+        image.src = src
+    })
 }
 
 function formatSize(bytes: number) {

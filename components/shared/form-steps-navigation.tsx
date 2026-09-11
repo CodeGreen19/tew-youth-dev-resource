@@ -1,10 +1,10 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { useFormStepsStore } from "@/hooks/use-form-steps-store"
 import { MoveLeft, MoveRight } from "lucide-react"
-import { useOnboardingStore } from "../../hooks/use-onboarding-store"
 
-export function OnboardingNavigation({
+export function FormStepsNavigation({
     formId,
     onSubmit,
     showSubmitButton,
@@ -16,7 +16,7 @@ export function OnboardingNavigation({
     submitPending: boolean
 }) {
     const { currentStep, previousStep } =
-        useOnboardingStore()
+        useFormStepsStore()
 
     const handleBack = () => {
         previousStep()

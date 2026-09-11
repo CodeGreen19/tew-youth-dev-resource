@@ -38,6 +38,12 @@ export const navData: NavDataType = {
                     title: "Branch Applications",
                     url: "/company/branch-applications",
                 },
+            ],
+        },
+        {
+            title: "Settings",
+
+            items: [
                 {
                     title: "Users",
                     url: "/company/users",

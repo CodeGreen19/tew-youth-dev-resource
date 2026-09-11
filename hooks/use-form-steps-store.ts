@@ -1,7 +1,7 @@
 // stores/use-onboarding-store.ts
 import { create } from "zustand"
 
-type OnboardingStore = {
+type FormStepsStore = {
     currentStep: number
     setStep: (step: number) => void
     nextStep: (
@@ -11,7 +11,7 @@ type OnboardingStore = {
     previousStep: () => void
 }
 
-export const useOnboardingStore = create<OnboardingStore>(
+export const useFormStepsStore = create<FormStepsStore>(
     (set) => ({
         currentStep: 0,
         setStep: (step) => set({ currentStep: step }),
