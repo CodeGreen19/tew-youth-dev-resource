@@ -9,3 +9,14 @@ export async function getMembers() {
         headers: await headers(),
     })
 }
+
+export async function getOrgUserDetailsById({
+    userId,
+}: {
+    userId: string
+}) {
+    return await auth.api.getUser({
+        query: { id: userId },
+        headers: await headers(),
+    })
+}

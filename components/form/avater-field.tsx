@@ -8,17 +8,16 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
+import {
+    avaterObjDefaults,
+    AvaterObjSchema,
+} from "@/features/schemas"
 import { FormField } from "@/types/form"
 import { ImagePlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import Cropper, { type Area } from "react-easy-crop"
 import { Button } from "../ui/button"
 import { useFieldContext } from "./use-app-form"
-import NextImage from "next/image"
-import {
-    avaterObjDefaults,
-    AvaterObjSchema,
-} from "@/features/schemas"
 
 type AvatarFieldProps = Pick<
     FormField,
@@ -39,8 +38,6 @@ export function AvatarField({
     const [zoom, setZoom] = useState(1)
     const [error, setError] = useState<string>()
     const [cropArea, setCropArea] = useState<Area>()
-    const [croppedPreview, setCroppedPreview] =
-        useState<string>()
 
     const isInvalid =
         field.state.meta.isTouched &&
@@ -131,22 +128,6 @@ export function AvatarField({
         }
     }, [cropArea])
 
-    // for preview
-
-    useEffect(() => {
-        if (!field.state.value?.croppedFile) {
-            setCroppedPreview(undefined)
-            return
-        }
-
-        const url = URL.createObjectURL(
-            field.state.value.croppedFile,
-        )
-        setCroppedPreview(url)
-
-        return () => URL.revokeObjectURL(url)
-    }, [field.state.value?.croppedFile])
-
     return (
         <Field data-invalid={isInvalid}>
             {label && (
@@ -158,15 +139,6 @@ export function AvatarField({
             {image ? (
                 <div className="space-y-4">
                     <div className="flex items-end gap-2 justify-start">
-                        {croppedPreview && (
-                            <NextImage
-                                src={croppedPreview}
-                                width={100}
-                                height={100}
-                                alt="Cropped avatar"
-                                className="rounded-full object-cover"
-                            />
-                        )}
                         <div className="relative aspect-square w-40! overflow-hidden border rounded-sm border-background shadow-lg ring-1 ring-border">
                             <Cropper
                                 image={image}

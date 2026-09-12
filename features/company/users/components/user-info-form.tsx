@@ -41,10 +41,6 @@ export function UserInfoForm({
         },
     })
 
-    const errors = form.state.errors
-
-    console.log("formError", errors)
-
     return (
         <Card>
             <CardHeader>
@@ -92,21 +88,20 @@ export function UserInfoForm({
                         />
 
                         <form.AppField
-                            name="phoneNumber"
-                            children={(field) => (
-                                <field.TextField
-                                    label="Phone Number"
-                                    placeholder="Enter Bangladeshi phone number"
-                                />
-                            )}
-                        />
-
-                        <form.AppField
                             name="password"
                             children={(field) => (
                                 <field.TextField
                                     label="Password"
                                     placeholder="Create a secure password"
+                                />
+                            )}
+                        />
+                        <form.AppField
+                            name="phoneNumber"
+                            children={(field) => (
+                                <field.TextField
+                                    label="Phone Number"
+                                    placeholder="Enter Bangladeshi phone number"
                                 />
                             )}
                         />

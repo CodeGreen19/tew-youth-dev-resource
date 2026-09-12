@@ -17,6 +17,14 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
+    user: {
+        additionalFields: {
+            data: {
+                type: "json",
+                required: false,
+            },
+        },
+    },
 
     plugins: [
         organization({

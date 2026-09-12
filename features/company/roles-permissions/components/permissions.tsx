@@ -51,8 +51,6 @@ function Resource({
     staticValues,
     values,
 }: PresourceProps) {
-    // console.log("values", values)
-
     return (
         <div className="space-y-3 py-3">
             <div>

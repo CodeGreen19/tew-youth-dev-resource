@@ -1,6 +1,7 @@
 import {
     boolean,
     index,
+    jsonb,
     pgTable,
     text,
     timestamp,
@@ -25,6 +26,7 @@ export const users = pgTable("users", {
     banned: boolean("banned").default(false),
     banReason: text("ban_reason"),
     banExpires: timestamp("ban_expires"),
+    data: jsonb("data"),
 })
 
 export const sessions = pgTable(

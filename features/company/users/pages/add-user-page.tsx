@@ -15,6 +15,7 @@ import {
     orgUserFullDefaults,
     OrgUserFullSchemaType,
 } from "../schemas"
+import { Button } from "@/components/ui/button"
 const formSteps = [
     {
         id: "user-info",
@@ -55,7 +56,10 @@ export function AddUserPage() {
             toast.add({ title: message, type: "success" })
         },
         onError: ({ message }) => {
-            toast.add({ title: message, type: "error" })
+            toast.add({
+                title: message,
+                type: "error",
+            })
         },
     })
 
@@ -106,8 +110,7 @@ export function AddUserPage() {
                             formSteps.length
                         }
                         onSubmit={() =>
-                            // mutation.mutate(orgUserForm)
-                            console.log(orgUserForm, "data")
+                            mutation.mutate(orgUserForm)
                         }
                         submitPending={mutation.isPending}
                         formId={formId}

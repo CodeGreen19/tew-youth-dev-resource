@@ -43,7 +43,8 @@ export function UserFormPreview({
                     {orgUser.profilePicture && (
                         <AvatarImage
                             src={URL.createObjectURL(
-                                orgUser.profilePicture,
+                                orgUser.profilePicture
+                                    .croppedFile,
                             )}
                             alt={orgUser.name}
                         />
