@@ -26,7 +26,8 @@ export async function applyForBranch(
         uploadToCloudinary(data.electricityBill),
         uploadToCloudinary(data.nidDocument),
         uploadToCloudinary(data.tradeLicense),
-        data.logo && uploadToCloudinary(data.logo),
+        data.logo &&
+            uploadToCloudinary(data.logo.croppedFile),
     ])
     await db.insert(branchApplications).values({
         ...data,

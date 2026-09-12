@@ -41,6 +41,10 @@ export function UserInfoForm({
         },
     })
 
+    const errors = form.state.errors
+
+    console.log("formError", errors)
+
     return (
         <Card>
             <CardHeader>

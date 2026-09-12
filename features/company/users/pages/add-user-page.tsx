@@ -30,7 +30,7 @@ const formSteps = [
     },
     {
         id: "preview",
-        title: "Preview & Confirm",
+        title: "Preview",
         description: "Review & confirm your details",
         formId: "user-preview-form",
     },

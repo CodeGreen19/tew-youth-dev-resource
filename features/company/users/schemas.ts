@@ -1,4 +1,8 @@
 import { GENDER } from "@/features/marketing/constants"
+import {
+    avatarObjSchema,
+    avaterObjDefaults,
+} from "@/features/schemas"
 import { z } from "zod"
 
 // ─────────────────────────────────────────────
@@ -6,9 +10,8 @@ import { z } from "zod"
 // ─────────────────────────────────────────────
 
 export const orgUserSchema = z.object({
-    profilePicture: z.instanceof(File, {
-        message: "Profile picture is required", // Fixed syntax error from 'error' to 'message'
-    }),
+    profilePicture: avatarObjSchema,
+
     name: z
         .string()
         .min(3, "Name must be at least 3 characters")
@@ -112,7 +115,7 @@ export const orgUserFullDefaults: OrgUserFullSchemaType = {
     phoneNumber: "",
     fatherName: "",
     motherName: "",
-    profilePicture: undefined as unknown as File,
+    profilePicture: avaterObjDefaults,
     gender: "Male", // Note: Ensure "Male" exists inside your GENDER array constants
 
     // Optional Fields

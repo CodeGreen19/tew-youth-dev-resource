@@ -10,11 +10,15 @@ import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { FormField } from "@/types/form"
 import { ImagePlus } from "lucide-react"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Cropper, { type Area } from "react-easy-crop"
-import { useFieldContext } from "./use-app-form"
 import { Button } from "../ui/button"
+import { useFieldContext } from "./use-app-form"
 import NextImage from "next/image"
+import {
+    avaterObjDefaults,
+    AvaterObjSchema,
+} from "@/features/schemas"
 
 type AvatarFieldProps = Pick<
     FormField,
@@ -28,15 +32,15 @@ export function AvatarField({
     description,
     maxSize = 5 * 1024 * 1024,
 }: AvatarFieldProps) {
-    const field = useFieldContext<File | null>()
+    const field = useFieldContext<AvaterObjSchema | null>()
 
     const [image, setImage] = useState<string>()
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [zoom, setZoom] = useState(1)
     const [error, setError] = useState<string>()
     const [cropArea, setCropArea] = useState<Area>()
-    const [croppedFile, setCroppedFile] =
-        useState<File | null>(null)
+    const [croppedPreview, setCroppedPreview] =
+        useState<string>()
 
     const isInvalid =
         field.state.meta.isTouched &&
@@ -58,16 +62,19 @@ export function AvatarField({
         }
 
         setError(undefined)
-        setImage(URL.createObjectURL(file))
         setCrop({ x: 0, y: 0 })
         setZoom(1)
-        field.handleChange(file)
+        setCropArea(undefined)
+
+        field.handleChange({
+            ...avaterObjDefaults,
+            originalFile: file,
+        })
     }
 
-    console.log("crop", cropArea)
-
+    // for setting initial image preview
     useEffect(() => {
-        const file = field.state.value
+        const file = field.state.value?.originalFile
 
         if (!file) {
             setImage(undefined)
@@ -78,7 +85,67 @@ export function AvatarField({
         setImage(url)
 
         return () => URL.revokeObjectURL(url)
-    }, [field.state.value])
+    }, [field.state.value?.originalFile])
+
+    // for setting initial image preview
+    useEffect(() => {
+        const x = field.state.value?.x || 0
+        const y = field.state.value?.y || 0
+        const zoom = field.state.value?.zoom
+        if (x || y) {
+            setCrop({ x, y })
+        }
+        if (zoom) {
+            setZoom(zoom)
+        }
+    }, [
+        field.state.value?.x,
+        field.state.value?.y,
+        field.state.value?.zoom,
+    ])
+
+    // for cropping the image file
+    useEffect(() => {
+        const value = field.state.value
+
+        if (!value || !cropArea) return
+
+        let cancelled = false
+
+        getCroppedFile(value.originalFile, cropArea).then(
+            (croppedFile) => {
+                if (cancelled) return
+
+                field.setValue({
+                    originalFile: value.originalFile,
+                    croppedFile,
+                    x: crop.x,
+                    y: crop.y,
+                    zoom,
+                })
+            },
+        )
+
+        return () => {
+            cancelled = true
+        }
+    }, [cropArea])
+
+    // for preview
+
+    useEffect(() => {
+        if (!field.state.value?.croppedFile) {
+            setCroppedPreview(undefined)
+            return
+        }
+
+        const url = URL.createObjectURL(
+            field.state.value.croppedFile,
+        )
+        setCroppedPreview(url)
+
+        return () => URL.revokeObjectURL(url)
+    }, [field.state.value?.croppedFile])
 
     return (
         <Field data-invalid={isInvalid}>
@@ -87,49 +154,37 @@ export function AvatarField({
                     {label}
                 </FieldLabel>
             )}
-            {/* testing */}
-            <div>
-                <Button
-                    onClick={async () => {
-                        const file = field.state.value
-                        if (!file || !cropArea) return
-                        const res = await getCroppedFile(
-                            file,
-                            cropArea,
-                        )
-                        setCroppedFile(res)
-                    }}
-                >
-                    Apply changes
-                </Button>
-
-                {croppedFile && (
-                    <NextImage
-                        src={URL.createObjectURL(
-                            croppedFile,
-                        )}
-                        height={100}
-                        width={100}
-                        alt="cropped image"
-                    />
-                )}
-            </div>
 
             {image ? (
                 <div className="space-y-4">
                     <div className="flex items-end gap-2 justify-start">
+                        {croppedPreview && (
+                            <NextImage
+                                src={croppedPreview}
+                                width={100}
+                                height={100}
+                                alt="Cropped avatar"
+                                className="rounded-full object-cover"
+                            />
+                        )}
                         <div className="relative aspect-square w-40! overflow-hidden border rounded-sm border-background shadow-lg ring-1 ring-border">
                             <Cropper
                                 image={image}
                                 crop={crop}
                                 zoom={zoom}
-                                aspect={1 / 1}
+                                aspect={1}
                                 cropShape="round"
-
                                 showGrid={false}
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
-                                onCropComplete={setCropArea}
+                                onCropComplete={(
+                                    _,
+                                    croppedAreaPixels,
+                                ) => {
+                                    setCropArea(
+                                        croppedAreaPixels,
+                                    )
+                                }}
                             />
                         </div>
                         <Button
@@ -217,44 +272,54 @@ async function getCroppedFile(
     file: File,
     crop: Area,
 ): Promise<File> {
-    const image = await loadImage(URL.createObjectURL(file))
+    const imageUrl = URL.createObjectURL(file)
 
-    const canvas = document.createElement("canvas")
-    const ctx = canvas.getContext("2d")
+    try {
+        const image = await loadImage(imageUrl)
 
-    if (!ctx) {
-        throw new Error("Could not create canvas context.")
+        const canvas = document.createElement("canvas")
+        const ctx = canvas.getContext("2d")
+
+        if (!ctx) {
+            throw new Error(
+                "Could not create canvas context.",
+            )
+        }
+
+        canvas.width = crop.width
+        canvas.height = crop.height
+
+        ctx.drawImage(
+            image,
+            crop.x,
+            crop.y,
+            crop.width,
+            crop.height,
+            0,
+            0,
+            crop.width,
+            crop.height,
+        )
+
+        const blob = await new Promise<Blob | null>(
+            (resolve) =>
+                canvas.toBlob(resolve, file.type, 0.9),
+        )
+
+        if (!blob) {
+            throw new Error(
+                "Could not create cropped image.",
+            )
+        }
+
+        return new File([blob], file.name, {
+            type: file.type,
+            lastModified: Date.now(),
+        })
+    } finally {
+        URL.revokeObjectURL(imageUrl)
     }
-
-    canvas.width = crop.width
-    canvas.height = crop.height
-
-    ctx.drawImage(
-        image,
-        crop.x,
-        crop.y,
-        crop.width,
-        crop.height,
-        0,
-        0,
-        crop.width,
-        crop.height,
-    )
-
-    const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, file.type, 0.9),
-    )
-
-    if (!blob) {
-        throw new Error("Could not create cropped image.")
-    }
-
-    return new File([blob], file.name, {
-        type: file.type,
-        lastModified: Date.now(),
-    })
 }
-
 function loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const image = new Image()
