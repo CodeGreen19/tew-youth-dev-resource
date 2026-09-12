@@ -43,7 +43,7 @@ export async function addOrgUser(
             name: data.name,
             email: data.email,
             password: data.password,
-            data: { profilePicture, cv, ...rest },
+            data: { data: { profilePicture, cv, ...rest } },
         },
         headers: await headers(),
     })

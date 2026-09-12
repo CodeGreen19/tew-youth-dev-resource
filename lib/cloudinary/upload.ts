@@ -1,14 +1,14 @@
 import "server-only"
 import { cloudinary } from "./config"
 
-type UploadResult = {
+export type UploadResult = {
     publicId: string
     secureUrl: string
     resourceType: string
     format: string
 }
 
-type UploadOptions = {
+export type UploadOptions = {
     folder?: string
     publicId?: string
     resourceType?: "image" | "video" | "raw" | "auto"
