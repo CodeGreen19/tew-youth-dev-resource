@@ -19,7 +19,7 @@ const columnHelper = createColumnHelper<
 export const columns = columnHelper.columns([
     createSelectColumn<OrgUser>(),
     columnHelper.accessor("user.name", {
-        id: "Name",
+        id: "name",
         header: ({ column }) => (
             <DataTableColumnHeader
                 column={column}
@@ -28,7 +28,7 @@ export const columns = columnHelper.columns([
         ),
     }),
     columnHelper.accessor("user.email", {
-        id: "Email",
+        id: "email",
         header: ({ column }) => (
             <DataTableColumnHeader
                 column={column}
@@ -56,7 +56,7 @@ export const columns = columnHelper.columns([
         id: "actions",
         cell: ({ row }) => (
             <CellNavigateTo
-                href={`/company/users/${row.original.user.id}/details`}
+                href={`/company/users/${row.original.id}/details`}
             />
         ),
     }),

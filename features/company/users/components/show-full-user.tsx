@@ -6,22 +6,25 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
     Card,
+    CardAction,
     CardContent,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { UserWithRole } from "better-auth/plugins"
 import {
+    Edit,
     FileText,
     GraduationCap,
     MapPin,
     Phone,
+    ShieldQuestion,
     User,
 } from "lucide-react"
-import { AdditionalDataType, FullUser } from "../types"
+import { FullUser } from "../types"
 
 function InfoItem({
     icon: Icon,
@@ -43,7 +46,7 @@ function InfoItem({
                 <p className="text-muted-foreground text-xs">
                     {label}
                 </p>
-                <p className="text-sm font-medium break-words">
+                <p className="text-sm font-medium wrap-break-words">
                     {value}
                 </p>
             </div>
@@ -63,6 +66,17 @@ export function ShowFullUser({ data }: { data: FullUser }) {
 
     return (
         <div className="space-y-4">
+            <Card>
+                <CardHeader>
+                    <CardTitle>User Details</CardTitle>
+                    <CardAction>
+                        <Button variant={"secondary"}>
+                            Edit <Edit />
+                        </Button>
+                    </CardAction>
+                    <CardContent>{}</CardContent>
+                </CardHeader>
+            </Card>
             <Card>
                 <CardContent className="flex flex-col gap-5 sm:flex-row sm:items-center">
                     <Avatar className="size-20">
@@ -90,16 +104,8 @@ export function ShowFullUser({ data }: { data: FullUser }) {
 
                         <div className="flex flex-wrap gap-2 pt-1">
                             <Badge variant="secondary">
-                                {userData?.gender}
+                                {data.orgRole}
                             </Badge>
-
-                            {userData?.qualification && (
-                                <Badge variant="outline">
-                                    {
-                                        userData?.qualification
-                                    }
-                                </Badge>
-                            )}
                         </div>
                     </div>
                 </CardContent>
@@ -132,6 +138,11 @@ export function ShowFullUser({ data }: { data: FullUser }) {
                         icon={MapPin}
                         label="Address"
                         value={userData?.address}
+                    />
+                    <InfoItem
+                        icon={ShieldQuestion}
+                        label="Gender"
+                        value={userData?.gender}
                     />
                 </CardContent>
             </Card>

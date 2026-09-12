@@ -72,13 +72,6 @@ export function DataTable<TData extends RowData>({
         },
     })
 
-    // test
-    const selectedRows = table.getSelectedRowModel().rows
-
-    const selectedData = selectedRows.map(
-        (row) => row.original,
-    )
-
     return (
         <div>
             <div className="flex items-center justify-between  gap-2 py-4">

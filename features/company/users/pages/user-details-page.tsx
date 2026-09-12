@@ -18,7 +18,7 @@ export async function OrgUserDetailsPage({
 }: {
     id: string
 }) {
-    const data = await getUserDetailsById({ userId: id })
+    const data = await getUserDetailsById({ memberId: id })
 
     return (
         <Page>

@@ -13,7 +13,7 @@ import { Plus } from "lucide-react"
 import Link from "next/link"
 
 export async function UsersPage() {
-    const members = (await getMembers()).members
+    const res = await getMembers()
 
     return (
         <Page>
@@ -34,8 +34,10 @@ export async function UsersPage() {
             </PageHeader>
             <PageContent>
                 <DataTable
+                    searchBy="name"
                     columns={columns}
-                    data={members}
+                    data={res.members}
+                    searchPlaceholder="Search by name..."
                 />
             </PageContent>
         </Page>
