@@ -7,6 +7,7 @@ import {
     organization,
 } from "better-auth/plugins"
 import { ac, owner } from "./permissions"
+import { sendResetPasswordEmail } from "./emails/auth-emails"
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -16,6 +17,14 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
+        sendResetPassword: async ({ user, url }, req) => {
+            await sendResetPasswordEmail(user.email, url)
+        },
+        onPasswordReset: async ({ user }, request) => {
+            console.log(
+                `Password for user ${user.email} has been reset.`,
+            )
+        },
     },
     user: {
         additionalFields: {

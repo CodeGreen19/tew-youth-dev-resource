@@ -10,7 +10,7 @@ export function AuthLayout(props: LayoutProps<"/">) {
                 </Link>
             </h1>
 
-            <div className="max-w-sm m-auto pt-5">
+            <div className="max-w-sm m-auto pt-5 px-4">
                 {props.children}
             </div>
         </div>

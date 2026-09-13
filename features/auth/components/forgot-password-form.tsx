@@ -14,21 +14,21 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { onErrorShowToast } from "@/lib/error/error-toast"
 import { onSuccessShowToast } from "@/lib/success/toast-success"
 import { useMutation } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-import { login } from "../actions"
-import { loginSchema, LoginSchemaType } from "../schemas"
+import { forgotPassword } from "../actions"
+import {
+    forgotPasswordSchema,
+    ForgotPasswordSchemaType,
+} from "../schemas"
 
-export function LoginForm() {
-    const router = useRouter()
-    const defaultValues: LoginSchemaType = {
+export function ForgotPasswordForm() {
+    const defaultValues: ForgotPasswordSchemaType = {
         email: "",
-        password: "",
     }
 
-    const loginMutation = useMutation({
-        mutationFn: login,
+    const forgotPasswordMutation = useMutation({
+        mutationFn: forgotPassword,
         onSuccess: (res) => {
-            router.push("/company/overviews")
+            form.reset()
             onSuccessShowToast(res)
         },
         onError: onErrorShowToast,
@@ -37,23 +37,25 @@ export function LoginForm() {
     const form = useAppForm({
         defaultValues,
         validators: {
-            onChange: loginSchema,
+            onChange: forgotPasswordSchema,
         },
         onSubmit: async ({ value }) =>
-            loginMutation.mutate(value),
+            forgotPasswordMutation.mutate(value),
     })
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Login</CardTitle>
+                <CardTitle>Forgot Password</CardTitle>
                 <CardDescription>
-                    Enter your credentials to login in
+                    Enter your email address and we'll send
+                    you a password reset link.
                 </CardDescription>
             </CardHeader>
+
             <CardContent>
                 <form
-                    id="login-form"
+                    id="forgot-password-form"
                     onSubmit={(e) => {
                         e.preventDefault()
                         form.handleSubmit()
@@ -69,26 +71,19 @@ export function LoginForm() {
                                 />
                             )}
                         />
-                        <form.AppField
-                            name="password"
-                            children={(field) => (
-                                <field.PasswordField
-                                    label="Password"
-                                    placeholder="eg: 34334456"
-                                    forgotPasswordHref="/forgot-password"
-                                />
-                            )}
-                        />
                     </FieldGroup>
                 </form>
             </CardContent>
+
             <CardFooter>
                 <Field>
                     <SubmitButton
-                        isPending={loginMutation.isPending}
-                        form="login-form"
+                        isPending={
+                            forgotPasswordMutation.isPending
+                        }
+                        form="forgot-password-form"
                     >
-                        Submit
+                        Send Reset Link
                     </SubmitButton>
                 </Field>
             </CardFooter>

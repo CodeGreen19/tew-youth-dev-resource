@@ -10,6 +10,7 @@ import { SelectField } from "./select-field"
 import { CheckboxField } from "./checkbox-field"
 import { FileField } from "./file-field"
 import { AvatarField } from "./avater-field"
+import { PasswordField } from "./password-field"
 
 export const {
     fieldContext,
@@ -23,6 +24,7 @@ export const { useAppForm, withForm } = createFormHook({
     formContext,
     fieldComponents: {
         TextField,
+        PasswordField,
         NumberField,
         SelectField,
         CheckboxField,

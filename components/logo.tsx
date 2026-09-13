@@ -11,6 +11,7 @@ export function Logo() {
                     width={60}
                     alt="main-log"
                     loading="eager"
+                    className="h-auto w-auto"
                 />
             </Link>
         </div>
