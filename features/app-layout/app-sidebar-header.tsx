@@ -17,16 +17,18 @@ import {
 } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { authClient } from "@/lib/auth-client"
-import { useMutation } from "@tanstack/react-query"
+import {
+    useMutation,
+    useSuspenseQuery,
+} from "@tanstack/react-query"
 import { GalleryVerticalEnd, Loader2 } from "lucide-react"
+import { getSideBarInfo } from "./data/queries"
 
 export function AppSidebarHeader() {
-    const org = authClient.useActiveOrganization()
-    const member = authClient.useActiveMember()
-
-    if (org.isPending || member.isPending) {
-        return <AppSidebarHeaderSkeleton />
-    }
+    const { data } = useSuspenseQuery({
+        queryKey: ["sidebar-info"],
+        queryFn: () => getSideBarInfo(),
+    })
 
     return (
         <SidebarHeader>
@@ -41,10 +43,10 @@ export function AppSidebarHeader() {
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-medium text-lg">
-                                        {org.data?.name}
+                                        {data.org.name}
                                     </span>
                                     <span className="text-xs text-muted-foreground capitalize">
-                                        {member.data?.role}
+                                        {data.member.role}
                                     </span>
                                 </div>
                             </div>
@@ -52,9 +54,9 @@ export function AppSidebarHeader() {
                     ></SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
-            <SelectOrganizationDialog
+            {/* <SelectOrganizationDialog
                 isOpen={!org.isPending && !org.data}
-            />
+            /> */}
         </SidebarHeader>
     )
 }

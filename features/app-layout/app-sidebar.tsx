@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 
 import {
@@ -6,35 +8,29 @@ import {
     SidebarFooter,
     SidebarGroup,
     SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
-import { authClient } from "@/lib/auth-client"
-import { cn, wait } from "@/lib/utils"
-import Link from "next/link"
-// import { usePathname } from "next/navigation"
-import { navData } from "../constants"
-import { AppNavUser } from "./app-nav-user"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { getSideBarInfo } from "./data/queries"
 import { AppSidebarHeader } from "./app-sidebar-header"
+import { AppNavUser } from "./app-nav-user"
 
-export async function AppSidebar({
+export function AppSidebar({
     ...props
 }: React.ComponentProps<typeof Sidebar>) {
-    // const pathname = usePathname()
-    // const session = authClient.useSession()
-    // const org = authClient.useActiveOrganization();
-    // await wait()
+    const { data } = useSuspenseQuery({
+        queryKey: ["sidebar-info"],
+        queryFn: () => getSideBarInfo(),
+    })
+
     return (
-        <Sidebar {...props}>
-            {/* <AppSidebarHeader /> */}
+        <Sidebar {...props} variant="inset">
+            <AppSidebarHeader />
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarMenu>
-                        sidebar menu
+                        sidebar menu{" "}
+                        {data.session.user.name}
                         {/* {navData.navMain.map((item) => (
                             <SidebarMenuItem
                                 key={item.title}
@@ -85,14 +81,7 @@ export async function AppSidebar({
             <SidebarRail />
             <SidebarFooter>
                 footer
-                {/* <AppNavUser
-                    isPending={session.isPending}
-                    user={{
-                        name: session.data?.user.name,
-                        email: session.data?.user.email,
-                        role: session.data?.user.role,
-                    }}
-                /> */}
+                <AppNavUser />
             </SidebarFooter>
         </Sidebar>
     )

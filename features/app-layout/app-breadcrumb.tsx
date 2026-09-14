@@ -8,7 +8,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { usePathname } from "next/navigation"
-import { navData } from "../constants"
 
 export function AppBreadcrumb() {
     const pathname = usePathname()

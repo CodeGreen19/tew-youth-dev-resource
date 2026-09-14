@@ -1,10 +1,10 @@
 "use server"
 
-import { db } from "@/drizzle/db"
+import { txDB } from "@/drizzle/db"
 import { tests } from "@/drizzle/schema"
 
 export async function action() {
-    return db.transaction(async (tx) => {
+    return txDB.transaction(async (tx) => {
         await tx
             .insert(tests)
             .values({ name: "test 6", code: "147" })
