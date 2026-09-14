@@ -1,13 +1,15 @@
 import { db } from "@/drizzle/db"
 import * as schema from "@/drizzle/schema"
+import { waitUntil } from "@vercel/functions"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { nextCookies } from "better-auth/next-js"
 import {
     admin as adminPlugin,
     organization,
 } from "better-auth/plugins"
-import { ac, owner } from "./permissions"
 import { sendResetPasswordEmail } from "./emails/auth-emails"
+import { ac, owner } from "./permissions"
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -17,10 +19,13 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
-        sendResetPassword: async ({ user, url }, req) => {
-            await sendResetPasswordEmail(user.email, url)
+        sendResetPassword: async ({ user, url }) => {
+            return await sendResetPasswordEmail(
+                user.email,
+                url,
+            )
         },
-        onPasswordReset: async ({ user }, request) => {
+        onPasswordReset: async ({ user }) => {
             console.log(
                 `Password for user ${user.email} has been reset.`,
             )
@@ -46,5 +51,11 @@ export const auth = betterAuth({
             },
         }),
         adminPlugin(),
+        nextCookies(),
     ],
+    advanced: {
+        backgroundTasks: {
+            handler: waitUntil,
+        },
+    },
 })

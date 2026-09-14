@@ -37,14 +37,14 @@ export async function forgotPassword(
         throw new ValidationError()
     }
 
-    await auth.api.requestPasswordReset({
+    const res = await auth.api.requestPasswordReset({
         body: {
             email: data.email,
-            redirectTo: "/reset-password",
+            redirectTo: `${process.env.BETTER_AUTH_URL}/reset-password`,
         },
     })
 
-    return message("Password reset link sent successfully")
+    return message(res.message)
 }
 
 type ResetPasswordInput = ResetPasswordSchemaType & {
@@ -65,12 +65,12 @@ export async function resetPassword(
         throw new ValidationError()
     }
 
-    await auth.api.resetPassword({
+    const res = await auth.api.resetPassword({
         body: {
             newPassword: data.newPassword,
             token: value.token,
         },
     })
 
-    return message("Password reset successfully")
+    return message("Password has been reset")
 }
