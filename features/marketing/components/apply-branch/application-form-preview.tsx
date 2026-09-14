@@ -69,7 +69,7 @@ export function ApplicationFormPreview({
                                     src={
                                         logo
                                             ? URL.createObjectURL(
-                                                  logo,
+                                                  logo.croppedFile,
                                               )
                                             : undefined
                                     }
@@ -240,7 +240,7 @@ export function ApplicationFormPreview({
                             />
                             <Document
                                 label="Branch Logo"
-                                file={logo}
+                                file={logo.croppedFile}
                             />
                         </div>
                     </section>

@@ -21,7 +21,7 @@ export function Navbar() {
                 </div>
                 <div>
                     {isPending ? (
-                        <Skeleton className="h-10 w-24" />
+                        <Skeleton className="h-10 w-24 bg-background" />
                     ) : session ? (
                         <Button
                             nativeButton={false}

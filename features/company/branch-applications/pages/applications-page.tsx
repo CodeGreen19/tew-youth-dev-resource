@@ -1,3 +1,4 @@
+"use client"
 import {
     Page,
     PageContent,
@@ -8,20 +9,20 @@ import { DataTable } from "@/components/table/data-table"
 import { columns } from "../components/columns"
 import { getBranchApplications } from "../queries"
 
-export async function ApplicationsPage() {
-    const branches = await getBranchApplications()
+export function ApplicationsPage() {
+    // const branches = await getBranchApplications()
     return (
         <Page>
             <PageHeader>
                 <PageTitle>Applications</PageTitle>
             </PageHeader>
-            <PageContent>
+            {/* <PageContent>
                 <DataTable
                     searchBy="branchName"
                     columns={columns}
                     data={branches}
                 />
-            </PageContent>
+            </PageContent> */}
         </Page>
     )
 }

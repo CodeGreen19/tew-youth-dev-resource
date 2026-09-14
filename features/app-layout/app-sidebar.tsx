@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 
 import {
@@ -16,27 +14,28 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar"
 import { authClient } from "@/lib/auth-client"
-import { cn } from "@/lib/utils"
+import { cn, wait } from "@/lib/utils"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+// import { usePathname } from "next/navigation"
 import { navData } from "../constants"
 import { AppNavUser } from "./app-nav-user"
 import { AppSidebarHeader } from "./app-sidebar-header"
 
-export function AppSidebar({
+export async function AppSidebar({
     ...props
 }: React.ComponentProps<typeof Sidebar>) {
-    const pathname = usePathname()
-    const session = authClient.useSession()
-    const org = authClient.useActiveOrganization()
-
+    // const pathname = usePathname()
+    // const session = authClient.useSession()
+    // const org = authClient.useActiveOrganization();
+    // await wait()
     return (
         <Sidebar {...props}>
-            <AppSidebarHeader />
+            {/* <AppSidebarHeader /> */}
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarMenu>
-                        {navData.navMain.map((item) => (
+                        sidebar menu
+                        {/* {navData.navMain.map((item) => (
                             <SidebarMenuItem
                                 key={item.title}
                             >
@@ -79,20 +78,21 @@ export function AppSidebar({
                                     </SidebarMenuSub>
                                 ) : null}
                             </SidebarMenuItem>
-                        ))}
+                        ))} */}
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
             <SidebarRail />
             <SidebarFooter>
-                <AppNavUser
+                footer
+                {/* <AppNavUser
                     isPending={session.isPending}
                     user={{
                         name: session.data?.user.name,
                         email: session.data?.user.email,
                         role: session.data?.user.role,
                     }}
-                />
+                /> */}
             </SidebarFooter>
         </Sidebar>
     )

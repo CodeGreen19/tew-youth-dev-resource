@@ -14,7 +14,7 @@ export function AppBreadcrumb() {
     const pathname = usePathname()
     return (
         <Breadcrumb>
-            <BreadcrumbList>
+            {/* <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink href="#">
                         {
@@ -42,7 +42,7 @@ export function AppBreadcrumb() {
                             )?.title || ""}
                     </BreadcrumbPage>
                 </BreadcrumbItem>
-            </BreadcrumbList>
+            </BreadcrumbList> */}
         </Breadcrumb>
     )
 }

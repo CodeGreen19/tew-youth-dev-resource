@@ -74,7 +74,7 @@ export function LoginForm() {
                             children={(field) => (
                                 <field.PasswordField
                                     label="Password"
-                                    placeholder="eg: 34334456"
+                                    placeholder="Enter your password"
                                     forgotPasswordHref="/forgot-password"
                                 />
                             )}
