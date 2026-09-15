@@ -1,17 +1,12 @@
 "use client"
 
-import Image from "next/image"
-import { format } from "date-fns"
-import {
-    ArrowLeft,
-    Calendar,
-    BookOpen,
-    Code,
-} from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { format } from "date-fns"
+import { BookOpen, Calendar } from "lucide-react"
+import Image from "next/image"
 import { Course } from "../types"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { getCourseById } from "../queries"
 
 const statusStyles = {
     active: "bg-emerald-500/10 text-emerald-600 border-emerald-200",
@@ -21,11 +16,11 @@ const statusStyles = {
         "bg-zinc-500/10 text-zinc-600 border-zinc-200",
 }
 
-export default function CourseDetails({
-    course,
-}: {
-    course: Course
-}) {
+export function CourseDetails({ id }: { id: string }) {
+    const { data: course } = useSuspenseQuery({
+        queryKey: ["courses-details", id],
+        queryFn: () => getCourseById(id),
+    })
     const imageUrl = course.banner.secureUrl
     return (
         <div className="max-w-md mx-auto bg-background pb-20 text-foreground space-y-4">

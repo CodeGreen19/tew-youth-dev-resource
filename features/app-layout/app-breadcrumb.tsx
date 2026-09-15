@@ -8,40 +8,40 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { usePathname } from "next/navigation"
+import { navData } from "./data/constants"
 
 export function AppBreadcrumb() {
     const pathname = usePathname()
+    const navDataAll = [
+        ...navData.navMenuForBranch,
+        ...navData.navMenuForCompany,
+    ]
+    const menuTitle =
+        navDataAll.find((nav) =>
+            nav.items.some((item) =>
+                pathname.startsWith(item.url),
+            ),
+        )?.title || ""
+    const menuItem =
+        navDataAll
+            .flatMap((nav) => nav.items || [])
+            .find((item) => pathname.startsWith(item.url))
+            ?.title || ""
     return (
         <Breadcrumb>
-            {/* <BreadcrumbList>
+            <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink href="#">
-                        {
-                            navData.navMain.find((nav) =>
-                                nav.items.some((item) =>
-                                    pathname.startsWith(
-                                        item.url,
-                                    ),
-                                ),
-                            )?.title
-                        }
+                        {menuTitle}
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
                     <BreadcrumbPage>
-                        {navData.navMain
-                            .flatMap(
-                                (nav) => nav.items || [],
-                            )
-                            .find((item) =>
-                                pathname.startsWith(
-                                    item.url,
-                                ),
-                            )?.title || ""}
+                        {menuItem}
                     </BreadcrumbPage>
                 </BreadcrumbItem>
-            </BreadcrumbList> */}
+            </BreadcrumbList>
         </Breadcrumb>
     )
 }

@@ -4,7 +4,7 @@ import {
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
-import { CourseForm } from "../components/course-form"
+import { AddCourseForm } from "../components/add-course-form"
 import { useRouter } from "next/navigation"
 
 export function AddCoursePage() {
@@ -18,7 +18,7 @@ export function AddCoursePage() {
                 </PageTitle>
             </PageHeader>
             <div className="max-w-lg m-auto">
-                <CourseForm
+                <AddCourseForm
                     onSuccess={() =>
                         router.push("/company/courses")
                     }

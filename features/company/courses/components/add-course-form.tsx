@@ -16,8 +16,9 @@ import { capitalize } from "@/lib/helpers"
 import { useMutation } from "@tanstack/react-query"
 import { addCourse } from "../actions"
 import { courseSchema, CourseSchemaType } from "../schemas"
+import { SubmitButton } from "@/components/shared/submit-button"
 
-export function CourseForm({
+export function AddCourseForm({
     onCancel,
     onSuccess,
 }: {
@@ -125,13 +126,13 @@ export function CourseForm({
                     >
                         Cancel
                     </Button>
-                    <Button
-                        disabled={isSubmitting}
+                    <SubmitButton
+                        isPending={isSubmitting}
                         form={"course-form"}
                         type="submit"
                     >
                         Submit
-                    </Button>
+                    </SubmitButton>
                 </Field>
             </CardFooter>
         </Card>

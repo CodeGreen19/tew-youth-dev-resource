@@ -1,28 +1,24 @@
-"use client"
+import { getQueryClient } from "@/lib/tanstack-query/get-query-client"
 import {
-    Page,
-    PageContent,
-    PageHeader,
-    PageTitle,
-} from "@/components/shared/page"
-import { DataTable } from "@/components/table/data-table"
-import { columns } from "../components/columns"
+    dehydrate,
+    HydrationBoundary,
+    queryOptions,
+} from "@tanstack/react-query"
+import { ApplicationsView } from "../components/applications-view"
 import { getBranchApplications } from "../queries"
 
-export function ApplicationsPage() {
-    // const branches = await getBranchApplications()
+export const options = queryOptions({
+    queryKey: ["branch-applications"],
+    queryFn: () => getBranchApplications(),
+})
+
+export async function ApplicationsPage() {
+    const qc = getQueryClient()
+    await qc.prefetchQuery(options)
+
     return (
-        <Page>
-            <PageHeader>
-                <PageTitle>Applications</PageTitle>
-            </PageHeader>
-            {/* <PageContent>
-                <DataTable
-                    searchBy="branchName"
-                    columns={columns}
-                    data={branches}
-                />
-            </PageContent> */}
-        </Page>
+        <HydrationBoundary state={dehydrate(qc)}>
+            <ApplicationsView />
+        </HydrationBoundary>
     )
 }

@@ -47,7 +47,7 @@ const columnHelper = createColumnHelper<
     Course
 >()
 
-export const columns = columnHelper.columns([
+export const coursesColumns = columnHelper.columns([
     createSelectColumn<Course>(),
     columnHelper.accessor("banner", {
         header: "Banner",

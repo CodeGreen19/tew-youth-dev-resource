@@ -26,103 +26,13 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { options } from "../pages/application-details-page"
 
-function Info({
-    label,
-    value,
-}: {
-    label: string
-    value: React.ReactNode
-}) {
-    return (
-        <div>
-            <p className="text-muted-foreground text-sm">
-                {label}
-            </p>
-            <p className="font-medium">{value || "—"}</p>
-        </div>
+export function ApplicationDetails({ id }: { id: string }) {
+    const { data: application } = useSuspenseQuery(
+        options(id),
     )
-}
-
-function DocumentItem({
-    label,
-    file,
-}: {
-    label: string
-    file: BranchApplicationById["nidDocument"]
-}) {
-    return (
-        <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-                <FileText className="text-muted-foreground size-5" />
-                <div>
-                    <p className="font-medium">{label}</p>
-                    <p className="text-muted-foreground text-sm">
-                        {file.format ?? "Uploaded document"}
-                    </p>
-                </div>
-            </div>
-
-            <Button
-                variant="outline"
-                size="sm"
-                nativeButton={false}
-                render={
-                    <Link
-                        href={file.secureUrl}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    />
-                }
-            >
-                <Download />
-                Download
-            </Button>
-        </div>
-    )
-}
-
-function Documents({
-    application,
-}: {
-    application: BranchApplicationById
-}) {
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Documents</CardTitle>
-                <CardDescription>
-                    Documents submitted with this
-                    application.
-                </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-5">
-                <DocumentItem
-                    label="NID Document"
-                    file={application.nidDocument}
-                />
-                <Separator />
-                <DocumentItem
-                    label="Trade License"
-                    file={application.tradeLicense}
-                />
-                <Separator />
-                <DocumentItem
-                    label="Electricity Bill"
-                    file={application.electricityBill}
-                />
-            </CardContent>
-        </Card>
-    )
-}
-
-export default function ViewDetails({
-    application,
-}: {
-    application: BranchApplicationById
-}) {
     return (
         <div className="space-y-6">
             <Card>
@@ -300,5 +210,96 @@ export default function ViewDetails({
                     </Card>
                 )}
         </div>
+    )
+}
+
+function Info({
+    label,
+    value,
+}: {
+    label: string
+    value: React.ReactNode
+}) {
+    return (
+        <div>
+            <p className="text-muted-foreground text-sm">
+                {label}
+            </p>
+            <p className="font-medium">{value || "—"}</p>
+        </div>
+    )
+}
+
+function DocumentItem({
+    label,
+    file,
+}: {
+    label: string
+    file: BranchApplicationById["nidDocument"]
+}) {
+    return (
+        <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+                <FileText className="text-muted-foreground size-5" />
+                <div>
+                    <p className="font-medium">{label}</p>
+                    <p className="text-muted-foreground text-sm">
+                        {file.format ?? "Uploaded document"}
+                    </p>
+                </div>
+            </div>
+
+            <Button
+                variant="outline"
+                size="sm"
+                nativeButton={false}
+                render={
+                    <Link
+                        href={file.secureUrl}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    />
+                }
+            >
+                <Download />
+                Download
+            </Button>
+        </div>
+    )
+}
+
+function Documents({
+    application,
+}: {
+    application: BranchApplicationById
+}) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Documents</CardTitle>
+                <CardDescription>
+                    Documents submitted with this
+                    application.
+                </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-5">
+                <DocumentItem
+                    label="NID Document"
+                    file={application.nidDocument}
+                />
+                <Separator />
+                <DocumentItem
+                    label="Trade License"
+                    file={application.tradeLicense}
+                />
+                <Separator />
+                <DocumentItem
+                    label="Electricity Bill"
+                    file={application.electricityBill}
+                />
+            </CardContent>
+        </Card>
     )
 }

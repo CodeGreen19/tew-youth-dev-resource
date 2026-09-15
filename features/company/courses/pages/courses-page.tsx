@@ -1,22 +1,21 @@
-import { Page } from "@/components/shared/page"
-import { DataTable } from "@/components/table/data-table"
-import { columns } from "../components/columns"
-import { CourseHeader } from "../components/header"
-import { SelectedBulkAction } from "../components/selected-bulk-actions"
+import { getQueryClient } from "@/lib/tanstack-query/get-query-client"
+import {
+    dehydrate,
+    HydrationBoundary,
+} from "@tanstack/react-query"
+import { CoursesView } from "../components/courses-view"
 import { getCourses } from "../queries"
 
 export async function CoursesPage() {
-    const courses = await getCourses()
+    const qc = getQueryClient()
+    await qc.prefetchQuery({
+        queryKey: ["courses"],
+        queryFn: () => getCourses(),
+    })
+
     return (
-        <Page>
-            <CourseHeader />
-            <DataTable
-                BulkActionComponent={SelectedBulkAction}
-                columns={columns}
-                data={courses}
-                searchBy="name"
-                searchPlaceholder="Search by Name ..."
-            />
-        </Page>
+        <HydrationBoundary state={dehydrate(qc)}>
+            <CoursesView />
+        </HydrationBoundary>
     )
 }

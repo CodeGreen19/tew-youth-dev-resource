@@ -1,7 +1,8 @@
 import { CourseDetailsPage } from "@/features/company/courses/pages/course-details-page"
 
-export default function page(
+export default async function page(
     props: PageProps<"/company/courses/[id]/details">,
 ) {
-    return <CourseDetailsPage {...props} />
+    const id = (await props.params).id
+    return <CourseDetailsPage id={id} />
 }

@@ -4,13 +4,15 @@ import { useEffect } from "react"
 import { Button } from "./ui/button"
 import { AlertCircle } from "lucide-react"
 
-export function Error({
-    error,
-    retry,
-}: {
+export type FallbackErrorType = {
     error: Error & { digest?: string }
     retry: () => void
-}) {
+}
+
+export function FallbackError({
+    error,
+    retry,
+}: FallbackErrorType) {
     useEffect(() => {
         // Log the error to an error reporting service
         console.error(error)

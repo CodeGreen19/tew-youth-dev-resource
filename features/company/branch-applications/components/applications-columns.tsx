@@ -20,7 +20,7 @@ const columnHelper = createColumnHelper<
     BranchApplication
 >()
 
-export const columns = columnHelper.columns([
+export const applicationsColumns = columnHelper.columns([
     createSelectColumn<BranchApplication>(),
 
     columnHelper.accessor("logo", {

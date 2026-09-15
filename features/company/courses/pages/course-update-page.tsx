@@ -5,13 +5,22 @@ import {
 } from "@/components/shared/page"
 import { UpdateCourse } from "../components/update-course"
 import { getCourseById } from "../queries"
+import { getQueryClient } from "@/lib/tanstack-query/get-query-client"
+import {
+    dehydrate,
+    HydrationBoundary,
+} from "@tanstack/react-query"
 
-export async function CourseUpdatePage(
-    props: PageProps<"/company/courses/[id]/update">,
-) {
-    const id = await props.params.then((v) => v.id)
-    const course = await getCourseById(id)
-
+export async function CourseUpdatePage({
+    id,
+}: {
+    id: string
+}) {
+    const qc = getQueryClient()
+    await qc.prefetchQuery({
+        queryKey: ["courses-details", id],
+        queryFn: () => getCourseById(id),
+    })
     return (
         <Page>
             <PageHeader>
@@ -19,7 +28,9 @@ export async function CourseUpdatePage(
                     Update Course
                 </PageTitle>
             </PageHeader>
-            <UpdateCourse course={course} />
+            <HydrationBoundary state={dehydrate(qc)}>
+                <UpdateCourse id={id} />
+            </HydrationBoundary>
         </Page>
     )
 }

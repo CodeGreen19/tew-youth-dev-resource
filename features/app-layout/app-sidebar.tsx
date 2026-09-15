@@ -8,12 +8,21 @@ import {
     SidebarFooter,
     SidebarGroup,
     SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
+import { cn } from "@/lib/utils"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { getSideBarInfo } from "./data/queries"
-import { AppSidebarHeader } from "./app-sidebar-header"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { AppNavUser } from "./app-nav-user"
+import { AppSidebarHeader } from "./app-sidebar-header"
+import { navData } from "./data/constants"
+import { getSideBarInfo } from "./data/queries"
 
 export function AppSidebar({
     ...props
@@ -22,6 +31,12 @@ export function AppSidebar({
         queryKey: ["sidebar-info"],
         queryFn: () => getSideBarInfo(),
     })
+    const pathname = usePathname()
+
+    const nav =
+        data.institutionType === "COMPANY"
+            ? navData.navMenuForCompany
+            : navData.navMenuForBranch
 
     return (
         <Sidebar {...props} variant="inset">
@@ -29,9 +44,7 @@ export function AppSidebar({
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarMenu>
-                        sidebar menu{" "}
-                        {data.session.user.name}
-                        {/* {navData.navMain.map((item) => (
+                        {nav.map((item) => (
                             <SidebarMenuItem
                                 key={item.title}
                             >
@@ -74,13 +87,12 @@ export function AppSidebar({
                                     </SidebarMenuSub>
                                 ) : null}
                             </SidebarMenuItem>
-                        ))} */}
+                        ))}
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
             <SidebarRail />
             <SidebarFooter>
-                footer
                 <AppNavUser />
             </SidebarFooter>
         </Sidebar>

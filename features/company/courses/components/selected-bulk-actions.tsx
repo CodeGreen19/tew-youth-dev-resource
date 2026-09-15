@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { RowData } from "@tanstack/react-table"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,14 +8,11 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal } from "lucide-react"
 import { courseStatuses } from "@/constants/course"
 import { useMutation } from "@tanstack/react-query"
+import { MoreHorizontal } from "lucide-react"
 import { changeCourseStatusInBulk } from "../actions"
 import { Course } from "../types"
 

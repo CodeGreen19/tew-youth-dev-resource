@@ -15,14 +15,20 @@ export async function getSideBarInfo() {
         const orgLists = await auth.api.listOrganizations({
             headers,
         })
+        const existedOrg = orgLists[0]
         await auth.api.setActiveOrganization({
             headers,
-            body: { organizationId: orgLists[0].id },
+            body: { organizationId: existedOrg.id },
         })
-        org = orgLists[0]
+        org = existedOrg
     }
     const member = await auth.api.getActiveMember({
         headers,
     })
-    return { session, org, member }
+    const institutionType: "COMPANY" | "BRANCH" =
+        process.env.COMPANY_ORG_ID === org.id
+            ? "COMPANY"
+            : "BRANCH"
+
+    return { session, org, member, institutionType }
 }

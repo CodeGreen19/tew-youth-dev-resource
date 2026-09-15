@@ -4,24 +4,21 @@ import {
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
-import { getBranchApplicationById } from "../queries"
-import ViewDetails from "../components/view-details"
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { ApplictionActions } from "../components/appliction-actions"
 
-export async function ApplicationDetials({
+import { ApplictionActions } from "../components/application-actions"
+import { ApplicationDetails } from "./application-details"
+
+export function ApplicationDetialsView({
     id,
 }: {
     id: string
 }) {
-    const application = await getBranchApplicationById({
-        id,
-    })
     return (
         <Page>
             <PageHeader>
@@ -41,14 +38,10 @@ export async function ApplicationDetials({
                     </TabsList>
                     <TabsContent value="details">
                         {" "}
-                        <ViewDetails
-                            application={application}
-                        />
+                        <ApplicationDetails id={id} />
                     </TabsContent>
                     <TabsContent value="actions">
-                        <ApplictionActions
-                            application={application}
-                        />
+                        <ApplictionActions id={id} />
                     </TabsContent>
                 </Tabs>
             </PageContent>
