@@ -11,14 +11,14 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup } from "@/components/ui/field"
-import { onErrorShowToast } from "@/lib/error/error-toast"
-import { onSuccessShowToast } from "@/lib/success/toast-success"
+import { onErrorShowToast } from "@/utils/error-toast"
 import { useMutation } from "@tanstack/react-query"
 import { forgotPassword } from "../actions"
 import {
     forgotPasswordSchema,
     ForgotPasswordSchemaType,
 } from "../schemas"
+import { onSuccessShowToast } from "@/utils/success-toast"
 
 export function ForgotPasswordForm() {
     const defaultValues: ForgotPasswordSchemaType = {

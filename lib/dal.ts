@@ -18,7 +18,7 @@ export async function requireAuth() {
     })
 
     if (!session) {
-        redirect("/admin-login")
+        redirect("/login")
     }
 
     return { ...session, headers: parasedHeaders }

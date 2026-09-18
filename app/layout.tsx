@@ -4,7 +4,7 @@ import {
     Roboto,
 } from "next/font/google"
 
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/lib/next-themes/theme-provider"
 import { Toaster } from "@/components/ui/toast"
 import { TanstackQueryProvider } from "@/lib/tanstack-query/tanstack-query-provider"
 import { cn } from "@/lib/utils"

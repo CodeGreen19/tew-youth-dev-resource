@@ -1,9 +1,8 @@
 "use server"
 
-import { ValidationError } from "@/lib/error/error-constructor"
+import { ValidationError } from "@/utils/error-constructor"
 import { loginSchema, LoginSchemaType } from "./schemas"
 import { auth } from "@/lib/auth"
-import { message } from "@/lib/success/message"
 import {
     forgotPasswordSchema,
     ForgotPasswordSchemaType,
@@ -13,6 +12,7 @@ import {
     ResetPasswordSchemaType,
 } from "./schemas"
 import { headers } from "next/headers"
+import { message } from "@/utils/message"
 
 export async function login(value: LoginSchemaType) {
     const { success, data } = loginSchema.safeParse(value)
@@ -65,7 +65,7 @@ export async function resetPassword(
         throw new ValidationError()
     }
 
-    const res = await auth.api.resetPassword({
+    await auth.api.resetPassword({
         body: {
             newPassword: data.newPassword,
             token: value.token,

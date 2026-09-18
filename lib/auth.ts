@@ -8,8 +8,8 @@ import {
     admin as adminPlugin,
     organization,
 } from "better-auth/plugins"
-import { sendResetPasswordEmail } from "./emails/auth-emails"
 import { ac, owner } from "./permissions"
+import { sendEmailResetPassword } from "./resend/emails"
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -20,7 +20,7 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
         sendResetPassword: async ({ user, url }) => {
-            return await sendResetPasswordEmail(
+            return await sendEmailResetPassword(
                 user.email,
                 url,
             )

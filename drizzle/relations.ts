@@ -58,24 +58,4 @@ export const relations = defineRelations(schema, (r) => ({
             to: r.users.id,
         }),
     },
-
-    forms: {
-        versions: r.many.formVersions(),
-    },
-
-    formVersions: {
-        form: r.one.forms({
-            from: r.formVersions.formId,
-            to: r.forms.id,
-        }),
-
-        submissions: r.many.formSubmissions(),
-    },
-
-    formSubmissions: {
-        version: r.one.formVersions({
-            from: r.formSubmissions.formVersionId,
-            to: r.formVersions.id,
-        }),
-    },
 }))

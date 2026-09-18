@@ -1,6 +1,6 @@
 "use client"
 
-import { Logo } from "@/components/logo"
+import { Logo } from "@/components/shared/logo"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { authClient } from "@/lib/auth-client"
@@ -26,7 +26,7 @@ export function Navbar() {
                         <Button
                             nativeButton={false}
                             render={
-                                <Link href="/company/overviews" />
+                                <Link href="/dashboard/overviews" />
                             }
                             variant="default"
                         >

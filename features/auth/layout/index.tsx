@@ -1,4 +1,4 @@
-import { ArrowLeft, MoveLeft } from "lucide-react"
+import { MoveLeft } from "lucide-react"
 import Link from "next/link"
 
 export function AuthLayout(props: LayoutProps<"/">) {

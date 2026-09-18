@@ -56,6 +56,7 @@ export const branchApplications = snakeCase.table(
         status: branchApplicationStatus()
             .default("pending")
             .notNull(),
+        organizationId: text(),
 
         rejectionReason: text(),
         createdAt,

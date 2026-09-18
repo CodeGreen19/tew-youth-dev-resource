@@ -11,8 +11,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup } from "@/components/ui/field"
-import { onErrorShowToast } from "@/lib/error/error-toast"
-import { onSuccessShowToast } from "@/lib/success/toast-success"
+import { onErrorShowToast } from "@/utils/error-toast"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter, useSearchParams } from "next/navigation"
 import { resetPassword } from "../actions"
@@ -20,6 +19,7 @@ import {
     resetPasswordSchema,
     ResetPasswordSchemaType,
 } from "../schemas"
+import { onSuccessShowToast } from "@/utils/success-toast"
 
 export function ResetPasswordForm() {
     const router = useRouter()

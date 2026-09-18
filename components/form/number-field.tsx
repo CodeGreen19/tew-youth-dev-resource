@@ -3,27 +3,32 @@ import {
     FieldDescription,
     FieldError,
     FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { useFieldContext } from "./use-app-form";
-import { FormField } from "@/types/form";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { useFieldContext } from "./use-app-form"
+import { FormField } from "@/types/form"
 
-
-type NumberFieldProps = Pick<FormField, "label" | "description" | "placeholder">;
-
-
+type NumberFieldProps = Pick<
+    FormField,
+    "label" | "description" | "placeholder"
+>
 
 export function NumberField({
     label,
     placeholder,
     description,
-
 }: NumberFieldProps) {
-    const field = useFieldContext<number | null>();
-    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+    const field = useFieldContext<number | null>()
+    const isInvalid =
+        field.state.meta.isTouched &&
+        !field.state.meta.isValid
     return (
         <Field data-invalid={isInvalid}>
-            {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
+            {label && (
+                <FieldLabel htmlFor={field.name}>
+                    {label}
+                </FieldLabel>
+            )}
             <Input
                 type="number"
                 id={field.name}
@@ -32,9 +37,11 @@ export function NumberField({
                 onBlur={field.handleBlur}
                 onChange={(e) => {
                     if (e.target.value === "") {
-                        field.handleChange(0);
+                        field.handleChange(0)
                     } else {
-                        field.handleChange(e.target.valueAsNumber || 0);
+                        field.handleChange(
+                            e.target.valueAsNumber || 0,
+                        )
                     }
                 }}
                 aria-invalid={isInvalid}
@@ -42,8 +49,16 @@ export function NumberField({
                 autoComplete="off"
             />
 
-            {description && <FieldDescription>{description}</FieldDescription>}
-            {isInvalid && <FieldError errors={field.state.meta.errors} />}
+            {description && (
+                <FieldDescription>
+                    {description}
+                </FieldDescription>
+            )}
+            {isInvalid && (
+                <FieldError
+                    errors={field.state.meta.errors}
+                />
+            )}
         </Field>
-    );
+    )
 }

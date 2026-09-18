@@ -1,105 +1,97 @@
-
-
-export type FieldWidth = "full" | "half";
+export type FieldWidth = "full" | "half"
 
 export type FieldValidation = {
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    min?: number;
-    max?: number;
-    pattern?: string;
-};
+    required?: boolean
+    minLength?: number
+    maxLength?: number
+    min?: number
+    max?: number
+    pattern?: string
+}
 
 export type BaseField = {
-    id: string;
-    name: string;
-    label: string;
+    id: string
+    name: string
+    label: string
 
-    description?: string;
-    placeholder?: string;
+    description?: string
+    placeholder?: string
 
-    width?: FieldWidth;
-};
+    width?: FieldWidth
+}
 
 export type TextField = BaseField & {
-    type: "text";
-    defaultValue?: string;
+    type: "text"
+    defaultValue?: string
 
     validation?: Pick<
         FieldValidation,
         "required" | "minLength" | "maxLength" | "pattern"
-    >;
-};
+    >
+}
 
 export type TextareaField = BaseField & {
-    type: "textarea";
-    defaultValue?: string;
+    type: "textarea"
+    defaultValue?: string
 
     validation?: Pick<
         FieldValidation,
         "required" | "minLength" | "maxLength" | "pattern"
-    >;
-};
-
+    >
+}
 
 export type NumberField = BaseField & {
-    type: "number";
+    type: "number"
 
-    defaultValue?: number;
+    defaultValue?: number
 
     validation?: Pick<
         FieldValidation,
         "required" | "min" | "max"
-    >;
-};
-
+    >
+}
 
 export type SelectField = BaseField & {
-    type: "select";
+    type: "select"
 
-    defaultValue?: string;
+    defaultValue?: string
 
     options: {
-        label: string;
-        value: string;
-    }[];
+        label: string
+        value: string
+    }[]
 
-    validation?: Pick<FieldValidation, "required">;
-};
+    validation?: Pick<FieldValidation, "required">
+}
 
 export type CheckboxField = BaseField & {
-    type: "checkbox";
+    type: "checkbox"
 
-    defaultValue?: boolean;
+    defaultValue?: boolean
 
-    validation?: Pick<FieldValidation, "required">;
-};
-
+    validation?: Pick<FieldValidation, "required">
+}
 
 export type FormField =
     | TextField
     | TextareaField
     | NumberField
     | SelectField
-    | CheckboxField;
-
-
+    | CheckboxField
 
 export type FormSettings = {
-    submitLabel: string;
-    successMessage: string;
-    redirectUrl?: string;
-};
+    submitLabel: string
+    successMessage: string
+    redirectUrl?: string
+}
 
 export type FormDefinition = {
-    version: number;
+    version: number
 
-    name: string;
-    description?: string;
+    name: string
+    description?: string
 
-    fields: FormField[];
+    fields: FormField[]
 
-    settings: FormSettings;
-};
-
+    settings: FormSettings
+}

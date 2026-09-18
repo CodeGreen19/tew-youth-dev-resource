@@ -3,24 +3,25 @@ import {
     FieldDescription,
     FieldError,
     FieldLabel,
-} from "@/components/ui/field";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormField } from "@/types/form";
-import { useFieldContext } from "./use-app-form";
+} from "@/components/ui/field"
+import { Checkbox } from "@/components/ui/checkbox"
+import { FormField } from "@/types/form"
+import { useFieldContext } from "./use-app-form"
 
 type CheckboxFieldProps = Pick<
     FormField,
     "label" | "description"
->;
+>
 
 export function CheckboxField({
     label,
     description,
 }: CheckboxFieldProps) {
-    const field = useFieldContext<boolean>();
+    const field = useFieldContext<boolean>()
 
     const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid;
+        field.state.meta.isTouched &&
+        !field.state.meta.isValid
 
     return (
         <Field data-invalid={isInvalid}>
@@ -50,8 +51,10 @@ export function CheckboxField({
             )}
 
             {isInvalid && (
-                <FieldError errors={field.state.meta.errors} />
+                <FieldError
+                    errors={field.state.meta.errors}
+                />
             )}
         </Field>
-    );
+    )
 }
