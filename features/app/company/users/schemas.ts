@@ -2,7 +2,7 @@ import { GENDER } from "@/features/marketing/constants"
 import {
     avatarObjSchema,
     avaterObjDefaults,
-} from "@/features/schemas"
+} from "@/features/app/schemas"
 import { z } from "zod"
 
 // ─────────────────────────────────────────────

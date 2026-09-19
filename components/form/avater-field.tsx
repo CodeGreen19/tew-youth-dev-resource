@@ -11,7 +11,7 @@ import { Slider } from "@/components/ui/slider"
 import {
     avaterObjDefaults,
     AvaterObjSchema,
-} from "@/features/schemas"
+} from "@/features/app/schemas"
 import { FormField } from "@/types/form"
 import { ImagePlus } from "lucide-react"
 import { useEffect, useState } from "react"

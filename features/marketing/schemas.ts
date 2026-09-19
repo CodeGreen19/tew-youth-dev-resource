@@ -3,7 +3,7 @@ import { BLOOD_GROUPS, GENDER } from "./constants"
 import {
     avatarObjSchema,
     avaterObjDefaults,
-} from "../schemas"
+} from "../app/schemas"
 
 // ─────────────────────────────────────────────
 // Part 1: Branch Details
