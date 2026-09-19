@@ -24,7 +24,7 @@ export async function UsersPage() {
                         nativeButton={false}
                         render={
                             <Link
-                                href={`/company/users/add`}
+                                href={`/dashboard/users/add`}
                             />
                         }
                     >

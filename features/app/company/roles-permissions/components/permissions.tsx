@@ -3,6 +3,7 @@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { resources } from "@/lib/resources"
+import { DashboardType } from "../types"
 
 type PermissionsProps = {
     permissions: Record<string, string[]>
@@ -11,15 +12,22 @@ type PermissionsProps = {
         permission: string,
         checked: boolean,
     ) => void
+
+    dashboardType: DashboardType
 }
 
 export function Permissions({
     onValueChange,
     permissions,
+    dashboardType,
 }: PermissionsProps) {
+    const appropriateResources =
+        dashboardType === "COMPANY"
+            ? resources.company
+            : resources.branch
     return (
         <div className="divide-y space-y-6">
-            {Object.entries(resources).map(
+            {Object.entries(appropriateResources).map(
                 ([resource, staticValues]) => (
                     <Resource
                         key={resource}

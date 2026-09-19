@@ -8,8 +8,7 @@ import { ShowRolesPermissions } from "../components/show-roles-permissions"
 import { getRolesAndPermissions } from "../queries"
 
 export async function RolesPermissionsPage() {
-    const rolesAndPermissions =
-        await getRolesAndPermissions()
+    const res = await getRolesAndPermissions()
 
     return (
         <Page>
@@ -17,11 +16,7 @@ export async function RolesPermissionsPage() {
                 <PageTitle>Roles & Permissions</PageTitle>
             </PageHeader>
             <PageContent>
-                <ShowRolesPermissions
-                    rolesAndPermissions={
-                        rolesAndPermissions
-                    }
-                />
+                <ShowRolesPermissions {...res} />
             </PageContent>
         </Page>
     )

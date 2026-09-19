@@ -21,7 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { capitalize } from "@/lib/helpers"
+import { capitalize } from "@/utils/helpers"
 import { useMutation } from "@tanstack/react-query"
 import { z } from "zod"
 import { createRole } from "../actions"

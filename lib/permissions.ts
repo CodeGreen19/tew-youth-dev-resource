@@ -4,10 +4,12 @@ import {
     ownerAc,
 } from "better-auth/plugins/organization/access"
 import {
-    branch,
     branch_application,
     course,
     overview,
+    branches,
+    roles_permissions,
+    students,
 } from "./resources"
 
 const statement = {
@@ -15,15 +17,19 @@ const statement = {
     course,
     branch_application,
     overview,
-    branch,
+    branches,
+    roles_permissions,
+    students,
 } as const
 
 export const ac = createAccessControl(statement)
 
 export const owner = ac.newRole({
     course: statement.course,
-    branch: statement.branch,
+    branches: statement.branches,
     branch_application: statement.branch_application,
     overview: statement.overview,
+    roles_permissions: statement.roles_permissions,
+    students: statement.students,
     ...ownerAc.statements,
 })

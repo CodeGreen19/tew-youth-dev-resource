@@ -1,6 +1,5 @@
-import { StudentListsPage } from "@/features/app/branch/students/pages/student-lists-page"
-import React from "react"
+import { StudentsPage } from "@/features/app/branch/students/pages/students-page"
 
 export default function page() {
-    return <StudentListsPage />
+    return <StudentsPage />
 }

@@ -10,12 +10,18 @@ export async function getRolesAndPermissions() {
     if (!org) {
         throw new Error("Org is not found")
     }
-    const roles = await auth.api.listOrgRoles({
-        query: {
-            organizationId: org.id,
+    const rolesAndPermissions = await auth.api.listOrgRoles(
+        {
+            query: {
+                organizationId: org.id,
+            },
+            headers: await headers(),
         },
-        headers: await headers(),
-    })
+    )
+    const dashboardType =
+        process.env.COMPANY_ORG_ID === org.id
+            ? "COMPANY"
+            : "BRANCH"
 
-    return roles
+    return { rolesAndPermissions, dashboardType }
 }

@@ -68,16 +68,26 @@ export const navData: NavDataType = {
         },
 
         {
-            title: "Students",
+            title: "Manage",
 
             items: [
                 {
-                    title: "Add Student",
-                    url: "/dashboard/add-student",
+                    title: "Students",
+                    url: "/dashboard/students",
+                },
+            ],
+        },
+        {
+            title: "Settings",
+
+            items: [
+                {
+                    title: "Users",
+                    url: "/dashboard/users",
                 },
                 {
-                    title: "Student Lists",
-                    url: "/dashboard/student-lists",
+                    title: "Roles & Permissions",
+                    url: "/dashboard/roles-permissions",
                 },
             ],
         },

@@ -9,14 +9,19 @@ import { toast } from "@/components/ui/toast"
 import { useMutation } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { updateRolePermission } from "../actions"
-import { RolesAndPermissions } from "../types"
+import {
+    DashboardType,
+    RolesAndPermissions,
+} from "../types"
 import { Permissions } from "./permissions"
 import { RoleSelect } from "./roles-select"
 
 export function ShowRolesPermissions({
     rolesAndPermissions,
+    dashboardType,
 }: {
     rolesAndPermissions: RolesAndPermissions
+    dashboardType: DashboardType
 }) {
     const [selectedRole, setSelectedRole] = useState("")
 
@@ -60,6 +65,7 @@ export function ShowRolesPermissions({
 
                 <Permissions
                     permissions={permissions}
+                    dashboardType={dashboardType}
                     onValueChange={(
                         resource,
                         permission,
