@@ -2,15 +2,18 @@
 
 import { createColumnHelper } from "@tanstack/react-table"
 
-import {
-    Check,
-    ChevronLeft,
-    MoreHorizontal,
-} from "lucide-react"
+import { Check, MoreHorizontal } from "lucide-react"
 
+import { createSelectColumn } from "@/components/table/columns/create-select-column"
+import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
 import { DataTableFeatures } from "@/components/table/data-table-features"
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,23 +26,13 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Course } from "../types"
-import { useRouter } from "next/navigation"
-import { Fragment, useState } from "react"
-import DeleteCourseDialog from "./delete-course-dialog"
-import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
-import { Badge } from "@/components/ui/badge"
 import { courseStatuses } from "@/constants/course"
 import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { Fragment, useState } from "react"
 import { changeCourseStatus } from "../actions"
-import { toast } from "@/components/ui/toast"
-import { authClient } from "@/lib/auth-client"
-import { createSelectColumn } from "@/components/table/columns/create-select-column"
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
+import { Course } from "../types"
+import DeleteCourseDialog from "./delete-course-dialog"
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<
@@ -103,8 +96,6 @@ export const coursesColumns = columnHelper.columns([
             const mutation = useMutation({
                 mutationFn: changeCourseStatus,
             })
-
-            const { data } = authClient.useSession()
 
             return (
                 <div>

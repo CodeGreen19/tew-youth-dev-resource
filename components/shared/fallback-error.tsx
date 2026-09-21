@@ -1,4 +1,4 @@
-"use client" // Error boundaries must be Client Components
+"use client"
 
 import { useEffect } from "react"
 import { Button } from "../ui/button"
@@ -14,7 +14,6 @@ export function FallbackError({
     retry,
 }: FallbackErrorType) {
     useEffect(() => {
-        // Log the error to an error reporting service
         console.error(error)
     }, [error])
 
@@ -29,10 +28,7 @@ export function FallbackError({
             </div>
             <Button
                 variant={"ghost"}
-                onClick={
-                    // Attempt to recover by re-fetching and re-rendering the segment
-                    () => retry()
-                }
+                onClick={() => retry()}
             >
                 Try again
             </Button>

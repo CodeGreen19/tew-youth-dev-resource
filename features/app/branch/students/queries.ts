@@ -2,6 +2,7 @@
 
 import { db } from "@/drizzle/db"
 import { auth } from "@/lib/auth"
+import { withPermission } from "@/lib/dal"
 import { UnauthorizedError } from "@/utils/error-constructor"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
@@ -18,6 +19,7 @@ export async function getStudents() {
     if (!hasPermission.success) {
         throw new UnauthorizedError()
     }
+
     //working
     return await db.query.students.findMany({
         orderBy: (courses, { desc }) => [
@@ -25,6 +27,17 @@ export async function getStudents() {
         ],
     })
 }
+
+// export const getStudents = withPermission(
+//     { students: ["view"] },
+//     async () => {
+//         return await db.query.students.findMany({
+//             orderBy: (courses, { desc }) => [
+//                 desc(courses.createdAt),
+//             ],
+//         })
+//     },
+// )
 
 export async function getStudentById(id: string) {
     const res = await db.query.courses.findFirst({

@@ -7,8 +7,9 @@ import { NotFoundError } from "@/utils/error-constructor"
 import { generatePassword } from "@/utils/helpers"
 import { eq } from "drizzle-orm"
 import { headers as nextHeaders } from "next/headers"
-import { createUniqueOrgSlug } from "./utils"
+
 import { message } from "@/utils/message"
+import { createUniqueOrgSlug } from "../branch-applications/utils"
 
 export async function approveApplication({
     applicationId,

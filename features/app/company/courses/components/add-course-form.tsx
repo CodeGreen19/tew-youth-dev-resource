@@ -18,14 +18,12 @@ import { addCourse } from "../actions"
 import { courseSchema, CourseSchemaType } from "../schemas"
 import { SubmitButton } from "@/components/shared/submit-button"
 import { capitalize } from "@/utils/helpers"
+import { useRouter } from "next/navigation"
+import { onSuccessShowToast } from "@/utils/success-toast"
+import { onErrorShowToast } from "@/utils/error-toast"
 
-export function AddCourseForm({
-    onCancel,
-    onSuccess,
-}: {
-    onCancel?: () => void
-    onSuccess?: () => void
-}) {
+export function AddCourseForm() {
+    const router = useRouter()
     const defaultValues: CourseSchemaType = {
         name: "",
         code: "",
@@ -36,13 +34,12 @@ export function AddCourseForm({
 
     const addMutation = useMutation({
         mutationFn: addCourse,
-        onSuccess: ({ message }) => {
-            toast.add({ title: message, type: "success" })
-            onSuccess?.()
+        onSuccess: (res) => {
+            onSuccessShowToast(res)
+            router.push("/dashboard/courses")
             form.reset()
         },
-        onError: ({ message }) =>
-            toast.add({ title: message, type: "error" }),
+        onError: onErrorShowToast,
     })
 
     const form = useAppForm({
@@ -121,7 +118,6 @@ export function AddCourseForm({
                     <Button
                         onClick={() => {
                             form.reset()
-                            onCancel?.()
                         }}
                         variant={"ghost"}
                     >

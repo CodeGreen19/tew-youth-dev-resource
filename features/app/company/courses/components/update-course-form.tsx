@@ -22,6 +22,9 @@ import {
 import Image from "next/image"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { onSuccessShowToast } from "@/utils/success-toast"
+import { onErrorShowToast } from "@/utils/error-toast"
+import { SubmitButton } from "@/components/shared/submit-button"
 
 export function UpdateCourseForm({
     existedValue,
@@ -33,12 +36,11 @@ export function UpdateCourseForm({
     const router = useRouter()
     const updateMutation = useMutation({
         mutationFn: updateCourse,
-        onSuccess: ({ message }) => {
-            toast.add({ title: message, type: "success" })
+        onSuccess: (res) => {
+            onSuccessShowToast(res)
             router.push("/dashboard/courses")
         },
-        onError: ({ message }) =>
-            toast.add({ title: message, type: "error" }),
+        onError: onErrorShowToast,
     })
 
     const form = useAppForm({
@@ -56,7 +58,6 @@ export function UpdateCourseForm({
 
     const [changeBanner, setChangeBanner] = useState(false)
 
-    const isSubmitting = updateMutation.isPending
     return (
         <Card>
             <CardHeader>
@@ -160,13 +161,13 @@ export function UpdateCourseForm({
                     >
                         Cancel
                     </Button>
-                    <Button
-                        disabled={isSubmitting}
+                    <SubmitButton
+                        disabled={updateMutation.isPending}
                         form={"update-course-form"}
                         type="submit"
                     >
                         Update
-                    </Button>
+                    </SubmitButton>
                 </Field>
             </CardFooter>
         </Card>

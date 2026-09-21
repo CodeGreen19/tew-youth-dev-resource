@@ -4,8 +4,6 @@ import { AddressDetailsForm } from "../components/apply-branch/address-details-f
 import { BranchDetailsForm } from "../components/apply-branch/branch-details-form"
 import { OwnerInfoForm } from "../components/apply-branch/owner-info-form"
 
-import { FormSteps } from "@/components/shared/form-steps"
-import { FormStepsNavigation } from "@/components/shared/form-steps-navigation"
 import { toast } from "@/components/ui/toast"
 import { useFormStepsStore } from "@/hooks/use-form-steps-store"
 import { FormStepsType } from "@/types/steps"
@@ -17,6 +15,8 @@ import {
     branchApplicationDefaults,
     BranchApplicationSchemaType,
 } from "../schemas"
+import { FormSteps } from "@/components/form-steps/form-steps"
+import { FormStepsNavigation } from "@/components/form-steps/form-steps-navigation"
 const formSteps = [
     {
         id: "branch",

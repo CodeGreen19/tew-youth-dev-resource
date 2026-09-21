@@ -1,15 +1,11 @@
-"use client"
 import {
     Page,
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
 import { AddCourseForm } from "../components/add-course-form"
-import { useRouter } from "next/navigation"
 
 export function AddCoursePage() {
-    const router = useRouter()
-
     return (
         <Page>
             <PageHeader>
@@ -18,11 +14,7 @@ export function AddCoursePage() {
                 </PageTitle>
             </PageHeader>
             <div className="max-w-lg m-auto">
-                <AddCourseForm
-                    onSuccess={() =>
-                        router.push("/dashboard/courses")
-                    }
-                />
+                <AddCourseForm />
             </div>
         </Page>
     )

@@ -9,11 +9,13 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
-import { Dispatch, SetStateAction } from "react"
-import { Course } from "../types"
+import { onErrorShowToast } from "@/utils/error-toast"
+import { onSuccessShowToast } from "@/utils/success-toast"
 import { useMutation } from "@tanstack/react-query"
+import { Dispatch, SetStateAction } from "react"
 import { deleteCourse } from "../actions"
-import { toast } from "@/components/ui/toast"
+import { Course } from "../types"
+import { SubmitButton } from "@/components/shared/submit-button"
 export default function DeleteCourseDialog({
     deleteDialogInfo,
     setDeleteDialogInfo,
@@ -25,12 +27,8 @@ export default function DeleteCourseDialog({
 }) {
     const mutation = useMutation({
         mutationFn: deleteCourse,
-        onSuccess: ({ message }) => {
-            toast.add({ title: message, type: "success" })
-        },
-        onError: ({ message }) => {
-            toast.add({ title: message, type: "error" })
-        },
+        onSuccess: onSuccessShowToast,
+        onError: onErrorShowToast,
         onSettled: () => {
             setDeleteDialogInfo(null)
         },
@@ -70,7 +68,7 @@ export default function DeleteCourseDialog({
                         >
                             Cancel
                         </Button>
-                        <Button
+                        <SubmitButton
                             disabled={mutation.isPending}
                             onClick={() =>
                                 deleteDialogInfo &&
@@ -85,7 +83,7 @@ export default function DeleteCourseDialog({
                             variant={"destructive"}
                         >
                             Delete Forever
-                        </Button>
+                        </SubmitButton>
                     </Field>
                 </DialogFooter>
             </DialogContent>

@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
 
-import { capitalize } from "@/lib/helpers"
 import { BLOOD_GROUPS, GENDER } from "../../constants"
 import {
     branchApplicationDefaults,
@@ -18,6 +17,7 @@ import {
     ownerInfoSchema,
     OwnerInfoSchemaType,
 } from "../../schemas"
+import { capitalize } from "@/utils/helpers"
 
 export function OwnerInfoForm({
     onSuccess,

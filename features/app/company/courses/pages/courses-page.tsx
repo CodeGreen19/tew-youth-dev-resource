@@ -16,32 +16,35 @@ import { SelectedBulkAction } from "../components/selected-bulk-actions"
 export async function CoursesPage() {
     const courses = await getCourses()
     return (
-        <Page>
-            <PageHeader>
-                <PageTitle>Courses</PageTitle>
+        <div>
+            {" "}
+            <Page>
+                <PageHeader>
+                    <PageTitle>Courses</PageTitle>
 
-                <PageAction>
-                    <Button
-                        nativeButton={false}
-                        render={
-                            <Link
-                                href={
-                                    "/dashboard/courses/add"
-                                }
-                            />
-                        }
-                    >
-                        <Plus /> Add Course
-                    </Button>
-                </PageAction>
-            </PageHeader>
-            <DataTable
-                BulkActionComponent={SelectedBulkAction}
-                columns={coursesColumns}
-                data={courses}
-                searchBy="name"
-                searchPlaceholder="Search by Name ..."
-            />
-        </Page>
+                    <PageAction>
+                        <Button
+                            nativeButton={false}
+                            render={
+                                <Link
+                                    href={
+                                        "/dashboard/courses/add"
+                                    }
+                                />
+                            }
+                        >
+                            <Plus /> Add Course
+                        </Button>
+                    </PageAction>
+                </PageHeader>
+                <DataTable
+                    BulkActionComponent={SelectedBulkAction}
+                    columns={coursesColumns}
+                    data={courses}
+                    searchBy="name"
+                    searchPlaceholder="Search by Name ..."
+                />
+            </Page>
+        </div>
     )
 }

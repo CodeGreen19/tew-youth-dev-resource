@@ -46,7 +46,7 @@ export function AppSidebarSkeleton() {
                                         key={index}
                                     >
                                         <div className="flex h-8 items-center gap-3 px-2">
-                                            <Skeleton className="size-4 shrink-0 rounded" />
+                                            <Skeleton className="size-4 invisible shrink-0 rounded" />
                                             <Skeleton
                                                 className="h-4"
                                                 style={{
@@ -74,7 +74,7 @@ export function AppSidebarSkeleton() {
                                         key={index}
                                     >
                                         <div className="flex h-8 items-center gap-3 px-2">
-                                            <Skeleton className="size-4 shrink-0 rounded" />
+                                            <Skeleton className="size-4 invisible shrink-0 rounded" />
                                             <Skeleton
                                                 className="h-4"
                                                 style={{

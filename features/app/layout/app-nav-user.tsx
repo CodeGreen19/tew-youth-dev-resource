@@ -41,7 +41,9 @@ export function AppNavUser({
     data: SidebarDataType
 }) {
     const isMobile = useIsMobile()
-
+    const {
+        session: { user },
+    } = data
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -55,10 +57,9 @@ export function AppNavUser({
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage
                                         src={
-                                            data.user
-                                                .image || ""
+                                            user.image || ""
                                         }
-                                        alt={data.user.name}
+                                        alt={user.name}
                                     />
                                     <AvatarFallback className="rounded-lg">
                                         CN
@@ -66,12 +67,10 @@ export function AppNavUser({
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="truncate font-medium">
-                                        {
-                                            data.user.name
-                                        }{" "}
+                                        {user.name}{" "}
                                     </span>
                                     <span className="truncate text-xs">
-                                        {data.user.email}
+                                        {user.email}
                                     </span>
                                 </div>
                                 <ChevronsUpDown className="ml-auto size-4" />
@@ -90,14 +89,10 @@ export function AppNavUser({
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage
                                             src={
-                                                data.user
-                                                    .image ||
+                                                user.image ||
                                                 ""
                                             }
-                                            alt={
-                                                data.user
-                                                    .name
-                                            }
+                                            alt={user.name}
                                         />
                                         <AvatarFallback className="rounded-lg">
                                             CN
@@ -105,16 +100,10 @@ export function AppNavUser({
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
                                         <span className="truncate font-medium">
-                                            {
-                                                data.user
-                                                    .name
-                                            }{" "}
+                                            {user.name}{" "}
                                         </span>
                                         <span className="truncate text-xs">
-                                            {
-                                                data.user
-                                                    .email
-                                            }
+                                            {user.email}
                                         </span>
                                     </div>
                                 </div>

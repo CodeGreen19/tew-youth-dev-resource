@@ -1,10 +1,9 @@
-"use server"
-
 import { auth } from "@/lib/auth"
 import { requireAuth } from "@/lib/dal"
+import { institutionType } from "./types"
 
 export async function getSidebarData() {
-    const { session, headers, user } = await requireAuth()
+    const { headers, session } = await requireAuth()
 
     let org = await auth.api.getOrganization({ headers })
     if (!org) {
@@ -21,10 +20,10 @@ export async function getSidebarData() {
     const member = await auth.api.getActiveMember({
         headers,
     })
-    const institutionType: "COMPANY" | "BRANCH" =
+    const institutionType: institutionType =
         process.env.COMPANY_ORG_ID === org.id
             ? "COMPANY"
             : "BRANCH"
 
-    return { session, user, org, member, institutionType }
+    return { session, org, member, institutionType }
 }

@@ -2,13 +2,14 @@ import "server-only"
 import { auth } from "./auth"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { UnauthorizedError } from "@/utils/error-constructor"
 
 type Session = NonNullable<
     Awaited<ReturnType<typeof auth.api.getSession>>
 > & { headers: HeadersInit }
 
 export type Permissions = NonNullable<
-    Parameters<typeof auth.api.userHasPermission>[0]
+    Parameters<typeof auth.api.hasPermission>[0]
 >["body"]["permissions"]
 
 export async function requireAuth() {
@@ -21,7 +22,7 @@ export async function requireAuth() {
         redirect("/login")
     }
 
-    return { ...session, headers: parasedHeaders }
+    return { session, headers: parasedHeaders }
 }
 
 export function withPermission<
@@ -35,18 +36,18 @@ export function withPermission<
     ) => Promise<TResult>,
 ) {
     return async (...args: Targs): Promise<TResult> => {
-        const session = await requireAuth()
+        const { headers, session } = await requireAuth()
 
-        const result = await auth.api.userHasPermission({
+        const result = await auth.api.hasPermission({
             body: {
-                userId: session.user.id,
                 permissions,
             },
+            headers,
         })
 
         if (!result.success) {
-            throw new Error("You don't have permission")
+            throw new UnauthorizedError()
         }
-        return action(session, ...args)
+        return action({ headers, ...session }, ...args)
     }
 }

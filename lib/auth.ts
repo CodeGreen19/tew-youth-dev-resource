@@ -39,7 +39,7 @@ export const auth = betterAuth({
             },
         },
     },
-
+    session: { cookieCache: { enabled: true } },
     plugins: [
         organization({
             ac,

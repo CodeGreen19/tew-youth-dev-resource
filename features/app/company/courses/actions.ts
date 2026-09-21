@@ -3,163 +3,243 @@
 import { CourseStatus } from "@/constants/course"
 import { db } from "@/drizzle/db"
 import { courses } from "@/drizzle/schema"
+import { deleteFromCloudinary } from "@/lib/cloudinary/delete"
 import { uploadToCloudinary } from "@/lib/cloudinary/upload"
+import { withPermission } from "@/lib/dal"
+import { ValidationError } from "@/utils/error-constructor"
 import { eq, inArray } from "drizzle-orm"
+import { updateTag } from "next/cache"
 import {
     CourseSchemaType,
     UpdateCourseSchemaType,
     courseSchema,
     updateCourseSchema,
 } from "./schemas"
-import { deleteFromCloudinary } from "@/lib/cloudinary/delete"
 
-export async function addCourse(course: CourseSchemaType) {
-    const result = courseSchema.safeParse(course)
+export const addCourse = withPermission(
+    { course: ["create"] },
+    async (_, inputs: CourseSchemaType) => {
+        const { success, data } =
+            courseSchema.safeParse(inputs)
 
-    if (!result.success) {
-        throw new Error("Validation failed")
-    }
+        if (!success) {
+            return new ValidationError()
+        }
 
-    const existCode = await db.query.courses.findFirst({
-        where: { code: result.data.code },
-    })
+        const existCode = await db.query.courses.findFirst({
+            where: { code: data.code },
+        })
 
-    if (existCode) {
-        throw new Error("Code already exists")
-    }
+        if (existCode) {
+            throw new Error("Code already exists")
+        }
 
-    const banner = await uploadToCloudinary(
-        result.data.banner,
-        { folder: "course_banner" },
-    )
-
-    await db
-        .insert(courses)
-        .values({ ...result.data, banner })
-
-    return {
-        message: "New Course Added",
-    }
-}
-
-export async function updateCourse(
-    course: UpdateCourseSchemaType & { id: string },
-) {
-    const result = updateCourseSchema.safeParse(course)
-
-    if (!result.success) {
-        throw new Error("Validation failed")
-    }
-
-    const existCode = await db.query.courses.findFirst({
-        where: {
-            AND: [
-                {
-                    code: {
-                        eq: result.data.code,
-                    },
-                },
-
-                {
-                    id: {
-                        ne: course.id,
-                    },
-                },
-            ],
-        },
-    })
-
-    if (existCode) {
-        throw new Error("Code already exists")
-    }
-
-    let banner = result.data.existingBanner
-    if (result.data.banner) {
-        banner = await uploadToCloudinary(
-            result.data.banner,
+        const banner = await uploadToCloudinary(
+            data.banner,
             { folder: "course_banner" },
         )
-        await deleteFromCloudinary(
-            result.data.existingBanner.publicId,
-        )
-    }
 
-    const updatedRows = await db
-        .update(courses)
-        .set({ ...result.data, banner })
-        .where(eq(courses.id, course.id))
-        .returning()
+        try {
+            await db.insert(courses).values({
+                ...data,
+                banner,
+            })
+        } catch (error) {
+            if (banner?.publicId) {
+                await deleteFromCloudinary(
+                    banner.publicId,
+                ).catch(() => {
+                    console.log("Image deletion error")
+                })
+            }
 
-    if (updatedRows.length === 0) {
-        throw new Error("Course not found")
-    }
+            throw error
+        }
 
-    return {
-        message: "Course updated successfully",
-    }
-}
+        updateTag("courses")
 
-export async function deleteCourse({
-    id,
-    bannerPublicId,
-}: {
-    id: string
-    bannerPublicId: string
-}) {
-    const deletedRows = await db
-        .delete(courses)
-        .where(eq(courses.id, id))
-        .returning({ id: courses.id })
+        return {
+            message: "New Course Added",
+        }
+    },
+)
 
-    await deleteFromCloudinary(bannerPublicId)
-    if (deletedRows.length === 0) {
-        throw new Error("Course not found")
-    }
+export const updateCourse = withPermission(
+    { course: ["update"] },
+    async (
+        _,
+        inputs: UpdateCourseSchemaType & { id: string },
+    ) => {
+        const { success, data } =
+            updateCourseSchema.safeParse(inputs)
 
-    return {
-        message: "Course deleted successfully",
-    }
-}
+        if (!success) {
+            return new ValidationError()
+        }
 
-export async function changeCourseStatus({
-    id,
-    status,
-}: {
-    id: string
-    status: CourseStatus
-}) {
-    const updatedRows = await db
-        .update(courses)
-        .set({ status })
-        .where(eq(courses.id, id))
-        .returning({ id: courses.id })
+        const existCode = await db.query.courses.findFirst({
+            where: {
+                AND: [
+                    {
+                        code: {
+                            eq: data.code,
+                        },
+                    },
+                    {
+                        id: {
+                            ne: inputs.id,
+                        },
+                    },
+                ],
+            },
+        })
 
-    if (updatedRows.length === 0) {
-        throw new Error("Course not found")
-    }
+        if (existCode) {
+            throw new Error("Code already exists")
+        }
 
-    return {
-        message: "Course status updated",
-    }
-}
+        let banner = data.existingBanner
+        let newBannerPublicId: string | undefined
 
-export async function changeCourseStatusInBulk({
-    ids,
-    status,
-}: {
-    ids: string[]
-    status: CourseStatus
-}) {
-    if (ids.length === 0) {
-        throw new Error("No courses selected")
-    }
+        if (data.banner) {
+            const uploadedBanner = await uploadToCloudinary(
+                data.banner,
+                { folder: "course_banner" },
+            )
 
-    await db
-        .update(courses)
-        .set({ status })
-        .where(inArray(courses.id, ids))
+            banner = uploadedBanner
+            newBannerPublicId = uploadedBanner?.publicId
+        }
 
-    return {
-        message: "Course status updated",
-    }
-}
+        try {
+            const updatedRows = await db
+                .update(courses)
+                .set({
+                    ...data,
+                    banner,
+                })
+                .where(eq(courses.id, inputs.id))
+                .returning({ id: courses.id })
+
+            if (updatedRows.length === 0) {
+                throw new Error("Course not found")
+            }
+        } catch (error) {
+            if (newBannerPublicId) {
+                await deleteFromCloudinary(
+                    newBannerPublicId,
+                ).catch(() => {
+                    console.log("Image deletion error")
+                })
+            }
+
+            throw error
+        }
+
+        if (data.banner && data.existingBanner.publicId) {
+            await deleteFromCloudinary(
+                data.existingBanner.publicId,
+            )
+        }
+
+        updateTag("courses")
+
+        return {
+            message: "Course updated successfully",
+        }
+    },
+)
+
+export const deleteCourse = withPermission(
+    { course: ["delete"] },
+    async (
+        _,
+        {
+            id,
+            bannerPublicId,
+        }: {
+            id: string
+            bannerPublicId: string
+        },
+    ) => {
+        const deletedRows = await db
+            .delete(courses)
+            .where(eq(courses.id, id))
+            .returning({ id: courses.id })
+
+        if (deletedRows.length === 0) {
+            throw new Error("Course not found")
+        }
+
+        try {
+            await deleteFromCloudinary(bannerPublicId)
+        } catch (error) {
+            console.log("Image deletion error", error)
+        }
+
+        updateTag("courses")
+
+        return {
+            message: "Course deleted successfully",
+        }
+    },
+)
+
+export const changeCourseStatus = withPermission(
+    { course: ["update"] },
+    async (
+        _,
+        {
+            id,
+            status,
+        }: {
+            id: string
+            status: CourseStatus
+        },
+    ) => {
+        const updatedRows = await db
+            .update(courses)
+            .set({ status })
+            .where(eq(courses.id, id))
+            .returning({ id: courses.id })
+
+        if (updatedRows.length === 0) {
+            throw new Error("Course not found")
+        }
+
+        updateTag("courses")
+
+        return {
+            message: "Course status updated",
+        }
+    },
+)
+
+export const changeCourseStatusInBulk = withPermission(
+    { course: ["update"] },
+    async (
+        _,
+        {
+            ids,
+            status,
+        }: {
+            ids: string[]
+            status: CourseStatus
+        },
+    ) => {
+        if (ids.length === 0) {
+            throw new Error("No courses selected")
+        }
+
+        await db
+            .update(courses)
+            .set({ status })
+            .where(inArray(courses.id, ids))
+
+        updateTag("courses")
+
+        return {
+            message: "Course status updated",
+        }
+    },
+)
