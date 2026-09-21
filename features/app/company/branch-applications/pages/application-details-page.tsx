@@ -26,11 +26,11 @@ export async function ApplicationDetailsPage({
     return (
         <Page>
             <PageHeader>
-                <PageTitle backTo="/company/branch-applications">
+                <PageTitle backTo="/dashboard/branch-applications">
                     Application Details
                 </PageTitle>
             </PageHeader>
-            <PageContent>
+            <PageContent className="max-w-xl mx-auto">
                 <Tabs defaultValue="details">
                     <TabsList>
                         <TabsTrigger value="details">

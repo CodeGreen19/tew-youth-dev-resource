@@ -4,7 +4,8 @@ import { AddressDetailsForm } from "../components/apply-branch/address-details-f
 import { BranchDetailsForm } from "../components/apply-branch/branch-details-form"
 import { OwnerInfoForm } from "../components/apply-branch/owner-info-form"
 
-import { toast } from "@/components/ui/toast"
+import { FormSteps } from "@/components/form-steps/form-steps"
+import { FormStepsNavigation } from "@/components/form-steps/form-steps-navigation"
 import { useFormStepsStore } from "@/hooks/use-form-steps-store"
 import { FormStepsType } from "@/types/steps"
 import { useMutation } from "@tanstack/react-query"
@@ -15,8 +16,6 @@ import {
     branchApplicationDefaults,
     BranchApplicationSchemaType,
 } from "../schemas"
-import { FormSteps } from "@/components/form-steps/form-steps"
-import { FormStepsNavigation } from "@/components/form-steps/form-steps-navigation"
 const formSteps = [
     {
         id: "branch",
@@ -64,13 +63,9 @@ export function ApplyBranchPage() {
 
     const mutation = useMutation({
         mutationFn: applyForBranch,
-        onSuccess: ({ message }) => {
+        onSuccess: () => {
             setApplicationForm(branchApplicationDefaults)
             setStep(0)
-            toast.add({ title: message, type: "success" })
-        },
-        onError: ({ message }) => {
-            toast.add({ title: message, type: "error" })
         },
     })
 

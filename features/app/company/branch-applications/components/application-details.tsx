@@ -73,7 +73,7 @@ export function ApplicationDetails({
                     </Badge>
                 </CardHeader>
 
-                <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <CardContent className="grid gap-6 sm:grid-cols-2 ">
                     <Info
                         label="Email"
                         value={application.email}
@@ -93,7 +93,7 @@ export function ApplicationDetails({
                 </CardContent>
             </Card>
 
-            <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 ">
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">

@@ -1,18 +1,38 @@
 export const resources = {
     company: {
         overview: ["view"] as const,
-        branches: ["view"] as const,
-        course: [
-            "create",
+        branches: [
             "view",
-            "change-status",
+            "create",
             "update",
             "delete",
         ] as const,
+        course: [
+            "view",
+            "create",
+            "update",
+            "delete",
+            "change-status",
+        ] as const,
 
-        branch_application: ["view"] as const,
-        users: ["view"] as const,
-        roles_permissions: ["view"] as const,
+        branch_application: [
+            "view",
+            "create",
+            "update",
+            "delete",
+        ] as const,
+        users: [
+            "view",
+            "create",
+            "update",
+            "delete",
+        ] as const,
+        roles_permissions: [
+            "view",
+            "create",
+            "update",
+            "delete",
+        ] as const,
     },
 
     branch: {

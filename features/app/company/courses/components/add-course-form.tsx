@@ -19,8 +19,6 @@ import { courseSchema, CourseSchemaType } from "../schemas"
 import { SubmitButton } from "@/components/shared/submit-button"
 import { capitalize } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
-import { onSuccessShowToast } from "@/utils/success-toast"
-import { onErrorShowToast } from "@/utils/error-toast"
 
 export function AddCourseForm() {
     const router = useRouter()
@@ -34,12 +32,10 @@ export function AddCourseForm() {
 
     const addMutation = useMutation({
         mutationFn: addCourse,
-        onSuccess: (res) => {
-            onSuccessShowToast(res)
+        onSuccess: () => {
             router.push("/dashboard/courses")
             form.reset()
         },
-        onError: onErrorShowToast,
     })
 
     const form = useAppForm({
@@ -52,7 +48,6 @@ export function AddCourseForm() {
         },
     })
 
-    const isSubmitting = addMutation.isPending
     return (
         <Card>
             <CardHeader>
@@ -124,7 +119,7 @@ export function AddCourseForm() {
                         Cancel
                     </Button>
                     <SubmitButton
-                        isPending={isSubmitting}
+                        isPending={addMutation.isPending}
                         form={"course-form"}
                         type="submit"
                     >

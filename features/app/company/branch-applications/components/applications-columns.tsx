@@ -2,18 +2,17 @@
 
 import { createColumnHelper } from "@tanstack/react-table"
 
+import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
 import { DataTableFeatures } from "@/components/table/data-table-features"
-
 import { CellNavigateTo } from "@/components/table/cells/cell-navigate-to"
 import { createSelectColumn } from "@/components/table/columns/create-select-column"
-import { Badge } from "@/components/ui/badge"
-import { BranchApplication } from "../types"
-import Image from "next/image"
 import {
     Avatar,
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { BranchApplication } from "../types"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -38,22 +37,64 @@ export const applicationsColumns = columnHelper.columns([
     }),
 
     columnHelper.accessor("branchName", {
-        header: "Branch Name",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Branch Name"
+            />
+        ),
     }),
+
     columnHelper.accessor("ownerName", {
-        header: "Owner Name",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Owner Name"
+            />
+        ),
     }),
+
     columnHelper.accessor("mobile", {
-        header: "Mobile Number",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Mobile Number"
+            />
+        ),
     }),
+
     columnHelper.accessor("status", {
-        header: "Status",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Status"
+            />
+        ),
         cell: ({ row }) => {
-            return <Badge>{row.original.status}</Badge>
+            const status = row.original.status
+            return (
+                <Badge
+                    variant={
+                        status === "pending"
+                            ? "default"
+                            : status === "approved"
+                              ? "secondary"
+                              : "destructive"
+                    }
+                >
+                    {status}
+                </Badge>
+            )
         },
     }),
+
     columnHelper.accessor("createdAt", {
-        header: "Created At",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Created At"
+            />
+        ),
         cell: ({ row }) => {
             return (
                 <span>

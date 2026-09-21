@@ -9,8 +9,6 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
-import { onErrorShowToast } from "@/utils/error-toast"
-import { onSuccessShowToast } from "@/utils/success-toast"
 import { useMutation } from "@tanstack/react-query"
 import { Dispatch, SetStateAction } from "react"
 import { deleteCourse } from "../actions"
@@ -27,8 +25,6 @@ export default function DeleteCourseDialog({
 }) {
     const mutation = useMutation({
         mutationFn: deleteCourse,
-        onSuccess: onSuccessShowToast,
-        onError: onErrorShowToast,
         onSettled: () => {
             setDeleteDialogInfo(null)
         },

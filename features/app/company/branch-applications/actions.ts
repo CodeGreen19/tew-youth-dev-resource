@@ -3,81 +3,149 @@
 import { db } from "@/drizzle/db"
 import { branchApplications } from "@/drizzle/schema"
 import { auth } from "@/lib/auth"
+import { withPermission } from "@/lib/dal"
 import { NotFoundError } from "@/utils/error-constructor"
 import { generatePassword } from "@/utils/helpers"
-import { eq } from "drizzle-orm"
-import { headers as nextHeaders } from "next/headers"
-import { createUniqueOrgSlug } from "./utils"
 import { message } from "@/utils/message"
+import { eq } from "drizzle-orm"
+import { updateTag } from "next/cache"
+import { createUniqueOrgSlug } from "./utils"
 
-export async function approveApplication({
-    applicationId,
-}: {
-    applicationId: string
-}) {
-    await db
-        .update(branchApplications)
-        .set({ status: "approved" })
-        .where(eq(branchApplications.id, applicationId))
-    return message("Status has changed to approved")
-}
-export async function rejectApplication({
-    applicationId,
-}: {
-    applicationId: string
-}) {
-    await db
-        .update(branchApplications)
-        .set({ status: "rejected" })
-        .where(eq(branchApplications.id, applicationId))
-    return message("Status has changed to rejected")
-}
+export const approveApplication = withPermission(
+    { branch_application: ["update"] },
+    async (
+        _,
+        { applicationId }: { applicationId: string },
+    ) => {
+        const updatedRows = await db
+            .update(branchApplications)
+            .set({ status: "approved" })
+            .where(eq(branchApplications.id, applicationId))
+            .returning({ id: branchApplications.id })
 
-export async function createNewBranchWorkspace({
-    applicationId,
-}: {
-    applicationId: string
-}) {
-    const headers = await nextHeaders()
-    const branchApplication =
-        await db.query.branchApplications.findFirst({
-            where: { id: applicationId },
-        })
-    if (!branchApplication) {
-        throw new NotFoundError()
-    }
-    const {
-        ownerName: name,
-        email,
-        branchName,
-        logo,
-    } = branchApplication
-    const password = generatePassword()
-    console.log("password", password)
+        if (updatedRows.length === 0) {
+            throw new NotFoundError()
+        }
 
-    const newUser = await auth.api.createUser({
-        body: {
-            name,
-            email,
-            password,
-            role: "admin",
-        },
-        headers,
-    })
-    const slug = await createUniqueOrgSlug(branchName)
+        updateTag("branch-applications")
 
-    const newOrg = await auth.api.createOrganization({
-        body: {
-            name: branchName,
-            slug,
-            logo: logo?.secureUrl,
-            userId: newUser.user.id,
-            keepCurrentActiveOrganization: true,
-        },
-    })
-    await db
-        .update(branchApplications)
-        .set({ organizationId: newOrg.id })
+        return message("Status has changed to approved")
+    },
+)
 
-    return message("Workspace has been set up successfully")
-}
+export const rejectApplication = withPermission(
+    { branch_application: ["update"] },
+    async (
+        _,
+        { applicationId }: { applicationId: string },
+    ) => {
+        const updatedRows = await db
+            .update(branchApplications)
+            .set({ status: "rejected" })
+            .where(eq(branchApplications.id, applicationId))
+            .returning({ id: branchApplications.id })
+
+        if (updatedRows.length === 0) {
+            throw new NotFoundError()
+        }
+
+        updateTag("branch-applications")
+
+        return message("Status has changed to rejected")
+    },
+)
+
+export const createNewBranchWorkspace = withPermission(
+    { branch_application: ["update"] },
+    async (
+        { headers },
+        { applicationId }: { applicationId: string },
+    ) => {
+        // 1. Fetch application details from DB
+        const branchApplication =
+            await db.query.branchApplications.findFirst({
+                where: { id: applicationId },
+            })
+
+        if (!branchApplication) {
+            throw new NotFoundError()
+        }
+
+        const { ownerName, email, branchName, logo } =
+            branchApplication
+        const password = generatePassword()
+        console.log("password", password)
+
+        let newUserId = ""
+
+        // 2. Create the Admin User
+        try {
+            const newUser = await auth.api.createUser({
+                body: {
+                    name: ownerName,
+                    email,
+                    password,
+                    role: "admin",
+                },
+                headers,
+            })
+            newUserId = newUser.user.id
+        } catch (error) {
+            throw error
+        }
+
+        // 3. Generate Organization Slug & Create Organization
+        const slug = await createUniqueOrgSlug(branchName)
+
+        try {
+            const newOrg =
+                await auth.api.createOrganization({
+                    body: {
+                        name: branchName,
+                        slug,
+                        logo: logo?.secureUrl ?? null,
+                        userId: newUserId,
+                        keepCurrentActiveOrganization: true,
+                    },
+                    headers,
+                })
+
+            // 4. Update application status/relation in Database
+            await db
+                .update(branchApplications)
+                .set({
+                    organizationId: newOrg.id,
+                    status: "approved",
+                })
+                .where(
+                    eq(
+                        branchApplications.id,
+                        applicationId,
+                    ),
+                )
+        } catch (error) {
+            // Rollback user creation if organization setup or DB update fails
+            if (newUserId) {
+                await auth.api
+                    .removeUser({
+                        body: { userId: newUserId },
+                        headers,
+                    })
+                    .catch(() =>
+                        console.log(
+                            "User deletion error during rollback",
+                        ),
+                    )
+            }
+
+            throw error
+        }
+
+        // 5. Invalidate cache tags
+        updateTag("branch-applications")
+
+        return message(
+            "Workspace has been set up successfully",
+        )
+    },
+)

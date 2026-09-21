@@ -11,14 +11,12 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup } from "@/components/ui/field"
-import { onErrorShowToast } from "@/utils/error-toast"
 import { useMutation } from "@tanstack/react-query"
 import { forgotPassword } from "../actions"
 import {
     forgotPasswordSchema,
     ForgotPasswordSchemaType,
 } from "../schemas"
-import { onSuccessShowToast } from "@/utils/success-toast"
 
 export function ForgotPasswordForm() {
     const defaultValues: ForgotPasswordSchemaType = {
@@ -27,11 +25,9 @@ export function ForgotPasswordForm() {
 
     const forgotPasswordMutation = useMutation({
         mutationFn: forgotPassword,
-        onSuccess: (res) => {
+        onSuccess: () => {
             form.reset()
-            onSuccessShowToast(res)
         },
-        onError: onErrorShowToast,
     })
 
     const form = useAppForm({

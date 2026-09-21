@@ -6,37 +6,82 @@ import {
     BranchApplicationSchemaType,
 } from "./schemas"
 import { branchApplications } from "@/drizzle/schema"
-import { uploadToCloudinary } from "@/lib/cloudinary/upload"
+import {
+    UploadResult,
+    uploadToCloudinary,
+} from "@/lib/cloudinary/upload"
+import { ValidationError } from "@/utils/error-constructor"
+import { cleanupUploads } from "@/lib/cloudinary/cleanup-uploads"
+import { updateTag } from "next/cache"
 
 export async function applyForBranch(
     inputs: BranchApplicationSchemaType,
 ) {
     const { data, success } =
         branchApplicationSchema.safeParse(inputs)
+
     if (!success) {
-        throw new Error("Invalid Data")
+        throw new ValidationError()
     }
 
-    const [
-        electricityBill,
-        nidDocument,
-        tradeLicense,
-        logo,
-    ] = await Promise.all([
-        uploadToCloudinary(data.electricityBill),
-        uploadToCloudinary(data.nidDocument),
-        uploadToCloudinary(data.tradeLicense),
-        data.logo &&
-            uploadToCloudinary(data.logo.croppedFile),
-    ])
-    await db.insert(branchApplications).values({
-        ...data,
-        electricityBill,
-        nidDocument,
-        tradeLicense,
-        logo,
+    const emailExist = await db.query.users.findFirst({
+        where: { email: inputs.email },
     })
-    return {
-        message: "Your form has submitted successfully",
+    if (emailExist) {
+        throw new Error("Email Already Exists")
+    }
+
+    let uploads: Array<UploadResult | undefined> = []
+    try {
+        const results = await Promise.allSettled([
+            uploadToCloudinary(data.electricityBill),
+            uploadToCloudinary(data.nidDocument),
+            uploadToCloudinary(data.tradeLicense),
+            data.logo
+                ? uploadToCloudinary(data.logo.croppedFile)
+                : Promise.resolve(undefined),
+        ])
+
+        uploads = results
+            .filter(
+                (
+                    result,
+                ): result is PromiseFulfilledResult<
+                    UploadResult | undefined
+                > => result.status === "fulfilled",
+            )
+            .map((result) => result.value)
+
+        const failed = results.find(
+            (result) => result.status === "rejected",
+        )
+
+        if (failed) {
+            throw failed.reason
+        }
+
+        const [
+            electricityBill,
+            nidDocument,
+            tradeLicense,
+            logo,
+        ] = uploads
+
+        await db.insert(branchApplications).values({
+            ...data,
+            electricityBill: electricityBill!,
+            nidDocument: nidDocument!,
+            tradeLicense: tradeLicense!,
+            logo,
+        })
+
+        updateTag("branch-applications")
+        return {
+            message:
+                "Your form has been submitted successfully.",
+        }
+    } catch (error) {
+        await cleanupUploads(uploads)
+        throw error
     }
 }

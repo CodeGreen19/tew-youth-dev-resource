@@ -10,12 +10,15 @@ export function generateSlug(name: string): string {
     })
 }
 
-async function isSlugTaken(slug: string): Promise<boolean> {
-    const existingOrg =
+async function isSlugExist(slug: string): Promise<boolean> {
+    try {
         await auth.api.checkOrganizationSlug({
             body: { slug },
         })
-    return !existingOrg.status
+        return true
+    } catch (error) {
+        return false
+    }
 }
 
 export async function createUniqueOrgSlug(
@@ -25,7 +28,7 @@ export async function createUniqueOrgSlug(
     let candidateSlug = baseSlug
     let counter = 1
 
-    while (await isSlugTaken(candidateSlug)) {
+    while (!(await isSlugExist(candidateSlug))) {
         candidateSlug = `${baseSlug}-${counter}`
         counter++
     }

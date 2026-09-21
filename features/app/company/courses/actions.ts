@@ -23,7 +23,7 @@ export const addCourse = withPermission(
             courseSchema.safeParse(inputs)
 
         if (!success) {
-            return new ValidationError()
+            throw new ValidationError()
         }
 
         const existCode = await db.query.courses.findFirst({
@@ -74,7 +74,7 @@ export const updateCourse = withPermission(
             updateCourseSchema.safeParse(inputs)
 
         if (!success) {
-            return new ValidationError()
+            throw new ValidationError()
         }
 
         const existCode = await db.query.courses.findFirst({

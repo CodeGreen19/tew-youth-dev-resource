@@ -1,12 +1,6 @@
 import { courseStatuses } from "@/constants/course"
 import { z } from "zod"
-
-const uploadedFileSchema = z.object({
-    secureUrl: z.url(),
-    publicId: z.string(),
-    resourceType: z.string(),
-    format: z.string(),
-})
+import { uploadedFileSchema } from "../../schemas"
 
 export const courseSchema = z.object({
     banner: z.instanceof(File, {

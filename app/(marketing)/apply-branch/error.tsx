@@ -1,6 +1,10 @@
 "use client"
-export default function error() {
-    return (
-        <div className="text-destructive">error occurs</div>
-    )
+
+import {
+    FallbackError,
+    FallbackErrorType,
+} from "@/components/shared/fallback-error"
+
+export default function error(error: FallbackErrorType) {
+    return <FallbackError {...error} />
 }

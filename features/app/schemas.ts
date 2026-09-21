@@ -22,3 +22,10 @@ export const avaterObjDefaults: AvaterObjSchema = {
     y: 0,
     zoom: 1,
 }
+
+export const uploadedFileSchema = z.object({
+    secureUrl: z.url(),
+    publicId: z.string(),
+    resourceType: z.string(),
+    format: z.string(),
+})

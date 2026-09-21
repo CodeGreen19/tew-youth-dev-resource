@@ -1,8 +1,16 @@
 "use client"
 
+import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
-import { CheckCircle2, XCircle } from "lucide-react"
+import {
+    CheckCircle2,
+    CircleAlert,
+    Plus,
+    XCircle,
+} from "lucide-react"
 
+import { SubmitButton } from "@/components/shared/submit-button"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -19,41 +27,54 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { SubmitButton } from "@/components/shared/submit-button"
+import { cn } from "@/lib/utils"
 import {
     approveApplication,
     createNewBranchWorkspace,
     rejectApplication,
 } from "../actions"
-import { onSuccessShowToast } from "@/utils/success-toast"
-import { onErrorShowToast } from "@/utils/error-toast"
 import { BranchApplication } from "../types"
-import { useRouter } from "next/navigation"
 
 type BranchStatus = "pending" | "approved" | "rejected"
 type Action = "approve" | "reject"
 
 const STATUS_CONFIG = {
     pending: {
-        title: "Branch approval",
+        title: "Review application",
         description:
-            "Review the branch application and choose an action.",
+            "Review the branch application and confirm whether it should be approved or rejected.",
+        label: "Pending review",
+        icon: CircleAlert,
+        className:
+            "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-400",
     },
     approved: {
-        title: "Branch approved",
+        title: "Application approved",
         description:
-            "This branch application has already been approved.",
+            "This application has been approved. You can create the branch workspace if one has not been created yet.",
+        label: "Approved",
+        icon: CheckCircle2,
+        className:
+            "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-400",
     },
     rejected: {
-        title: "Branch rejected",
+        title: "Application rejected",
         description:
-            "This branch application has already been rejected.",
+            "This application has been rejected and can no longer be approved from this page.",
+        label: "Rejected",
+        icon: XCircle,
+        className:
+            "border-destructive/20 bg-destructive/5 text-destructive",
     },
 } satisfies Record<
     BranchStatus,
-    { title: string; description: string }
+    {
+        title: string
+        description: string
+        label: string
+        icon: typeof CircleAlert
+        className: string
+    }
 >
 
 export function ApproveBranch({
@@ -67,76 +88,98 @@ export function ApproveBranch({
     const [action, setAction] = useState<Action | null>(
         null,
     )
-    const router = useRouter()
 
     const approveMutation = useMutation({
         mutationFn: approveApplication,
-        onSuccess: (res) => {
+        onSuccess: () => {
             setAction(null)
-            onSuccessShowToast(res)
-            router.refresh()
         },
-        onError: onErrorShowToast,
     })
+
     const rejectMutation = useMutation({
         mutationFn: rejectApplication,
-        onSuccess: (res) => {
+        onSuccess: () => {
             setAction(null)
-            onSuccessShowToast(res)
-            router.refresh()
         },
-        onError: onErrorShowToast,
     })
+
     const workspaceMutation = useMutation({
         mutationFn: createNewBranchWorkspace,
-        onSuccess: (res) => {
-            onSuccessShowToast(res)
-            router.refresh()
-        },
-        onError: onErrorShowToast,
     })
+
+    const config = STATUS_CONFIG[status]
+    const StatusIcon = config.icon
 
     const actionButtonDisabled =
         status === "approved" || status === "rejected"
 
+    const isActionPending =
+        approveMutation.isPending ||
+        rejectMutation.isPending
+
     return (
         <>
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        {STATUS_CONFIG[status].title}
-                    </CardTitle>
-                    <CardDescription>
-                        {STATUS_CONFIG[status].description}
-                    </CardDescription>
+            <Card className="overflow-hidden">
+                <CardHeader className="border-b">
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-1">
+                            <CardTitle className="text-base">
+                                {config.title}
+                            </CardTitle>
+                            <CardDescription className="max-w-2xl">
+                                {config.description}
+                            </CardDescription>
+                        </div>
+
+                        <div
+                            className={cn(
+                                "flex shrink-0 items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium",
+                                config.className,
+                            )}
+                        >
+                            <StatusIcon className="size-3.5" />
+                            {config.label}
+                        </div>
+                    </div>
                 </CardHeader>
 
-                <CardContent className="flex flex-col gap-3 sm:flex-row">
-                    <Button
-                        disabled={actionButtonDisabled}
-                        variant={
-                            actionButtonDisabled
-                                ? "ghost"
-                                : "default"
-                        }
-                        onClick={() => setAction("approve")}
-                    >
-                        <CheckCircle2 />
-                        Accept
-                    </Button>
+                <CardContent className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                    {status === "pending" ? (
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                            <Button
+                                disabled={
+                                    actionButtonDisabled
+                                }
+                                onClick={() =>
+                                    setAction("approve")
+                                }
+                                className="sm:min-w-36"
+                            >
+                                <CheckCircle2 />
+                                Approve application
+                            </Button>
 
-                    <Button
-                        disabled={actionButtonDisabled}
-                        variant={
-                            actionButtonDisabled
-                                ? "ghost"
-                                : "outline"
-                        }
-                        onClick={() => setAction("reject")}
-                    >
-                        <XCircle />
-                        Reject
-                    </Button>
+                            <Button
+                                disabled={
+                                    actionButtonDisabled
+                                }
+                                variant="outline"
+                                onClick={() =>
+                                    setAction("reject")
+                                }
+                                className="sm:min-w-28"
+                            >
+                                <XCircle />
+                                Reject
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="text-sm text-muted-foreground">
+                            No further approval action is
+                            available.
+                        </div>
+                    )}
+
                     {status === "approved" &&
                         !organizationId && (
                             <SubmitButton
@@ -150,8 +193,11 @@ export function ApproveBranch({
                                         },
                                     )
                                 }
+                                variant="outline"
+                                className="sm:min-w-40"
                             >
-                                Create Workspace
+                                <Plus />
+                                Create workspace
                             </SubmitButton>
                         )}
                 </CardContent>
@@ -165,41 +211,58 @@ export function ApproveBranch({
                     }
                 }}
             >
-                <DialogContent>
+                <DialogContent className="sm:max-w-md">
                     <DialogHeader>
+                        <div
+                            className={cn(
+                                "mb-2 flex size-10 items-center justify-center rounded-lg",
+                                action === "approve"
+                                    ? "bg-emerald-500/10 text-emerald-600"
+                                    : "bg-destructive/10 text-destructive",
+                            )}
+                        >
+                            {action === "approve" ? (
+                                <CheckCircle2 className="size-5" />
+                            ) : (
+                                <XCircle className="size-5" />
+                            )}
+                        </div>
+
                         <DialogTitle>
                             {action === "approve"
-                                ? "Accept branch application?"
-                                : "Reject branch application?"}
+                                ? "Approve this application?"
+                                : "Reject this application?"}
                         </DialogTitle>
 
-                        <DialogDescription>
+                        <DialogDescription className="leading-6">
                             {action === "approve"
-                                ? "This will approve the branch application and allow the branch to continue with its dashboard access."
-                                : "This will reject the branch application. The application will no longer remain in the pending state."}
+                                ? "Approving this application will allow the branch to proceed with dashboard access."
+                                : "Rejecting this application will remove it from the pending review state."}
                         </DialogDescription>
                     </DialogHeader>
 
-                    <DialogFooter>
+                    <div className="rounded-lg border bg-muted/40 p-3 text-sm text-muted-foreground">
+                        {action === "approve"
+                            ? "Make sure the branch information and submitted documents have been reviewed before continuing."
+                            : "This action changes the application status. Review the submitted information before continuing."}
+                    </div>
+
+                    <DialogFooter className="gap-2 sm:gap-2">
                         <DialogClose
                             render={
                                 <Button
                                     variant="outline"
                                     disabled={
-                                        approveMutation.isPending ||
-                                        rejectMutation.isPending
+                                        isActionPending
                                     }
                                 >
                                     Cancel
                                 </Button>
                             }
-                        ></DialogClose>
+                        />
 
                         <SubmitButton
-                            isPending={
-                                approveMutation.isPending ||
-                                rejectMutation.isPending
-                            }
+                            isPending={isActionPending}
                             onClick={() => {
                                 if (action === "approve") {
                                     approveMutation.mutate({
@@ -212,10 +275,15 @@ export function ApproveBranch({
                                 }
                             }}
                             type="button"
+                            variant={
+                                action === "approve"
+                                    ? "default"
+                                    : "destructive"
+                            }
                         >
                             {action === "approve"
-                                ? "Accept branch"
-                                : "Reject branch"}
+                                ? "Approve application"
+                                : "Reject application"}
                         </SubmitButton>
                     </DialogFooter>
                 </DialogContent>

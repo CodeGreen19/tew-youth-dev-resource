@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { useFormStepsStore } from "@/hooks/use-form-steps-store"
 import { MoveLeft, MoveRight } from "lucide-react"
+import { SubmitButton } from "../shared/submit-button"
 
 export function FormStepsNavigation({
     formId,
@@ -33,15 +34,15 @@ export function FormStepsNavigation({
                 <MoveLeft /> Back
             </Button>
             {showSubmitButton ? (
-                <Button
-                    disabled={submitPending}
+                <SubmitButton
+                    isPending={submitPending}
                     onClick={onSubmit}
                     variant="default"
                     type="submit"
                     form={formId}
                 >
                     Submit Form
-                </Button>
+                </SubmitButton>
             ) : (
                 <Button
                     variant="outline"

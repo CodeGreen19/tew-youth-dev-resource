@@ -11,12 +11,10 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup } from "@/components/ui/field"
-import { onErrorShowToast } from "@/utils/error-toast"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { login } from "../actions"
 import { loginSchema, LoginSchemaType } from "../schemas"
-import { onSuccessShowToast } from "@/utils/success-toast"
 
 export function LoginForm() {
     const router = useRouter()
@@ -27,11 +25,9 @@ export function LoginForm() {
 
     const loginMutation = useMutation({
         mutationFn: login,
-        onSuccess: (res) => {
+        onSuccess: () => {
             router.push("/dashboard/overviews")
-            onSuccessShowToast(res)
         },
-        onError: onErrorShowToast,
     })
 
     const form = useAppForm({

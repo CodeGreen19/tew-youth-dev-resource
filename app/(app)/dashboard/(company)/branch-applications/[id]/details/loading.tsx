@@ -1,5 +1,5 @@
-import React from "react"
+import { FallbackLoading } from "@/components/shared/fallback-loading"
 
 export default function loading() {
-    return <div>loading...</div>
+    return <FallbackLoading />
 }

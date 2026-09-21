@@ -22,8 +22,6 @@ import {
 import Image from "next/image"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { onSuccessShowToast } from "@/utils/success-toast"
-import { onErrorShowToast } from "@/utils/error-toast"
 import { SubmitButton } from "@/components/shared/submit-button"
 
 export function UpdateCourseForm({
@@ -36,11 +34,9 @@ export function UpdateCourseForm({
     const router = useRouter()
     const updateMutation = useMutation({
         mutationFn: updateCourse,
-        onSuccess: (res) => {
-            onSuccessShowToast(res)
+        onSuccess: () => {
             router.push("/dashboard/courses")
         },
-        onError: onErrorShowToast,
     })
 
     const form = useAppForm({

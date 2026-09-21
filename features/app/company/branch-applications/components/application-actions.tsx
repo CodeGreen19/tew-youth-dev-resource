@@ -9,7 +9,7 @@ export function ApplictionActions({
     application: BranchApplicationById
 }) {
     return (
-        <div className="max-w-lg">
+        <div>
             <ApproveBranch {...application} />
         </div>
     )

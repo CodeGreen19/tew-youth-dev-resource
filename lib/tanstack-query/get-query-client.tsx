@@ -1,8 +1,10 @@
 // app/get-query-client.ts
+import { toast } from "@/components/ui/toast"
 import {
     environmentManager,
     QueryClient,
     defaultShouldDehydrateQuery,
+    MutationCache,
 } from "@tanstack/react-query"
 
 function makeQueryClient() {
@@ -21,6 +23,25 @@ function makeQueryClient() {
             },
             hydrate: {},
         },
+        mutationCache: new MutationCache({
+            onSuccess: (data: any) => {
+                if (data?.message) {
+                    toast.add({
+                        title: data.message,
+                        type: "success",
+                    })
+                }
+            },
+            onError: (error) => {
+                toast.add({
+                    title:
+                        error instanceof Error
+                            ? error.message
+                            : "Something went wrong.",
+                    type: "error",
+                })
+            },
+        }),
     })
 }
 
