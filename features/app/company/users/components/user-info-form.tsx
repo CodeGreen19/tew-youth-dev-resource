@@ -61,7 +61,7 @@ export function UserInfoForm({
                 >
                     <FieldGroup>
                         <form.AppField
-                            name="profilePicture"
+                            name="profileFile"
                             children={(field) => (
                                 <field.AvatarField label="Profile Picture" />
                             )}

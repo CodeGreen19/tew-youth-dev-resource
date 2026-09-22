@@ -40,10 +40,10 @@ export function UserFormPreview({
         <Card>
             <CardHeader className="flex-row items-center gap-4">
                 <Avatar className="size-20">
-                    {orgUser.profilePicture && (
+                    {orgUser.profileFile && (
                         <AvatarImage
                             src={URL.createObjectURL(
-                                orgUser.profilePicture
+                                orgUser.profileFile
                                     .croppedFile,
                             )}
                             alt={orgUser.name}
@@ -62,7 +62,7 @@ export function UserFormPreview({
                         {orgUser.email}
                     </p>
 
-                    {orgUser.cv && (
+                    {orgUser.cvFile && (
                         <Badge
                             variant="secondary"
                             className="mt-2"

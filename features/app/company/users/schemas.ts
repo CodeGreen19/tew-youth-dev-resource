@@ -10,14 +10,14 @@ import { z } from "zod"
 // ─────────────────────────────────────────────
 
 export const orgUserSchema = z.object({
-    profilePicture: avatarObjSchema,
+    profileFile: avatarObjSchema,
 
     name: z
         .string()
         .min(3, "Name must be at least 3 characters")
         .max(100, "Name must not exceed 100 characters"),
 
-    email: z.string().email("Enter a valid email address"), // Fixed syntax error: z.string().email()
+    email: z.email("Enter a valid email address"),
 
     password: z
         .string()
@@ -36,7 +36,7 @@ export const orgUserSchema = z.object({
 
     gender: z.enum(GENDER, {
         message: "Please select a valid gender",
-    }), // Fixed invalid direct string argument on z.enum
+    }),
 })
 
 // ─────────────────────────────────────────────
@@ -67,7 +67,7 @@ export const orgUserAdditionalSchema = z.object({
             "Mother's name must not exceed 100 characters",
         ),
 
-    cv: z.instanceof(File).nullable(),
+    cvFile: z.instanceof(File).nullable(),
 
     qualification: z
         .string()
@@ -115,11 +115,11 @@ export const orgUserFullDefaults: OrgUserFullSchemaType = {
     phoneNumber: "",
     fatherName: "",
     motherName: "",
-    profilePicture: avaterObjDefaults,
-    gender: "Male", // Note: Ensure "Male" exists inside your GENDER array constants
+    profileFile: avaterObjDefaults,
+    gender: "Male",
 
     // Optional Fields
     address: "",
-    cv: null,
+    cvFile: null,
     qualification: "",
 }

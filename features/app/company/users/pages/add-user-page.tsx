@@ -9,7 +9,6 @@ import {
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
-import { toast } from "@/components/ui/toast"
 import { useFormStepsStore } from "@/hooks/use-form-steps-store"
 import { FormStepsType } from "@/types/steps"
 import { useMutation } from "@tanstack/react-query"
@@ -55,16 +54,9 @@ export function AddUserPage() {
 
     const mutation = useMutation({
         mutationFn: addOrgUser,
-        onSuccess: ({ message }) => {
+        onSuccess: () => {
             setOrgUserForm(orgUserFullDefaults)
             setStep(0)
-            toast.add({ title: message, type: "success" })
-        },
-        onError: ({ message }) => {
-            toast.add({
-                title: message,
-                type: "error",
-            })
         },
     })
 
@@ -80,7 +72,7 @@ export function AddUserPage() {
                     <div className="max-w-7xl m-auto">
                         <FormSteps steps={formSteps} />
                     </div>
-                    <div className="max-w-lg m-auto pt-6 px-4 lg:px-0">
+                    <div className="max-w-lg m-auto pt-10 px-4 lg:px-0">
                         <div className="space-y-8">
                             {currentStep === 0 ? (
                                 <UserInfoForm

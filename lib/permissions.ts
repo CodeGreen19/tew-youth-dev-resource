@@ -10,6 +10,7 @@ import {
     branches,
     roles_permissions,
     students,
+    users,
 } from "./resources"
 
 const statement = {
@@ -20,6 +21,7 @@ const statement = {
     branches,
     roles_permissions,
     students,
+    users,
 } as const
 
 export const ac = createAccessControl(statement)
@@ -31,5 +33,6 @@ export const owner = ac.newRole({
     overview: statement.overview,
     roles_permissions: statement.roles_permissions,
     students: statement.students,
+    users: statement.users,
     ...ownerAc.statements,
 })

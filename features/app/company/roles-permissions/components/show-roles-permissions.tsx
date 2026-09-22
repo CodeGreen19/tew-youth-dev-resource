@@ -1,11 +1,10 @@
 "use client"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/shared/submit-button"
 import {
     Field,
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
-import { toast } from "@/components/ui/toast"
 import { useMutation } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { updateRolePermission } from "../actions"
@@ -36,12 +35,6 @@ export function ShowRolesPermissions({
 
     const updateRoleMutation = useMutation({
         mutationFn: updateRolePermission,
-        onSuccess: ({ message }) => {
-            toast.add({ title: message })
-        },
-        onError: ({ message }) => {
-            toast.add({ title: message })
-        },
     })
 
     useEffect(() => {
@@ -101,19 +94,19 @@ export function ShowRolesPermissions({
                     orientation={"horizontal"}
                     className="justify-center"
                 >
-                    <Button
+                    <SubmitButton
                         onClick={() =>
                             updateRoleMutation.mutate({
                                 permission: permissions,
                                 roleName: selectedRole,
                             })
                         }
-                        disabled={
+                        isPending={
                             updateRoleMutation.isPending
                         }
                     >
                         Update Changes
-                    </Button>
+                    </SubmitButton>
                 </Field>
             )}
         </FieldGroup>

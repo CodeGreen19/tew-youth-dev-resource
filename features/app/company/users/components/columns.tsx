@@ -54,10 +54,12 @@ export const columns = columnHelper.columns([
 
     columnHelper.display({
         id: "actions",
-        cell: ({ row }) => (
-            <CellNavigateTo
-                href={`/dashboard/users/${row.original.id}/details`}
-            />
-        ),
+        cell: ({ row }) => {
+            return (
+                <CellNavigateTo
+                    href={`/dashboard/users/${row.original.id}/details`}
+                />
+            )
+        },
     }),
 ])

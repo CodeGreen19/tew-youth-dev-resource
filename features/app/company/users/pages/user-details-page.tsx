@@ -13,6 +13,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import { ShowFullUser } from "../components/show-full-user"
+import { ActionsTab } from "../components/actions-tab"
 export async function UserDetailsPage({
     id,
 }: {
@@ -41,7 +42,7 @@ export async function UserDetailsPage({
                         <ShowFullUser data={data} />
                     </TabsContent>
                     <TabsContent value="actions">
-                        Actions tab
+                        <ActionsTab data={data} />
                     </TabsContent>
                 </Tabs>
             </PageContent>

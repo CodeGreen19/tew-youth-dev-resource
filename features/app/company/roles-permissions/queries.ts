@@ -1,27 +1,52 @@
-"use server"
-
 import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { withPermission } from "@/lib/dal"
+import { NotFoundError } from "@/utils/error-constructor"
+import { cacheTag } from "next/cache"
 
-export async function getRolesAndPermissions() {
-    const org = await auth.api.getOrganization({
-        headers: await headers(),
-    })
-    if (!org) {
-        throw new Error("Org is not found")
-    }
-    const rolesAndPermissions = await auth.api.listOrgRoles(
-        {
-            query: {
-                organizationId: org.id,
-            },
-            headers: await headers(),
-        },
+export const getRolesAndPermissions = withPermission(
+    { roles_permissions: ["view"] },
+    async ({ headers }) => {
+        const org = await auth.api.getOrganization({
+            headers,
+        })
+
+        if (!org) {
+            throw new NotFoundError()
+        }
+
+        const rolesAndPermissions =
+            await getCachedRolesAndPermissions(
+                org.id,
+                headers,
+            )
+
+        const dashboardType =
+            process.env.COMPANY_ORG_ID === org.id
+                ? "COMPANY"
+                : "BRANCH"
+
+        return {
+            rolesAndPermissions,
+            dashboardType,
+        }
+    },
+)
+
+async function getCachedRolesAndPermissions(
+    organizationId: string,
+    headers: HeadersInit,
+) {
+    "use cache"
+
+    cacheTag(
+        "roles-permissions",
+        `roles-permissions:${organizationId}`,
     )
-    const dashboardType =
-        process.env.COMPANY_ORG_ID === org.id
-            ? "COMPANY"
-            : "BRANCH"
 
-    return { rolesAndPermissions, dashboardType }
+    return await auth.api.listOrgRoles({
+        query: {
+            organizationId,
+        },
+        headers,
+    })
 }

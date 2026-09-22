@@ -24,6 +24,7 @@ export async function login(value: LoginSchemaType) {
         body: data,
         headers: await headers(),
     })
+
     return message("Login Successfull")
 }
 

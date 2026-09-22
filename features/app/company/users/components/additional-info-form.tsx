@@ -94,7 +94,7 @@ export function AdditionalInfoForm({
                             )}
                         />
                         <form.AppField
-                            name="cv"
+                            name="cvFile"
                             children={(field) => (
                                 <field.FileField label="CV (optional)" />
                             )}

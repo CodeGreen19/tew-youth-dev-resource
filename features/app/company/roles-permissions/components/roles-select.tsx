@@ -4,6 +4,7 @@ import { Plus } from "lucide-react"
 import { Dispatch, SetStateAction, useState } from "react"
 
 import { useAppForm } from "@/components/form/use-app-form"
+import { SubmitButton } from "@/components/shared/submit-button"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -25,7 +26,6 @@ import { capitalize } from "@/utils/helpers"
 import { useMutation } from "@tanstack/react-query"
 import { z } from "zod"
 import { createRole } from "../actions"
-import { toast } from "@/components/ui/toast"
 
 const roleSchema = z.object({
     roleName: z
@@ -104,13 +104,8 @@ function CreateRole({
 }: CreateRoleProps) {
     const createRoleMutation = useMutation({
         mutationFn: createRole,
-        onSuccess: ({ message, role }) => {
-            toast.add({ title: message })
-
+        onSuccess: () => {
             onOpenChange(false)
-        },
-        onError: ({ message }) => {
-            toast.add({ title: message })
         },
     })
 
@@ -129,7 +124,15 @@ function CreateRole({
     })
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog
+            open={open}
+            onOpenChange={(v) => {
+                onOpenChange(v)
+                if (v === false) {
+                    form.reset()
+                }
+            }}
+        >
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
@@ -162,15 +165,15 @@ function CreateRole({
                     </form>
                 </FieldGroup>
                 <DialogFooter>
-                    <Button
-                        disabled={
+                    <SubmitButton
+                        isPending={
                             createRoleMutation.isPending
                         }
                         form="role-form"
                         type="submit"
                     >
                         Submit{" "}
-                    </Button>
+                    </SubmitButton>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
