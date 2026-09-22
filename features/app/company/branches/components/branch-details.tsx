@@ -1,11 +1,6 @@
 "use client"
 
-import {
-    Download,
-    FileText,
-    MapPin,
-    User,
-} from "lucide-react"
+import { FileText, MapPin, User } from "lucide-react"
 
 import {
     Avatar,
@@ -13,7 +8,6 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -22,7 +16,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
 import { BranchById } from "../types"
 
 export function BranchDetails({
@@ -114,21 +107,6 @@ export function BranchDetails({
                             </p>
                         </div>
                     </div>
-
-                    {/* <Button
-                        disabled
-                        variant="outline"
-                        size="sm"
-                        nativeButton={false}
-                        render={
-                            <Link
-                                href={`/admin/branches/${branch.slug}/documents`}
-                            >
-                                <Download />
-                                Documents
-                            </Link>
-                        }
-                    ></Button> */}
                 </div>
             </CardContent>
         </Card>

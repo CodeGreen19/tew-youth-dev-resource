@@ -12,6 +12,7 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Branch } from "../types"
+import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -36,9 +37,13 @@ export const branchColumns = columnHelper.columns([
     }),
 
     columnHelper.accessor("name", {
-        header: "Branch Name",
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Branch Name"
+            />
+        ),
     }),
-
     columnHelper.accessor("createdAt", {
         header: "Created At",
         cell: ({ row }) => {
