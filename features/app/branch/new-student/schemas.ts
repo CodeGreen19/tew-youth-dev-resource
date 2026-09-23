@@ -1,7 +1,7 @@
 import { z } from "zod"
 import {
+    AvatarObjSchema,
     avatarObjSchema,
-    avaterObjDefaults,
 } from "../../schemas"
 import { BLOOD_GROUPS, GENDER } from "../students/constants"
 
@@ -183,7 +183,7 @@ export const academicInformationDefaults: AcademicInformationSchemaType =
 
 export const studentDefaults: StudentSchemaType = {
     // Personal Information
-    image: avaterObjDefaults,
+    image: null as unknown as AvatarObjSchema,
     name: "",
     fatherName: "",
     motherName: "",

@@ -2,20 +2,20 @@ import z from "zod"
 
 export const avatarObjSchema = z.object({
     originalFile: z.instanceof(File, {
-        message: "Profile picture is required", // Fixed syntax error from 'error' to 'message'
+        message: "Avatar is required",
     }),
     croppedFile: z.instanceof(File, {
-        message: "Profile picture is required", // Fixed syntax error from 'error' to 'message'
+        message: "Avatar is required",
     }),
     x: z.number(),
     y: z.number(),
     zoom: z.number(),
 })
 
-export type AvaterObjSchema = z.infer<
+export type AvatarObjSchema = z.infer<
     typeof avatarObjSchema
 >
-export const avaterObjDefaults: AvaterObjSchema = {
+export const avatarObjDefaults: AvatarObjSchema = {
     originalFile: null as unknown as File,
     croppedFile: null as unknown as File,
     x: 0,

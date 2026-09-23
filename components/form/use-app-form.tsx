@@ -9,7 +9,7 @@ import { TextareaField } from "./textarea-field"
 import { SelectField } from "./select-field"
 import { CheckboxField } from "./checkbox-field"
 import { FileField } from "./file-field"
-import { AvatarField } from "./avater-field"
+import { AvatarField } from "./avatar-field"
 import { PasswordField } from "./password-field"
 import { DatePickerField } from "./date-picker-field"
 

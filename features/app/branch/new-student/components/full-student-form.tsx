@@ -112,8 +112,7 @@ export function FullStudentForm({
                             }}
                         />
                     ) : currentStep === 1 ? (
-                        <CourseInformationForm
-                            courses={courses}
+                        <AcademicInformationForm
                             existedValues={studentForm}
                             formId={formId}
                             onSuccess={(values) => {
@@ -123,7 +122,8 @@ export function FullStudentForm({
                             }}
                         />
                     ) : currentStep === 2 ? (
-                        <AcademicInformationForm
+                        <CourseInformationForm
+                            courses={courses}
                             existedValues={studentForm}
                             formId={formId}
                             onSuccess={(values) => {

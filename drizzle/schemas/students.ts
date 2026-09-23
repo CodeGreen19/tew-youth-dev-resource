@@ -8,6 +8,7 @@ import {
     index,
     integer,
     jsonb,
+    numeric,
     pgEnum,
     snakeCase,
     text,
@@ -129,6 +130,11 @@ export const enrollmentStatusEnum = pgEnum(
     ENROLLMENT_STATUS,
 )
 
+export const paymentStatusEnum = pgEnum("payment_status", [
+    "pending",
+    "paid",
+    "cancelled",
+])
 export const enrollments = snakeCase.table(
     "enrollments",
 
@@ -153,7 +159,7 @@ export const enrollments = snakeCase.table(
 
         rollNumber: varchar("roll_number", {
             length: 30,
-        }),
+        }).notNull(),
 
         courseRange: varchar("course_range", {
             length: 100,
@@ -167,13 +173,19 @@ export const enrollments = snakeCase.table(
             length: 50,
         }).notNull(),
 
-        enrollmentDate: date("enrollment_date", {
-            mode: "date",
-        }).notNull(),
-
         status: enrollmentStatusEnum("status")
             .notNull()
             .default("active"),
+        paidAmount: numeric("paid_amount", {
+            precision: 12,
+            scale: 2,
+        })
+            .notNull()
+            .default("0"),
+
+        paymentStatus: paymentStatusEnum("payment_status")
+            .notNull()
+            .default("pending"),
 
         createdAt,
         updatedAt,
@@ -182,6 +194,9 @@ export const enrollments = snakeCase.table(
         uniqueIndex(
             "enrollments_registration_number_unique",
         ).on(table.registrationNumber),
+        uniqueIndex("enrollments_roll_number_unique").on(
+            table.rollNumber,
+        ),
         index("enrollments_student_id_idx").on(
             table.studentId,
         ),

@@ -8,16 +8,17 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
-import {
-    avaterObjDefaults,
-    AvaterObjSchema,
-} from "@/features/app/schemas"
+
 import { FormField } from "@/types/form"
 import { ImagePlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import Cropper, { type Area } from "react-easy-crop"
 import { Button } from "../ui/button"
 import { useFieldContext } from "./use-app-form"
+import {
+    avatarObjDefaults,
+    AvatarObjSchema,
+} from "@/features/app/schemas"
 
 type AvatarFieldProps = Pick<
     FormField,
@@ -31,7 +32,7 @@ export function AvatarField({
     description,
     maxSize = 5 * 1024 * 1024,
 }: AvatarFieldProps) {
-    const field = useFieldContext<AvaterObjSchema | null>()
+    const field = useFieldContext<AvatarObjSchema | null>()
 
     const [image, setImage] = useState<string>()
     const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -40,8 +41,11 @@ export function AvatarField({
     const [cropArea, setCropArea] = useState<Area>()
 
     const isInvalid =
-        field.state.meta.isTouched &&
+        (field.state.meta.isTouched ||
+            field.form.state.submissionAttempts > 0) &&
         !field.state.meta.isValid
+
+    console.log("error", field.state.meta.errors)
 
     const handleChange = (file?: File) => {
         if (!file) return
@@ -64,7 +68,7 @@ export function AvatarField({
         setCropArea(undefined)
 
         field.handleChange({
-            ...avaterObjDefaults,
+            ...avatarObjDefaults,
             originalFile: file,
         })
     }
@@ -75,6 +79,7 @@ export function AvatarField({
 
         if (!file) {
             setImage(undefined)
+
             return
         }
 

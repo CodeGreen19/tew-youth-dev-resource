@@ -36,7 +36,12 @@ export const resources = {
     },
 
     branch: {
-        students: ["view"] as const,
+        students: [
+            "view",
+            "create",
+            "update",
+            "delete",
+        ] as const,
     },
 }
 

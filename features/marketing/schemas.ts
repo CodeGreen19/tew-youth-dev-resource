@@ -1,9 +1,9 @@
 import { z } from "zod"
-import { BLOOD_GROUPS, GENDER } from "./constants"
 import {
     avatarObjSchema,
-    avaterObjDefaults,
+    AvatarObjSchema,
 } from "../app/schemas"
+import { BLOOD_GROUPS, GENDER } from "./constants"
 
 // ─────────────────────────────────────────────
 // Part 1: Branch Details
@@ -169,7 +169,7 @@ export type BranchApplicationSchemaType = z.infer<
 export const branchApplicationDefaults: BranchApplicationSchemaType =
     {
         // Branch Details
-        logo: avaterObjDefaults,
+        logo: null as unknown as AvatarObjSchema,
         branchName: "",
         mobile: "",
         email: "",
