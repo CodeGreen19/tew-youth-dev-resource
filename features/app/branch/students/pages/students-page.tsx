@@ -1,5 +1,4 @@
 import { DataTable } from "@/components/table/data-table"
-import { getStudents } from "../queries"
 
 import {
     Page,
@@ -10,10 +9,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-import { studentsColumns } from "../components/student-columns"
 
 export async function StudentsPage() {
-    const students = await getStudents()
     return (
         <Page>
             <PageHeader>
@@ -34,12 +31,12 @@ export async function StudentsPage() {
                     </Button>
                 </PageAction>
             </PageHeader>
-            <DataTable
+            {/* <DataTable
                 columns={studentsColumns}
                 data={students}
                 searchBy="name"
                 searchPlaceholder="Search by Name ..."
-            />
+            /> */}
         </Page>
     )
 }

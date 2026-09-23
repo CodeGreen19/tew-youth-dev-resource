@@ -9,15 +9,11 @@ export async function getSidebarData() {
         headers,
     })
 
-    console.log(org)
-
     if (!org) {
         const organizations =
             await auth.api.listOrganizations({
                 headers,
             })
-
-        console.log(organizations, "org")
 
         const firstOrg = organizations[0]
 
@@ -34,13 +30,8 @@ export async function getSidebarData() {
             },
         })
 
-        console.log("data=>>>>", data)
-        console.log("first=>>>>", firstOrg)
-
         org = firstOrg
     }
-
-    console.log("outside org =>>>>", org)
 
     const member = await auth.api.getActiveMember({
         headers,

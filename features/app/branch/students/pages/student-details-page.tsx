@@ -4,16 +4,12 @@ import {
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
-import { getStudentById } from "../queries"
-import { StudentDetails } from "../components/student-details"
 
 export async function StudentDetailsPage({
     id,
 }: {
     id: string
 }) {
-    const student = await getStudentById(id)
-
     return (
         <Page>
             <PageHeader>
@@ -21,10 +17,6 @@ export async function StudentDetailsPage({
                     Student Details
                 </PageTitle>
             </PageHeader>
-
-            <PageContent>
-                <StudentDetails student={student} />
-            </PageContent>
         </Page>
     )
 }

@@ -10,31 +10,35 @@ import {
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
 
-import { BLOOD_GROUPS, GENDER } from "../../constants"
 import {
-    BranchApplicationSchemaType,
-    ownerInfoSchema,
-    OwnerInfoSchemaType,
-} from "../../schemas"
-import { capitalize } from "@/utils/helpers"
+    BLOOD_GROUPS,
+    GENDER,
+} from "../../students/constants"
 
-export function OwnerInfoForm({
+import { capitalize } from "@/utils/helpers"
+import {
+    personalInformationSchema,
+    PersonalInformationSchemaType,
+    StudentSchemaType,
+} from "../schemas"
+
+export function PersonalInformationForm({
     onSuccess,
     formId,
     existedValues,
 }: {
-    onSuccess: (v: OwnerInfoSchemaType) => void
+    onSuccess: (v: PersonalInformationSchemaType) => void
     formId: string
-    existedValues: BranchApplicationSchemaType
+    existedValues: StudentSchemaType
 }) {
-    const defaultValues: OwnerInfoSchemaType = {
+    const defaultValues: PersonalInformationSchemaType = {
         ...existedValues,
     }
 
     const form = useAppForm({
         defaultValues,
         validators: {
-            onChange: ownerInfoSchema,
+            onChange: personalInformationSchema,
         },
         onSubmit: async ({ value }) => {
             onSuccess(value)
@@ -44,10 +48,10 @@ export function OwnerInfoForm({
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Owner Information</CardTitle>
+                <CardTitle>Personal Information</CardTitle>
                 <CardDescription>
-                    Provide the personal and identification
-                    details of the branch owner.
+                    Provide the student's personal and
+                    identification details.
                 </CardDescription>
             </CardHeader>
 
@@ -61,11 +65,18 @@ export function OwnerInfoForm({
                 >
                     <FieldGroup>
                         <form.AppField
-                            name="ownerName"
+                            name="image"
+                            children={(field) => (
+                                <field.AvatarField label="Student Image" />
+                            )}
+                        />
+
+                        <form.AppField
+                            name="name"
                             children={(field) => (
                                 <field.TextField
                                     label="Full Name"
-                                    placeholder="Enter the owner's full name"
+                                    placeholder="Enter the student's full name"
                                 />
                             )}
                         />
@@ -75,7 +86,7 @@ export function OwnerInfoForm({
                             children={(field) => (
                                 <field.TextField
                                     label="Father's Name"
-                                    placeholder="Enter the owner's father's full name"
+                                    placeholder="Enter the student's father's full name"
                                 />
                             )}
                         />
@@ -85,17 +96,33 @@ export function OwnerInfoForm({
                             children={(field) => (
                                 <field.TextField
                                     label="Mother's Name"
-                                    placeholder="Enter the owner's mother's full name"
+                                    placeholder="Enter the student's mother's full name"
                                 />
                             )}
                         />
 
                         <form.AppField
-                            name="nidNumber"
+                            name="mobile"
                             children={(field) => (
                                 <field.TextField
-                                    label="National ID Number"
-                                    placeholder="Enter the 10, 13, or 17-digit NID number"
+                                    label="Mobile Number"
+                                    placeholder="Enter the student's mobile number"
+                                />
+                            )}
+                        />
+                        <form.AppField
+                            name="dateOfBirth"
+                            children={(field) => (
+                                <field.DatePickerField label="Date of Birth" />
+                            )}
+                        />
+
+                        <form.AppField
+                            name="religion"
+                            children={(field) => (
+                                <field.TextField
+                                    label="Religion"
+                                    placeholder="Enter the student's religion"
                                 />
                             )}
                         />
@@ -107,13 +134,23 @@ export function OwnerInfoForm({
                                     label="Blood Group"
                                     placeholder="Select the blood group"
                                     options={BLOOD_GROUPS.map(
-                                        (b) => ({
+                                        (bloodGroup) => ({
                                             label: capitalize(
-                                                b,
+                                                bloodGroup,
                                             ),
-                                            value: b,
+                                            value: bloodGroup,
                                         }),
                                     )}
+                                />
+                            )}
+                        />
+
+                        <form.AppField
+                            name="nationality"
+                            children={(field) => (
+                                <field.TextField
+                                    label="Nationality"
+                                    placeholder="Enter the student's nationality"
                                 />
                             )}
                         />
@@ -123,15 +160,26 @@ export function OwnerInfoForm({
                             children={(field) => (
                                 <field.SelectField
                                     label="Gender"
-                                    placeholder="Select the owner's gender"
+                                    placeholder="Select the student's gender"
                                     options={GENDER.map(
-                                        (g) => ({
+                                        (gender) => ({
                                             label: capitalize(
-                                                g,
+                                                gender,
                                             ),
-                                            value: g,
+                                            value: gender,
                                         }),
                                     )}
+                                />
+                            )}
+                        />
+
+                        <form.AppField
+                            name="email"
+                            children={(field) => (
+                                <field.TextField
+                                    label="Email (optional)"
+                                    placeholder="Enter the student's email address"
+                                    description="Optional"
                                 />
                             )}
                         />

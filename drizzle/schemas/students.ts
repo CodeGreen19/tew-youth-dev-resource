@@ -1,10 +1,194 @@
-import { snakeCase, varchar } from "drizzle-orm/pg-core"
+import {
+    BLOOD_GROUPS,
+    ENROLLMENT_STATUS,
+    GENDER,
+} from "@/features/app/branch/students/constants"
+import {
+    date,
+    index,
+    integer,
+    jsonb,
+    pgEnum,
+    snakeCase,
+    text,
+    uniqueIndex,
+    uuid,
+    varchar,
+} from "drizzle-orm/pg-core"
 import { createdAt, id, updatedAt } from "../helpers"
+import { UploadedFileType } from "../types"
+import { organizations } from "./auth"
+import { courses } from "./courses"
 
-export const students = snakeCase.table("students", {
-    id,
+export const genderEnum = pgEnum("gender", GENDER)
 
-    name: varchar({ length: 255 }).notNull(),
-    createdAt,
-    updatedAt,
-})
+export const bloodGroupEnum = pgEnum(
+    "blood_group",
+    BLOOD_GROUPS,
+)
+
+export const students = snakeCase.table(
+    "students",
+    {
+        id,
+
+        image: jsonb().$type<UploadedFileType>(),
+
+        name: varchar("name", {
+            length: 150,
+        }).notNull(),
+
+        fatherName: varchar("father_name", {
+            length: 150,
+        }).notNull(),
+
+        motherName: varchar("mother_name", {
+            length: 150,
+        }).notNull(),
+
+        mobile: varchar("mobile", {
+            length: 20,
+        }).notNull(),
+
+        email: varchar("email", {
+            length: 255,
+        }),
+
+        religion: varchar("religion", {
+            length: 50,
+        }).notNull(),
+
+        bloodGroup: bloodGroupEnum("blood_group").notNull(),
+
+        nationality: varchar("nationality", {
+            length: 100,
+        }).notNull(),
+
+        gender: genderEnum("gender").notNull(),
+
+        dateOfBirth: date("date_of_birth", {
+            mode: "date",
+        }).notNull(),
+        organizationId: text("organization_id")
+            .notNull()
+            .references(() => organizations.id, {
+                onDelete: "set null",
+            }),
+
+        createdAt,
+        updatedAt,
+    },
+    (table) => [
+        index("students_mobile_idx").on(table.mobile),
+        index("students_name_idx").on(table.name),
+    ],
+)
+
+export const studentAcademicQualifications =
+    snakeCase.table(
+        "student_academic_qualifications",
+        {
+            id,
+
+            studentId: uuid("student_id")
+                .notNull()
+                .references(() => students.id, {
+                    onDelete: "cascade",
+                }),
+
+            level: varchar("level", {
+                length: 100,
+            }).notNull(),
+
+            institution: varchar("institution", {
+                length: 200,
+            }).notNull(),
+
+            passingYear: integer("passing_year").notNull(),
+
+            rollId: varchar("roll_id", {
+                length: 50,
+            }).notNull(),
+
+            result: varchar("result", {
+                length: 50,
+            }).notNull(),
+
+            createdAt,
+            updatedAt,
+        },
+        (table) => [
+            index(
+                "student_academic_qualifications_student_id_idx",
+            ).on(table.studentId),
+        ],
+    )
+
+export const enrollmentStatusEnum = pgEnum(
+    "enrollment_status",
+    ENROLLMENT_STATUS,
+)
+
+export const enrollments = snakeCase.table(
+    "enrollments",
+
+    {
+        id,
+
+        studentId: uuid("student_id")
+            .notNull()
+            .references(() => students.id, {
+                onDelete: "cascade",
+            }),
+
+        courseId: uuid("course_id")
+            .notNull()
+            .references(() => courses.id, {
+                onDelete: "restrict",
+            }),
+
+        registrationNumber: varchar("registration_number", {
+            length: 40,
+        }).notNull(),
+
+        rollNumber: varchar("roll_number", {
+            length: 30,
+        }),
+
+        courseRange: varchar("course_range", {
+            length: 100,
+        }).notNull(),
+
+        courseDuration: varchar("course_duration", {
+            length: 100,
+        }).notNull(),
+
+        medium: varchar("medium", {
+            length: 50,
+        }).notNull(),
+
+        enrollmentDate: date("enrollment_date", {
+            mode: "date",
+        }).notNull(),
+
+        status: enrollmentStatusEnum("status")
+            .notNull()
+            .default("active"),
+
+        createdAt,
+        updatedAt,
+    },
+    (table) => [
+        uniqueIndex(
+            "enrollments_registration_number_unique",
+        ).on(table.registrationNumber),
+        index("enrollments_student_id_idx").on(
+            table.studentId,
+        ),
+
+        index("enrollments_course_id_idx").on(
+            table.courseId,
+        ),
+        index("enrollments_status_idx").on(table.status),
+    ],
+)

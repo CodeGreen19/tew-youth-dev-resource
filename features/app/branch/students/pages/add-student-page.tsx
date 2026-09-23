@@ -2,11 +2,12 @@
 
 import {
     Page,
+    PageContent,
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
 import { useRouter } from "next/navigation"
-import { AddStudentForm } from "../components/add-student-form"
+import { FullStudentForm } from "../../new-student/components/full-student-form"
 
 export function AddStudentPage() {
     const router = useRouter()
@@ -18,14 +19,6 @@ export function AddStudentPage() {
                     Add Student
                 </PageTitle>
             </PageHeader>
-
-            <div className="max-w-lg m-auto">
-                <AddStudentForm
-                    onSuccess={() =>
-                        router.push("/dashboard/students")
-                    }
-                />
-            </div>
         </Page>
     )
 }

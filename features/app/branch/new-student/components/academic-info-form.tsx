@@ -1,0 +1,264 @@
+"use client"
+
+import { useAppForm } from "@/components/form/use-app-form"
+import { Button } from "@/components/ui/button"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { FieldGroup } from "@/components/ui/field"
+import { Plus, Trash2 } from "lucide-react"
+
+import {
+    AcademicInformationSchemaType,
+    StudentSchemaType,
+    studentSchema,
+} from "../schemas"
+
+const ACADEMIC_LEVEL_OPTIONS = [
+    {
+        label: "SSC",
+        value: "ssc",
+    },
+    {
+        label: "HSC",
+        value: "hsc",
+    },
+    {
+        label: "Diploma",
+        value: "diploma",
+    },
+    {
+        label: "Bachelor",
+        value: "bachelor",
+    },
+    {
+        label: "Master",
+        value: "master",
+    },
+]
+
+const INSTITUTION_OPTIONS = [
+    {
+        label: "Dhaka Board",
+        value: "dhaka-board",
+    },
+    {
+        label: "Jessore Board",
+        value: "jessore-board",
+    },
+    {
+        label: "Rajshahi Board",
+        value: "rajshahi-board",
+    },
+    {
+        label: "Chittagong Board",
+        value: "chittagong-board",
+    },
+]
+
+const academicInformationDefaults: AcademicInformationSchemaType =
+    {
+        level: "",
+        institution: "",
+        passingYear: new Date().getFullYear(),
+        rollId: "",
+        result: "",
+    }
+
+export function AcademicInformationForm({
+    onSuccess,
+    formId,
+    existedValues,
+}: {
+    onSuccess: (
+        v: Pick<StudentSchemaType, "academicInformation">,
+    ) => void
+    formId: string
+    existedValues: StudentSchemaType
+}) {
+    const defaultValues = {
+        academicInformation:
+            existedValues.academicInformation.length > 0
+                ? existedValues.academicInformation
+                : [academicInformationDefaults],
+    }
+
+    const form = useAppForm({
+        defaultValues,
+        validators: {
+            onChange: studentSchema.pick({
+                academicInformation: true,
+            }),
+        },
+        onSubmit: async ({ value }) => {
+            onSuccess(value)
+        },
+    })
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Academic Information</CardTitle>
+                <CardDescription>
+                    Add the student's academic
+                    qualifications. You can add multiple
+                    qualifications.
+                </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+                <form
+                    id={formId}
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        form.handleSubmit()
+                    }}
+                >
+                    <FieldGroup>
+                        <form.Field
+                            name="academicInformation"
+                            mode="array"
+                        >
+                            {(field) => (
+                                <div className="space-y-6">
+                                    {field.state.value.map(
+                                        (_, index) => (
+                                            <div
+                                                key={index}
+                                                className="space-y-4"
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <h3 className="font-medium">
+                                                            Qualification{" "}
+                                                            {index +
+                                                                1}
+                                                        </h3>
+
+                                                        <p className="text-sm text-muted-foreground">
+                                                            Provide
+                                                            the
+                                                            academic
+                                                            qualification
+                                                            details.
+                                                        </p>
+                                                    </div>
+
+                                                    {field
+                                                        .state
+                                                        .value
+                                                        .length >
+                                                        1 && (
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() =>
+                                                                field.removeValue(
+                                                                    index,
+                                                                )
+                                                            }
+                                                        >
+                                                            <Trash2 />
+                                                            Remove
+                                                        </Button>
+                                                    )}
+                                                </div>
+
+                                                <FieldGroup>
+                                                    <form.AppField
+                                                        name={`academicInformation[${index}].level`}
+                                                        children={(
+                                                            field,
+                                                        ) => (
+                                                            <field.SelectField
+                                                                label="Academic Level"
+                                                                placeholder="Select academic level"
+                                                                options={
+                                                                    ACADEMIC_LEVEL_OPTIONS
+                                                                }
+                                                            />
+                                                        )}
+                                                    />
+
+                                                    <form.AppField
+                                                        name={`academicInformation[${index}].institution`}
+                                                        children={(
+                                                            field,
+                                                        ) => (
+                                                            <field.SelectField
+                                                                label="Institution"
+                                                                placeholder="Select institution"
+                                                                options={
+                                                                    INSTITUTION_OPTIONS
+                                                                }
+                                                            />
+                                                        )}
+                                                    />
+
+                                                    <form.AppField
+                                                        name={`academicInformation[${index}].passingYear`}
+                                                        children={(
+                                                            field,
+                                                        ) => (
+                                                            <field.TextField
+                                                                label="Passing Year"
+                                                                placeholder="Enter passing year"
+                                                            />
+                                                        )}
+                                                    />
+
+                                                    <form.AppField
+                                                        name={`academicInformation[${index}].rollId`}
+                                                        children={(
+                                                            field,
+                                                        ) => (
+                                                            <field.TextField
+                                                                label="Roll / ID"
+                                                                placeholder="Enter roll or ID"
+                                                            />
+                                                        )}
+                                                    />
+
+                                                    <form.AppField
+                                                        name={`academicInformation[${index}].result`}
+                                                        children={(
+                                                            field,
+                                                        ) => (
+                                                            <field.TextField
+                                                                label="Result / GPA"
+                                                                placeholder="Enter result or GPA"
+                                                            />
+                                                        )}
+                                                    />
+                                                </FieldGroup>
+                                            </div>
+                                        ),
+                                    )}
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() =>
+                                            field.pushValue(
+                                                academicInformationDefaults,
+                                            )
+                                        }
+                                    >
+                                        <Plus />
+                                        Add More
+                                        Qualifications
+                                    </Button>
+                                </div>
+                            )}
+                        </form.Field>
+                    </FieldGroup>
+                </form>
+            </CardContent>
+        </Card>
+    )
+}

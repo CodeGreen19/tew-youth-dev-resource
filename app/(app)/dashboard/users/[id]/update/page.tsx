@@ -1,8 +1,8 @@
-import { UserDetailsPage } from "@/features/app/company/users/pages/user-details-page"
+import { UpdateUserPage } from "@/features/app/shared/users/pages/update-user-page"
 
 export default async function page(
     props: PageProps<"/dashboard/users/[id]/details">,
 ) {
     const id = (await props.params).id
-    return <UserDetailsPage id={id} />
+    return <UpdateUserPage id={id} />
 }

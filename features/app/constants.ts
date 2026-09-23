@@ -75,6 +75,18 @@ export const navData: NavDataType = {
                     title: "Students",
                     url: "/dashboard/students",
                 },
+                {
+                    title: "Unpaid Students",
+                    url: "/dashboard/unpaid-students",
+                },
+                {
+                    title: "New Student",
+                    url: "/dashboard/new-student",
+                },
+                {
+                    title: "Join Another Course",
+                    url: "/dashboard/join-another-course",
+                },
             ],
         },
         {

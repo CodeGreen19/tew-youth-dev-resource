@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core"
 
 import { createdAt, id, updatedAt } from "../helpers"
-import { FileType } from "../types"
+import { UploadedFileType } from "../types"
 
 export const branchApplicationStatus = pgEnum(
     "branch_application_status",
@@ -48,10 +48,14 @@ export const branchApplications = snakeCase.table(
 
         electricityBill: jsonb()
             .notNull()
-            .$type<FileType>(),
-        nidDocument: jsonb().notNull().$type<FileType>(),
-        tradeLicense: jsonb().notNull().$type<FileType>(),
-        logo: jsonb().$type<FileType>(),
+            .$type<UploadedFileType>(),
+        nidDocument: jsonb()
+            .notNull()
+            .$type<UploadedFileType>(),
+        tradeLicense: jsonb()
+            .notNull()
+            .$type<UploadedFileType>(),
+        logo: jsonb().$type<UploadedFileType>(),
 
         status: branchApplicationStatus()
             .default("pending")

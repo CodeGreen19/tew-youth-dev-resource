@@ -1,4 +1,4 @@
-export type FileType = {
+export type UploadedFileType = {
     secureUrl: string
     publicId: string
     resourceType: string

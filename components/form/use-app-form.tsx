@@ -11,6 +11,7 @@ import { CheckboxField } from "./checkbox-field"
 import { FileField } from "./file-field"
 import { AvatarField } from "./avater-field"
 import { PasswordField } from "./password-field"
+import { DatePickerField } from "./date-picker-field"
 
 export const {
     fieldContext,
@@ -31,6 +32,7 @@ export const { useAppForm, withForm } = createFormHook({
         TextareaField,
         FileField,
         AvatarField,
+        DatePickerField,
     },
     formComponents: {},
 })
