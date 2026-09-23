@@ -27,7 +27,13 @@ export const getBranchById = withPermission(
         if (!branch) {
             throw new NotFoundError()
         }
+        const email = await db.query.branchApplications
+            .findFirst({
+                where: { organizationId: branch?.id },
+                columns: { email: true },
+            })
+            .then((d) => d?.email)
 
-        return branch
+        return { ...branch, email }
     },
 )

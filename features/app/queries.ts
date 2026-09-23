@@ -1,48 +1,46 @@
 import { auth } from "@/lib/auth"
 import { requireAuth } from "@/lib/dal"
 import { institutionType } from "./types"
-import { Organization } from "better-auth/plugins/organization"
 
 export async function getSidebarData() {
     const { headers, session } = await requireAuth()
 
-    let org: Organization | null = null
+    let org = await auth.api.getOrganization({
+        headers,
+    })
 
-    try {
-        let existedOrg = await auth.api.getOrganization({
-            headers,
-        })
-
-        org = existedOrg
-    } catch (error) {
-        if (!org) {
-            const organizations =
-                await auth.api.listOrganizations({
-                    headers,
-                })
-
-            const firstOrg = organizations[0]
-
-            if (!firstOrg) {
-                throw new Error(
-                    "Authenticated user does not belong to an organization.",
-                )
-            }
-
-            await auth.api.setActiveOrganization({
-                headers,
-                body: {
-                    organizationId: firstOrg.id,
-                },
-            })
-
-            org = firstOrg
-        }
-    }
+    console.log(org)
 
     if (!org) {
-        throw new Error("Org is not found")
+        const organizations =
+            await auth.api.listOrganizations({
+                headers,
+            })
+
+        console.log(organizations, "org")
+
+        const firstOrg = organizations[0]
+
+        if (!firstOrg) {
+            throw new Error(
+                "Authenticated user does not belong to an organization.",
+            )
+        }
+
+        const data = await auth.api.setActiveOrganization({
+            headers,
+            body: {
+                organizationId: firstOrg.id,
+            },
+        })
+
+        console.log("data=>>>>", data)
+        console.log("first=>>>>", firstOrg)
+
+        org = firstOrg
     }
+
+    console.log("outside org =>>>>", org)
 
     const member = await auth.api.getActiveMember({
         headers,

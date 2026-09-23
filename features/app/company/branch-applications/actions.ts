@@ -13,6 +13,7 @@ import { createUniqueOrgSlug } from "./utils"
 
 export const approveApplication = withPermission(
     { branch_application: ["update"] },
+
     async (
         _,
         { applicationId }: { applicationId: string },
@@ -107,7 +108,6 @@ export const createNewBranchWorkspace = withPermission(
                         userId: newUserId,
                         keepCurrentActiveOrganization: true,
                     },
-                    headers,
                 })
 
             // 4. Update application status/relation in Database

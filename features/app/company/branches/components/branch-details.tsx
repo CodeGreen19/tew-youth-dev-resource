@@ -1,6 +1,6 @@
 "use client"
 
-import { FileText, MapPin, User } from "lucide-react"
+import { FileText, Mail, MapPin, User } from "lucide-react"
 
 import {
     Avatar,
@@ -85,6 +85,19 @@ export function BranchDetails({
                             </p>
                             <p className="max-w-48 truncate text-sm text-muted-foreground">
                                 {branch.id}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex size-9 items-center justify-center rounded-md bg-muted">
+                            <Mail className="size-4 text-muted-foreground" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium">
+                                Email
+                            </p>
+                            <p className="max-w-48 truncate text-sm text-muted-foreground">
+                                {branch.email}
                             </p>
                         </div>
                     </div>
