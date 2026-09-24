@@ -1,3 +1,5 @@
+import "server-only"
+
 import { txDB } from "@/drizzle/db"
 import { enrollments } from "@/drizzle/schema"
 import { desc, like } from "drizzle-orm"

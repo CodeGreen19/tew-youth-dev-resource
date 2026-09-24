@@ -24,6 +24,13 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { StudentSchemaType } from "../schemas"
+import {
+    ACADEMIC_LEVEL_OPTIONS,
+    COURSE_DURATION_OPTIONS,
+    CourseDuration,
+    getCourseRangeLabel,
+    INSTITUTION_OPTIONS,
+} from "../constants"
 
 export function StudentFormPreview({
     studentForm,
@@ -58,6 +65,13 @@ export function StudentFormPreview({
     const courseName = courses.find(
         (c) => c.value === courseId,
     )?.label
+    const previewCourseRange = getCourseRangeLabel(
+        courseRange,
+        courseDuration as CourseDuration,
+    )
+    const previewDuration = COURSE_DURATION_OPTIONS.find(
+        (c) => c.value === courseDuration,
+    )?.label
 
     return (
         <div className="mx-auto w-full max-w-4xl">
@@ -86,12 +100,12 @@ export function StudentFormPreview({
                                             "Course not selected"}
                                     </span>
 
-                                    {courseRange && (
+                                    {previewCourseRange && (
                                         <>
                                             <span>•</span>
                                             <span>
                                                 {
-                                                    courseRange
+                                                    previewCourseRange
                                                 }
                                             </span>
                                         </>
@@ -195,12 +209,12 @@ export function StudentFormPreview({
 
                             <Info
                                 label="Course Range"
-                                value={courseRange}
+                                value={previewCourseRange}
                             />
 
                             <Info
                                 label="Duration"
-                                value={courseDuration}
+                                value={previewDuration}
                             />
 
                             <Info
@@ -238,12 +252,26 @@ export function StudentFormPreview({
                                         <div className="mb-3 flex items-center justify-between gap-3">
                                             <div className="flex items-center gap-2">
                                                 <Badge>
-                                                    {academic.level ||
+                                                    {ACADEMIC_LEVEL_OPTIONS.find(
+                                                        (
+                                                            a,
+                                                        ) =>
+                                                            a.value ===
+                                                            academic.level,
+                                                    )
+                                                        ?.label ||
                                                         "Qualification"}
                                                 </Badge>
 
                                                 <span className="text-sm font-medium">
-                                                    {academic.institution ||
+                                                    {INSTITUTION_OPTIONS.find(
+                                                        (
+                                                            i,
+                                                        ) =>
+                                                            i.value ===
+                                                            academic.institution,
+                                                    )
+                                                        ?.label ||
                                                         "Institution not selected"}
                                                 </span>
                                             </div>

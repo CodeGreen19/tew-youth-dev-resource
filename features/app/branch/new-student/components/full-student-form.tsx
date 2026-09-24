@@ -2,21 +2,21 @@
 
 import { useState } from "react"
 
-import { useMutation } from "@tanstack/react-query"
-
 import { FormSteps } from "@/components/form-steps/form-steps"
 import { FormStepsNavigation } from "@/components/form-steps/form-steps-navigation"
-import { FormStepsType } from "@/types/steps"
 import { useFormStepsStore } from "@/hooks/use-form-steps-store"
+import { FormStepsType } from "@/types/steps"
 
-import { PersonalInformationForm } from "./personal-info-form"
-import { CourseInformationForm } from "./course-info-form"
-import { AcademicInformationForm } from "./academic-info-form"
-import { StudentFormPreview } from "./student-form-preview"
 import {
     studentDefaults,
     StudentSchemaType,
 } from "../schemas"
+import { AcademicInformationForm } from "./academic-info-form"
+import { CourseInformationForm } from "./course-info-form"
+import { PersonalInformationForm } from "./personal-info-form"
+import { StudentFormPreview } from "./student-form-preview"
+import { createStudent } from "../actions"
+import { useMutation } from "@tanstack/react-query"
 
 const formSteps = [
     {
@@ -50,7 +50,8 @@ export function FullStudentForm({
 }: {
     courses: { label: string; value: string }[]
 }) {
-    const { currentStep, nextStep } = useFormStepsStore()
+    const { currentStep, nextStep, setStep } =
+        useFormStepsStore()
 
     const [studentForm, setStudentForm] =
         useState<StudentSchemaType>({
@@ -65,22 +66,22 @@ export function FullStudentForm({
 
     const formId = formSteps[currentStep].formId
 
-    // const mutation = useMutation({
-    //     mutationFn: createStudent,
-    //     onSuccess: () => {
-    //         setStudentForm({
-    //             ...studentDefaults,
-    //             academicInformation:
-    //                 studentDefaults.academicInformation.map(
-    //                     (academic) => ({
-    //                         ...academic,
-    //                     }),
-    //                 ),
-    //         })
+    const mutation = useMutation({
+        mutationFn: createStudent,
+        onSuccess: () => {
+            setStudentForm({
+                ...studentDefaults,
+                academicInformation:
+                    studentDefaults.academicInformation.map(
+                        (academic) => ({
+                            ...academic,
+                        }),
+                    ),
+            })
 
-    //         setStep(0)
-    //     },
-    // })
+            setStep(0)
+        },
+    })
 
     const updateStudentForm = <
         T extends Partial<StudentSchemaType>,
@@ -145,17 +146,9 @@ export function FullStudentForm({
                             formSteps.length
                         }
                         onSubmit={() =>
-                            // mutation.mutate(
-                            //     studentForm,
-                            // )
-                            {
-                                console.log(studentForm)
-                            }
+                            mutation.mutate(studentForm)
                         }
-                        submitPending={
-                            // mutation.isPending
-                            false
-                        }
+                        submitPending={mutation.isPending}
                         formId={formId}
                     />
                 </div>

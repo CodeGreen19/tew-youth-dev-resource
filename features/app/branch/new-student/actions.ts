@@ -1,3 +1,5 @@
+"use server"
+
 import { db, txDB } from "@/drizzle/db"
 import {
     enrollments,
@@ -79,10 +81,10 @@ export const createStudent = withPermission(
                     studentId: newStudent.id,
                     ...numbers,
                 })
-                return message(
-                    "New Student is Registered Successfully",
-                )
             })
+            return message(
+                "New Student is Registered Successfully",
+            )
         } catch (error) {
             await cleanupUploads([image]).catch(() =>
                 console.log("Image deletion error"),

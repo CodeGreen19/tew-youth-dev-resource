@@ -17,48 +17,10 @@ import {
     StudentSchemaType,
     studentSchema,
 } from "../schemas"
-
-const ACADEMIC_LEVEL_OPTIONS = [
-    {
-        label: "SSC",
-        value: "ssc",
-    },
-    {
-        label: "HSC",
-        value: "hsc",
-    },
-    {
-        label: "Diploma",
-        value: "diploma",
-    },
-    {
-        label: "Bachelor",
-        value: "bachelor",
-    },
-    {
-        label: "Master",
-        value: "master",
-    },
-]
-
-const INSTITUTION_OPTIONS = [
-    {
-        label: "Dhaka Board",
-        value: "dhaka-board",
-    },
-    {
-        label: "Jessore Board",
-        value: "jessore-board",
-    },
-    {
-        label: "Rajshahi Board",
-        value: "rajshahi-board",
-    },
-    {
-        label: "Chittagong Board",
-        value: "chittagong-board",
-    },
-]
+import {
+    ACADEMIC_LEVEL_OPTIONS,
+    INSTITUTION_OPTIONS,
+} from "../constants"
 
 const academicInformationDefaults: AcademicInformationSchemaType =
     {

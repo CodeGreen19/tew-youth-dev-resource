@@ -14,51 +14,15 @@ import {
     StudentSchemaType,
     courseInformationSchema,
 } from "../schemas"
-
-const COURSE_RANGE_OPTIONS = [
-    {
-        label: "Beginner",
-        value: "beginner",
-    },
-    {
-        label: "Intermediate",
-        value: "intermediate",
-    },
-    {
-        label: "Advanced",
-        value: "advanced",
-    },
-]
-
-const COURSE_DURATION_OPTIONS = [
-    {
-        label: "3 Months",
-        value: "3-months",
-    },
-    {
-        label: "6 Months",
-        value: "6-months",
-    },
-    {
-        label: "1 Year",
-        value: "1-year",
-    },
-]
-
-const MEDIUM_OPTIONS = [
-    {
-        label: "Bangla",
-        value: "bangla",
-    },
-    {
-        label: "English",
-        value: "english",
-    },
-    {
-        label: "Bangla & English",
-        value: "bangla-english",
-    },
-]
+import {
+    COURSE_DURATION_OPTIONS,
+    MEDIUM_OPTIONS,
+} from "../constants"
+import { useSelector } from "@tanstack/react-form"
+import {
+    CourseDuration,
+    getCourseRangeOptions,
+} from "../constants"
 
 export function CourseInformationForm({
     onSuccess,
@@ -84,6 +48,11 @@ export function CourseInformationForm({
             onSuccess(value)
         },
     })
+
+    const courseDuration = useSelector(
+        form.store,
+        (field) => field.values.courseDuration,
+    ) as CourseDuration
 
     return (
         <Card>
@@ -116,27 +85,29 @@ export function CourseInformationForm({
                         />
 
                         <form.AppField
-                            name="courseRange"
-                            children={(field) => (
-                                <field.SelectField
-                                    label="Course Range"
-                                    placeholder="Select the course range"
-                                    options={
-                                        COURSE_RANGE_OPTIONS
-                                    }
-                                />
-                            )}
-                        />
-
-                        <form.AppField
                             name="courseDuration"
                             children={(field) => (
                                 <field.SelectField
                                     label="Course Duration"
                                     placeholder="Select the course duration"
-                                    options={
-                                        COURSE_DURATION_OPTIONS
+                                    options={[
+                                        ...COURSE_DURATION_OPTIONS,
+                                    ]}
+                                />
+                            )}
+                        />
+                        <form.AppField
+                            name="courseRange"
+                            children={(field) => (
+                                <field.SelectField
+                                    disabled={
+                                        !courseDuration
                                     }
+                                    label="Course Range"
+                                    placeholder="Select the course range"
+                                    options={getCourseRangeOptions(
+                                        courseDuration,
+                                    )}
                                 />
                             )}
                         />
@@ -147,7 +118,9 @@ export function CourseInformationForm({
                                 <field.SelectField
                                     label="Medium"
                                     placeholder="Select the course medium"
-                                    options={MEDIUM_OPTIONS}
+                                    options={[
+                                        ...MEDIUM_OPTIONS,
+                                    ]}
                                 />
                             )}
                         />

@@ -161,11 +161,11 @@ export const enrollments = snakeCase.table(
             length: 30,
         }).notNull(),
 
-        courseRange: varchar("course_range", {
+        courseDuration: varchar("course_duration", {
             length: 100,
         }).notNull(),
 
-        courseDuration: varchar("course_duration", {
+        courseRange: varchar("course_range", {
             length: 100,
         }).notNull(),
 

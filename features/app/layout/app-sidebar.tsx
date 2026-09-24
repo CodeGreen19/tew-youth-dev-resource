@@ -65,7 +65,7 @@ export function AppSidebar({
                                                                 item.url.startsWith(
                                                                     pathname,
                                                                 )
-                                                                ? "bg-background hover:bg-background focus:bg-background "
+                                                                ? "bg-background hover:bg-background focus:bg-background border"
                                                                 : "",
                                                         )}
                                                         render={
