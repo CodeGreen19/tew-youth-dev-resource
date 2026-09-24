@@ -9,16 +9,19 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Field, FieldGroup } from "@/components/ui/field"
-import { toast } from "@/components/ui/toast"
+import {
+    Field,
+    FieldGroup,
+    FieldLabel,
+} from "@/components/ui/field"
 import { courseStatuses } from "@/constants/course"
 
-import { useMutation } from "@tanstack/react-query"
-import { addCourse } from "../actions"
-import { courseSchema, CourseSchemaType } from "../schemas"
 import { SubmitButton } from "@/components/shared/submit-button"
 import { capitalize } from "@/utils/helpers"
+import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { addCourse } from "../actions"
+import { courseSchema, CourseSchemaType } from "../schemas"
 
 export function AddCourseForm() {
     const router = useRouter()
@@ -28,6 +31,12 @@ export function AddCourseForm() {
         description: "",
         status: "active",
         banner: null as unknown as File,
+        threeMonthsFee: null,
+        sixMonthsFee: null,
+        oneYearFee: null,
+        twoYearsFee: null,
+        threeYearsFee: null,
+        fourYearsFee: null,
     }
 
     const addMutation = useMutation({
@@ -102,6 +111,51 @@ export function AddCourseForm() {
                                 <field.TextareaField label="Course Description (optional)" />
                             )}
                         />
+                        <Field>
+                            <FieldLabel>
+                                {
+                                    "Define your course fees (optional), if not provided, the enrollment will be automatic. But you change update it later"
+                                }
+                            </FieldLabel>
+                            <div className="grid grid-cols-2 gap-5">
+                                <form.AppField
+                                    name="threeMonthsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="3 Months Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="sixMonthsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="6 Months Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="oneYearFee"
+                                    children={(field) => (
+                                        <field.NumberField label="1 Year Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="twoYearsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="2 Years Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="threeYearsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="3 Years Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="fourYearsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="4 Years Fee" />
+                                    )}
+                                />
+                            </div>
+                        </Field>
                     </FieldGroup>
                 </form>
             </CardContent>

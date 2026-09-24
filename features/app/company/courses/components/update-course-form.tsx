@@ -9,7 +9,11 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Field, FieldGroup } from "@/components/ui/field"
+import {
+    Field,
+    FieldGroup,
+    FieldLabel,
+} from "@/components/ui/field"
 import { toast } from "@/components/ui/toast"
 import { courseStatuses } from "@/constants/course"
 import { capitalize } from "@/utils/helpers"
@@ -137,6 +141,51 @@ export function UpdateCourseForm({
                                 <field.TextareaField label="Course Description (optional)" />
                             )}
                         />
+                        <Field>
+                            <FieldLabel>
+                                {
+                                    "Define your course fees (optional), if not provided, the enrollment will be automatic. But you change update it later"
+                                }
+                            </FieldLabel>
+                            <div className="grid grid-cols-2 gap-5">
+                                <form.AppField
+                                    name="threeMonthsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="3 Months Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="sixMonthsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="6 Months Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="oneYearFee"
+                                    children={(field) => (
+                                        <field.NumberField label="1 Year Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="twoYearsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="2 Years Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="threeYearsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="3 Years Fee" />
+                                    )}
+                                />
+                                <form.AppField
+                                    name="fourYearsFee"
+                                    children={(field) => (
+                                        <field.NumberField label="4 Years Fee" />
+                                    )}
+                                />
+                            </div>
+                        </Field>
                     </FieldGroup>
                 </form>
             </CardContent>

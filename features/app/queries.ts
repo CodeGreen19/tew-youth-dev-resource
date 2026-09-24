@@ -1,6 +1,6 @@
+import { db } from "@/drizzle/db"
 import { auth } from "@/lib/auth"
 import { requireAuth } from "@/lib/dal"
-import { institutionType } from "./types"
 
 export async function getSidebarData() {
     const { headers, session } = await requireAuth()
@@ -15,35 +15,41 @@ export async function getSidebarData() {
                 headers,
             })
 
-        const firstOrg = organizations[0]
+        org = organizations[0]
 
-        if (!firstOrg) {
+        if (!org) {
             throw new Error(
                 "Authenticated user does not belong to an organization.",
             )
         }
 
-        const data = await auth.api.setActiveOrganization({
+        await auth.api.setActiveOrganization({
             headers,
             body: {
-                organizationId: firstOrg.id,
+                organizationId: org.id,
             },
         })
-
-        org = firstOrg
     }
 
-    const member = await auth.api.getActiveMember({
-        headers,
+    const member = await db.query.members.findFirst({
+        where: {
+            AND: [
+                {
+                    organizationId: org.id,
+                    userId: session.user.id,
+                },
+            ],
+        },
+        columns: { role: true },
     })
 
     if (!member) {
         throw new Error(
-            "Active organization membership could not be found.",
+            "Authenticated user is not a member of the organization.",
         )
     }
 
-    const institutionType: institutionType =
+    const institutionType =
         process.env.COMPANY_ORG_ID === org.id
             ? "COMPANY"
             : "BRANCH"
@@ -51,7 +57,7 @@ export async function getSidebarData() {
     return {
         session,
         org,
-        member,
+        orgRole: member.role,
         institutionType,
     }
 }

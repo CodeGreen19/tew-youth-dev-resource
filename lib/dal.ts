@@ -13,7 +13,7 @@ export type Permissions = NonNullable<
 >["body"]["permissions"]
 
 export async function requireAuth() {
-    const parasedHeaders = await headers()
+    let parasedHeaders = await headers()
     const session = await auth.api.getSession({
         headers: parasedHeaders,
     })
