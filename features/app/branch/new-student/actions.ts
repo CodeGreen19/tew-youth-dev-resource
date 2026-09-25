@@ -36,15 +36,21 @@ export const createStudent = withPermission(
             throw new NotFoundError("Org not found")
         }
 
-        const existUser = await db.query.students.findFirst(
-            {
+        const existEmail =
+            await db.query.students.findFirst({
                 where: { email: data.email },
-                columns: { id: true },
-            },
-        )
+            })
 
-        if (existUser) {
+        if (existEmail) {
             throw new Error("Email already exists")
+        }
+        const existPhoneNumber =
+            await db.query.students.findFirst({
+                where: { mobile: data.mobile },
+            })
+
+        if (existPhoneNumber) {
+            throw new Error("Phone number already exists")
         }
 
         const image = await uploadToCloudinary(

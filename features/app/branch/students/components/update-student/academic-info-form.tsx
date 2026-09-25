@@ -11,16 +11,15 @@ import {
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
 import { Plus, Trash2 } from "lucide-react"
-
-import {
-    AcademicInformationSchemaType,
-    StudentSchemaType,
-    studentSchema,
-} from "../schemas"
 import {
     ACADEMIC_LEVEL_OPTIONS,
     INSTITUTION_OPTIONS,
-} from "../constants"
+} from "../../../new-student/constants"
+import { AcademicInformationSchemaType } from "../../../new-student/schemas"
+import {
+    updateStudentSchema,
+    UpdateStudentSchemaType,
+} from "../../schemas"
 
 const academicInformationDefaults: AcademicInformationSchemaType =
     {
@@ -37,10 +36,13 @@ export function AcademicInformationForm({
     existedValues,
 }: {
     onSuccess: (
-        v: Pick<StudentSchemaType, "academicInformation">,
+        v: Pick<
+            UpdateStudentSchemaType,
+            "academicInformation"
+        >,
     ) => void
     formId: string
-    existedValues: StudentSchemaType
+    existedValues: UpdateStudentSchemaType
 }) {
     const defaultValues = {
         academicInformation:
@@ -52,7 +54,7 @@ export function AcademicInformationForm({
     const form = useAppForm({
         defaultValues,
         validators: {
-            onChange: studentSchema.pick({
+            onChange: updateStudentSchema.pick({
                 academicInformation: true,
             }),
         },
@@ -161,7 +163,6 @@ export function AcademicInformationForm({
                                                             />
                                                         )}
                                                     />
-
                                                     <div className=" grid grid-cols-1 lg:grid-cols-3 gap-4">
                                                         <form.AppField
                                                             name={`academicInformation[${index}].passingYear`}

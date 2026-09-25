@@ -2,41 +2,25 @@ import { DataTable } from "@/components/table/data-table"
 
 import {
     Page,
-    PageAction,
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import Link from "next/link"
+import { studentColumns } from "../components/student-columns"
+import { getPaidStudents } from "../queries"
 
 export async function StudentsPage() {
+    const students = await getPaidStudents()
     return (
         <Page>
             <PageHeader>
                 <PageTitle>Students</PageTitle>
-
-                <PageAction>
-                    <Button
-                        nativeButton={false}
-                        render={
-                            <Link
-                                href={
-                                    "/dashboard/students/add"
-                                }
-                            />
-                        }
-                    >
-                        <Plus /> Add Student
-                    </Button>
-                </PageAction>
             </PageHeader>
-            {/* <DataTable
-                columns={studentsColumns}
+            <DataTable
+                columns={studentColumns}
                 data={students}
                 searchBy="name"
                 searchPlaceholder="Search by Name ..."
-            /> */}
+            />
         </Page>
     )
 }

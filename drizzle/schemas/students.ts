@@ -33,7 +33,7 @@ export const students = snakeCase.table(
     {
         id,
 
-        image: jsonb().$type<UploadedFileType>(),
+        image: jsonb().$type<UploadedFileType>().notNull(),
 
         name: varchar("name", {
             length: 150,
@@ -49,11 +49,13 @@ export const students = snakeCase.table(
 
         mobile: varchar("mobile", {
             length: 20,
-        }).notNull(),
+        })
+            .notNull()
+            .unique(),
 
         email: varchar("email", {
             length: 255,
-        }),
+        }).unique(),
 
         religion: varchar("religion", {
             length: 50,
