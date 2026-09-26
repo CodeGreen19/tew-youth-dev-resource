@@ -21,6 +21,17 @@ export const resources = {
             "update",
             "delete",
         ] as const,
+    },
+
+    branch: {
+        students: [
+            "view",
+            "create",
+            "update",
+            "delete",
+        ] as const,
+    },
+    common: {
         users: [
             "view",
             "create",
@@ -33,15 +44,7 @@ export const resources = {
             "update",
             "delete",
         ] as const,
-    },
-
-    branch: {
-        students: [
-            "view",
-            "create",
-            "update",
-            "delete",
-        ] as const,
+        sidebar: ["view"] as const,
     },
 }
 
@@ -50,7 +53,7 @@ export const {
     branch_application,
     overview,
     branches,
-    users,
-    roles_permissions,
 } = resources.company
 export const { students } = resources.branch
+export const { users, roles_permissions, sidebar } =
+    resources.common

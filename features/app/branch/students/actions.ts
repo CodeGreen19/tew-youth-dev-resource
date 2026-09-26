@@ -1,6 +1,10 @@
 "use server"
 import { withPermission } from "@/lib/dal"
 import {
+    courseInformationSchema,
+    CourseInformationSchemaType,
+    studentSchema,
+    StudentSchemaType,
     updateStudentSchema,
     UpdateStudentSchemaType,
 } from "./schemas"
@@ -11,12 +15,90 @@ import {
 import { db, txDB } from "@/drizzle/db"
 import { uploadToCloudinary } from "@/lib/cloudinary/upload"
 import {
+    enrollments,
     studentAcademicQualifications,
     students,
 } from "@/drizzle/schema"
 import { eq } from "drizzle-orm"
 import { deleteFromCloudinary } from "@/lib/cloudinary/delete"
 import { updateTag } from "next/cache"
+import { message } from "@/utils/message"
+import { cleanupUploads } from "@/lib/cloudinary/cleanup-uploads"
+import { getNextEnrollmentNumbers } from "./utils"
+
+export const createStudent = withPermission(
+    { students: ["create"] },
+    async ({ org }, inputs: StudentSchemaType) => {
+        const { success, data } =
+            studentSchema.safeParse(inputs)
+
+        if (!success) {
+            throw new ValidationError()
+        }
+
+        const existEmail =
+            await db.query.students.findFirst({
+                where: { email: data.email },
+            })
+
+        if (existEmail) {
+            throw new Error("Email already exists")
+        }
+        const existPhoneNumber =
+            await db.query.students.findFirst({
+                where: { mobile: data.mobile },
+            })
+
+        if (existPhoneNumber) {
+            throw new Error("Phone number already exists")
+        }
+
+        const image = await uploadToCloudinary(
+            data.image.croppedFile,
+        )
+        try {
+            await txDB.transaction(async (tx) => {
+                const [newStudent] = await tx
+                    .insert(students)
+                    .values({
+                        ...data,
+                        image,
+                        organizationId: org.id,
+                    })
+                    .returning()
+
+                // students academics
+                await tx
+                    .insert(studentAcademicQualifications)
+                    .values(
+                        data.academicInformation.map(
+                            (a) => ({
+                                ...a,
+                                studentId: newStudent.id,
+                            }),
+                        ),
+                    )
+                // enroll in a course
+                const numbers =
+                    await getNextEnrollmentNumbers()
+
+                await tx.insert(enrollments).values({
+                    ...data,
+                    studentId: newStudent.id,
+                    ...numbers,
+                })
+            })
+            return message(
+                "New Student is Registered Successfully",
+            )
+        } catch (error) {
+            await cleanupUploads([image]).catch(() =>
+                console.log("Image deletion error"),
+            )
+            throw error
+        }
+    },
+)
 
 export const updateStudent = withPermission(
     { students: ["update"] },
@@ -154,6 +236,72 @@ export const updateStudent = withPermission(
             })
         }
 
+        updateTag("students")
+        updateTag("paid-students")
+
+        return {
+            message: "Student updated successfully",
+        }
+    },
+)
+export const updateEnrollment = withPermission(
+    { students: ["update"] },
+    async (
+        _,
+        inputs: CourseInformationSchemaType & {
+            enrollmentId: string
+        },
+    ) => {
+        const { success, data } =
+            courseInformationSchema.safeParse(inputs)
+
+        if (!success) {
+            throw new ValidationError()
+        }
+        await db
+            .update(enrollments)
+            .set(data)
+            .where(eq(enrollments.id, inputs.enrollmentId))
+
+        updateTag("students")
+        updateTag("paid-students")
+
+        return {
+            message: "Student course updated successfully",
+        }
+    },
+)
+
+export const deleteStudent = withPermission(
+    { students: ["delete"] },
+    async (_, { studentId }: { studentId: string }) => {
+        await db
+            .delete(students)
+            .where(eq(students.id, studentId))
+        updateTag("students")
+        updateTag("paid-students")
+        return {
+            message: "Student deleted successfully",
+        }
+    },
+)
+
+export const acceptPayment = withPermission(
+    { students: ["update"] },
+    async (
+        _,
+
+        {
+            enrollmentId,
+            paidAmount,
+        }: { enrollmentId: string; paidAmount: number },
+    ) => {
+        await db
+            .update(enrollments)
+            .set({ paymentStatus: "paid", paidAmount })
+            .where(eq(enrollments.id, enrollmentId))
+
+        updateTag("students")
         updateTag("paid-students")
 
         return {

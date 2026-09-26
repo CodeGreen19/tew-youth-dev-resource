@@ -10,6 +10,7 @@ import {
     jsonb,
     numeric,
     pgEnum,
+    pgSequence,
     snakeCase,
     text,
     uniqueIndex,
@@ -127,6 +128,32 @@ export const studentAcademicQualifications =
         ],
     )
 
+export const enrollmentRollNumberSeq = pgSequence(
+    "enrollment_roll_number_seq",
+    {
+        startWith: 246200,
+        increment: 1,
+        minValue: 246200,
+    },
+)
+
+export const enrollmentRegistrationNumberSeq = pgSequence(
+    "enrollment_registration_number_seq",
+    {
+        startWith: 1293330100,
+        increment: 1,
+        minValue: 1293330100,
+    },
+)
+
+export const enrollmentSerialNoSeq = pgSequence(
+    "enrollment_serial_no_seq",
+    {
+        startWith: 28810,
+        increment: 1,
+        minValue: 28810,
+    },
+)
 export const enrollmentStatusEnum = pgEnum(
     "enrollment_status",
     ENROLLMENT_STATUS,
@@ -162,6 +189,11 @@ export const enrollments = snakeCase.table(
         rollNumber: varchar("roll_number", {
             length: 30,
         }).notNull(),
+        serialNo: varchar("serial_no", {
+            length: 20,
+        })
+            .notNull()
+            .unique(),
 
         courseDuration: varchar("course_duration", {
             length: 100,
@@ -178,12 +210,7 @@ export const enrollments = snakeCase.table(
         status: enrollmentStatusEnum("status")
             .notNull()
             .default("active"),
-        paidAmount: numeric("paid_amount", {
-            precision: 12,
-            scale: 2,
-        })
-            .notNull()
-            .default("0"),
+        paidAmount: integer().notNull().default(0),
 
         paymentStatus: paymentStatusEnum("payment_status")
             .notNull()
@@ -198,6 +225,9 @@ export const enrollments = snakeCase.table(
         ).on(table.registrationNumber),
         uniqueIndex("enrollments_roll_number_unique").on(
             table.rollNumber,
+        ),
+        uniqueIndex("enrollments_serial_no_unique").on(
+            table.serialNo,
         ),
         index("enrollments_student_id_idx").on(
             table.studentId,

@@ -23,14 +23,14 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { StudentSchemaType } from "../schemas"
+import { StudentSchemaType } from "../../schemas"
 import {
     ACADEMIC_LEVEL_OPTIONS,
     COURSE_DURATION_OPTIONS,
     CourseDuration,
     getCourseRangeLabel,
     INSTITUTION_OPTIONS,
-} from "../constants"
+} from "../../constants"
 
 export function StudentFormPreview({
     studentForm,

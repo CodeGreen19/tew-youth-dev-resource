@@ -13,16 +13,16 @@ import {
     CourseInformationSchemaType,
     StudentSchemaType,
     courseInformationSchema,
-} from "../schemas"
+} from "../../schemas"
 import {
     COURSE_DURATION_OPTIONS,
     MEDIUM_OPTIONS,
-} from "../constants"
+} from "../../constants"
 import { useSelector } from "@tanstack/react-form"
 import {
     CourseDuration,
     getCourseRangeOptions,
-} from "../constants"
+} from "../../constants"
 
 export function CourseInformationForm({
     onSuccess,

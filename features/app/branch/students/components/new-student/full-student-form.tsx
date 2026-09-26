@@ -7,16 +7,17 @@ import { FormStepsNavigation } from "@/components/form-steps/form-steps-navigati
 import { useFormStepsStore } from "@/hooks/use-form-steps-store"
 import { FormStepsType } from "@/types/steps"
 
-import {
-    studentDefaults,
-    StudentSchemaType,
-} from "../schemas"
 import { AcademicInformationForm } from "./academic-info-form"
 import { CourseInformationForm } from "./course-info-form"
 import { PersonalInformationForm } from "./personal-info-form"
 import { StudentFormPreview } from "./student-form-preview"
-import { createStudent } from "../actions"
+
 import { useMutation } from "@tanstack/react-query"
+import {
+    studentDefaults,
+    StudentSchemaType,
+} from "../../schemas"
+import { createStudent } from "../../actions"
 
 const formSteps = [
     {

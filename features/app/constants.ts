@@ -7,21 +7,11 @@ export type NavItem = {
 export type NavDataType = {
     navMenuForCompany: NavItem[]
     navMenuForBranch: NavItem[]
+    navCommon: NavItem[]
 }
 
 export const navData: NavDataType = {
     navMenuForCompany: [
-        {
-            title: "Menu",
-
-            items: [
-                {
-                    title: "Overviews",
-                    url: "/dashboard/overviews",
-                },
-            ],
-        },
-
         {
             title: "Manage",
 
@@ -40,33 +30,8 @@ export const navData: NavDataType = {
                 },
             ],
         },
-        {
-            title: "Settings",
-
-            items: [
-                {
-                    title: "Users",
-                    url: "/dashboard/users",
-                },
-                {
-                    title: "Roles & Permissions",
-                    url: "/dashboard/roles-permissions",
-                },
-            ],
-        },
     ],
     navMenuForBranch: [
-        {
-            title: "Menu",
-
-            items: [
-                {
-                    title: "Overviews",
-                    url: "/dashboard/overviews",
-                },
-            ],
-        },
-
         {
             title: "Manage",
 
@@ -86,6 +51,18 @@ export const navData: NavDataType = {
                 {
                     title: "Join Another Course",
                     url: "/dashboard/join-another-course",
+                },
+            ],
+        },
+    ],
+    navCommon: [
+        {
+            title: "Menu",
+
+            items: [
+                {
+                    title: "Overviews",
+                    url: "/dashboard/overviews",
                 },
             ],
         },

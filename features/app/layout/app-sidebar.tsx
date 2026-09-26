@@ -31,10 +31,13 @@ export function AppSidebar({
 }) {
     const pathname = usePathname()
 
-    const nav =
-        data.institutionType === "COMPANY"
+    const nav = [
+        navData.navCommon[0],
+        ...(data.institutionType === "COMPANY"
             ? navData.navMenuForCompany
-            : navData.navMenuForBranch
+            : navData.navMenuForBranch),
+        ...navData.navCommon.slice(1),
+    ]
 
     return (
         <Sidebar {...props} variant="inset">

@@ -15,6 +15,7 @@ export function AppBreadcrumb() {
     const navDataAll = [
         ...navData.navMenuForBranch,
         ...navData.navMenuForCompany,
+        ...navData.navCommon,
     ]
     const menuTitle =
         navDataAll.find((nav) =>

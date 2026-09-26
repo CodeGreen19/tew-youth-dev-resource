@@ -16,11 +16,11 @@ import {
     AcademicInformationSchemaType,
     StudentSchemaType,
     studentSchema,
-} from "../schemas"
+} from "../../schemas"
 import {
     ACADEMIC_LEVEL_OPTIONS,
     INSTITUTION_OPTIONS,
-} from "../constants"
+} from "../../constants"
 
 const academicInformationDefaults: AcademicInformationSchemaType =
     {

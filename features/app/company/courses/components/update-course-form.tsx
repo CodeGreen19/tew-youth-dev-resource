@@ -207,7 +207,7 @@ export function UpdateCourseForm({
                         Cancel
                     </Button>
                     <SubmitButton
-                        disabled={updateMutation.isPending}
+                        isPending={updateMutation.isPending}
                         form={"update-course-form"}
                         type="submit"
                     >

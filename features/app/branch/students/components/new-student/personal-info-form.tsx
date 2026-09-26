@@ -10,17 +10,13 @@ import {
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
 
-import {
-    BLOOD_GROUPS,
-    GENDER,
-} from "../../students/constants"
-
 import { capitalize } from "@/utils/helpers"
 import {
     personalInformationSchema,
     PersonalInformationSchemaType,
     StudentSchemaType,
-} from "../schemas"
+} from "../../schemas"
+import { BLOOD_GROUPS, GENDER } from "../../constants"
 
 export function PersonalInformationForm({
     onSuccess,

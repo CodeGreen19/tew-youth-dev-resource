@@ -5,23 +5,26 @@ import {
     PageTitle,
 } from "@/components/shared/page"
 import { UpdateStudentForm } from "../components/update-student/update-student-form"
-import { getPaidStudentByEnrolledId } from "../queries"
+import { getStudentByEnrolledId } from "../queries"
 
-export async function UpdateStudentInfo({
+export async function UpdateStudentPage({
     id,
+    backTo,
 }: {
     id: string
+    backTo: string
 }) {
-    const student = await getPaidStudentByEnrolledId({ id })
+    const student = await getStudentByEnrolledId({ id })
     return (
         <Page>
             <PageHeader>
-                <PageTitle backTo="/dashboard/students">
+                <PageTitle backTo={backTo}>
                     Update Student
                 </PageTitle>
             </PageHeader>
             <PageContent>
                 <UpdateStudentForm
+                    backTo={backTo}
                     enrollmentId={id}
                     student={student}
                 />

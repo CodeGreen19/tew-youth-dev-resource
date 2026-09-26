@@ -27,7 +27,7 @@ import { UpdateStudentSchemaType } from "../../schemas"
 import {
     ACADEMIC_LEVEL_OPTIONS,
     INSTITUTION_OPTIONS,
-} from "../../../new-student/constants"
+} from "../../constants"
 
 export function StudentFormPreview({
     studentForm,

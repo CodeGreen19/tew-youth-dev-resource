@@ -1,8 +1,5 @@
-import { StudentDetailsPage } from "@/features/app/branch/students/pages/student-details-page"
+import React from "react"
 
-export default async function page(
-    props: PageProps<"/dashboard/students/[id]/details">,
-) {
-    const id = (await props.params).id
-    return <StudentDetailsPage id={id} />
+export default function page() {
+    return <div>page</div>
 }

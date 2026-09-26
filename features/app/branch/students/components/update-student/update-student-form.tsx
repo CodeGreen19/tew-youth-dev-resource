@@ -6,7 +6,6 @@ import { FormSteps } from "@/components/form-steps/form-steps"
 import { FormStepsNavigation } from "@/components/form-steps/form-steps-navigation"
 import { useFormStepsStore } from "@/hooks/use-form-steps-store"
 import { FormStepsType } from "@/types/steps"
-import { getPaidStudentByEnrolledId } from "../../queries"
 import { UpdateStudentSchemaType } from "../../schemas"
 import { useMutation } from "@tanstack/react-query"
 import { updateStudent } from "../../actions"
@@ -14,6 +13,8 @@ import { PersonalInformationForm } from "./personal-info-form"
 import { AcademicInformationForm } from "./academic-info-form"
 import { AvatarObjSchema } from "@/features/app/schemas"
 import { StudentFormPreview } from "./student-form-preview"
+import { getStudentByEnrolledId } from "../../queries"
+import { useRouter } from "next/navigation"
 
 const formSteps = [
     {
@@ -40,14 +41,17 @@ const formSteps = [
 export function UpdateStudentForm({
     student,
     enrollmentId,
+    backTo,
 }: {
     student: Awaited<
-        ReturnType<typeof getPaidStudentByEnrolledId>
+        ReturnType<typeof getStudentByEnrolledId>
     >
     enrollmentId: string
+    backTo: string
 }) {
     const { currentStep, nextStep, setStep } =
         useFormStepsStore()
+    const router = useRouter()
 
     const [studentForm, setStudentForm] =
         useState<UpdateStudentSchemaType>({
@@ -64,6 +68,7 @@ export function UpdateStudentForm({
         mutationFn: updateStudent,
         onSuccess: () => {
             setStep(0)
+            router.push(backTo)
         },
     })
 

@@ -11,15 +11,16 @@ import {
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
 import { Plus, Trash2 } from "lucide-react"
+
 import {
-    ACADEMIC_LEVEL_OPTIONS,
-    INSTITUTION_OPTIONS,
-} from "../../../new-student/constants"
-import { AcademicInformationSchemaType } from "../../../new-student/schemas"
-import {
+    AcademicInformationSchemaType,
     updateStudentSchema,
     UpdateStudentSchemaType,
 } from "../../schemas"
+import {
+    ACADEMIC_LEVEL_OPTIONS,
+    INSTITUTION_OPTIONS,
+} from "../../constants"
 
 const academicInformationDefaults: AcademicInformationSchemaType =
     {

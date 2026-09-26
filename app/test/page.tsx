@@ -1,17 +1,7 @@
-import {
-    generateEnrollmentNumbers,
-    getCourseRangeOptions,
-} from "@/features/app/branch/new-student/utils"
+import { getNextEnrollmentNumbers } from "@/features/app/branch/students/utils"
+import React from "react"
 
-export default async function DatePickerSimple() {
-    const res = getCourseRangeOptions("2_years")
-    return (
-        <div>
-            {res.map((r) => (
-                <div key={r.label}>
-                    {r.label}, {r.value}
-                </div>
-            ))}
-        </div>
-    )
+export default async function page() {
+    const res = await getNextEnrollmentNumbers()
+    return <div>{JSON.stringify(res)}</div>
 }

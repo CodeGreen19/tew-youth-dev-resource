@@ -6,18 +6,18 @@ import {
     PageHeader,
     PageTitle,
 } from "@/components/shared/page"
-import { getStudents } from "../queries"
-import { studentColumns } from "../components/students/student-columns"
+import { unpaidStudentColumns } from "../components/unpaid-students/unpaid-student-columns"
+import { getUnpaidStudents } from "../queries"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
 import Link from "next/link"
+import { Plus } from "lucide-react"
 
-export async function StudentsPage() {
-    const students = await getStudents()
+export async function UnpaidStudentsPage() {
+    const res = await getUnpaidStudents()
     return (
         <Page>
             <PageHeader>
-                <PageTitle>Students</PageTitle>
+                <PageTitle>Unpaid Students</PageTitle>
                 <PageAction>
                     <Button
                         nativeButton={false}
@@ -34,8 +34,8 @@ export async function StudentsPage() {
                 </PageAction>
             </PageHeader>
             <DataTable
-                columns={studentColumns}
-                data={students}
+                columns={unpaidStudentColumns}
+                data={res}
                 searchBy="name"
                 searchPlaceholder="Search by Name ..."
             />
