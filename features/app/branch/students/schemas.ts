@@ -68,7 +68,7 @@ export const personalInformationSchema = z.object({
         .or(z.literal("")),
 })
 
-export const courseInformationSchema = z.object({
+export const enrollmentInformationSchema = z.object({
     courseId: z.string().min(1, "Course is required"),
 
     courseRange: z
@@ -128,7 +128,7 @@ export const academicInformationSchema = z.object({
 
 export const studentSchema = z.object({
     ...personalInformationSchema.shape,
-    ...courseInformationSchema.shape,
+    ...enrollmentInformationSchema.shape,
 
     academicInformation: z
         .array(academicInformationSchema)
@@ -146,8 +146,8 @@ export type PersonalInformationSchemaType = z.infer<
     typeof personalInformationSchema
 >
 
-export type CourseInformationSchemaType = z.infer<
-    typeof courseInformationSchema
+export type EnrollmentInformationSchemaType = z.infer<
+    typeof enrollmentInformationSchema
 >
 
 export type AcademicInformationSchemaType = z.infer<

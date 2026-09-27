@@ -27,7 +27,9 @@ export const getStudents = withPermission(
                 id: true,
                 paymentStatus: true,
                 rollNumber: true,
+                courseRange: true,
                 registrationNumber: true,
+                courseDuration: true,
             },
             with: {
                 student: {
@@ -71,10 +73,12 @@ export const getUnpaidStudents = withPermission(
                 id: true,
                 paymentStatus: true,
                 courseDuration: true,
+                courseRange: true,
             },
             with: {
                 student: {
                     columns: {
+                        id: true,
                         name: true,
                         email: true,
                         image: true,
@@ -106,7 +110,7 @@ export const getStudentByEnrolledId = withPermission(
     { students: ["view"] },
     async ({ org }, { id }: { id: string }) => {
         "use cache"
-        cacheTag(`student:${id}`)
+        cacheTag(`student-enrolled:${id}`)
 
         const enrollment =
             await db.query.enrollments.findFirst({
@@ -137,7 +141,7 @@ export const getEnrollmentById = withPermission(
     { students: ["view"] },
     async ({ org }, { id }: { id: string }) => {
         "use cache"
-        cacheTag(`student:${id}`)
+        cacheTag(`enrollment:${id}`)
 
         const enrollment =
             await db.query.enrollments.findFirst({

@@ -10,10 +10,19 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { FieldGroup } from "@/components/ui/field"
+import { students } from "@/drizzle/schema"
 import { useSelector } from "@tanstack/react-form"
 import { useMutation } from "@tanstack/react-query"
-import { updateEnrollment } from "../../actions"
+import { BookOpen, Phone } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { joinAnotherCourse } from "../../actions"
 import {
     COURSE_DURATION_OPTIONS,
     CourseDuration,
@@ -24,39 +33,42 @@ import {
     EnrollmentInformationSchemaType,
     enrollmentInformationSchema,
 } from "../../schemas"
-import { EnrollmentById } from "../../types"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { StudentByEnrolledId } from "../../types"
 
-export function UpdateEnrollmentForm({
+export function JoinAnotherCourseForm({
     formId,
-    existedValues,
     courses,
-    enrollmentId,
+    backTo,
+    student,
 }: {
     formId: string
-    existedValues: EnrollmentById
-    enrollmentId: string
     courses: { label: string; value: string }[]
+    backTo: string
+    student: StudentByEnrolledId
 }) {
     const defaultValues: EnrollmentInformationSchemaType = {
-        ...existedValues,
+        medium: "",
+        courseDuration: "",
+        courseId: "",
+        courseRange: "",
     }
+
     const router = useRouter()
 
     const { isPending, mutate } = useMutation({
-        mutationFn: updateEnrollment,
+        mutationFn: joinAnotherCourse,
         onSuccess: () => {
-            router.push("/dashboard/unpaid-students")
+            router.push(backTo)
         },
     })
+
     const form = useAppForm({
         defaultValues,
         validators: {
             onChange: enrollmentInformationSchema,
         },
         onSubmit: async ({ value }) => {
-            mutate({ ...value, enrollmentId })
+            mutate({ ...value, studentId: student.id })
         },
     })
 
@@ -65,23 +77,65 @@ export function UpdateEnrollmentForm({
         (field) => field.values.courseDuration,
     ) as CourseDuration
 
-    useEffect(() => {
-        if (
-            courseDuration === existedValues.courseDuration
-        ) {
-            return
-        }
-        form.setFieldValue("courseRange", "")
-    }, [courseDuration])
+    const studentInitials = student.name
+        .split(" ")
+        .map((name) => name.charAt(0))
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Course Information</CardTitle>
-                <CardDescription>
-                    Select the course and provide the course
-                    enrollment details.
-                </CardDescription>
+        <Card className="overflow-hidden">
+            <CardHeader className="pb-5">
+                <div className="bg-muted/50 flex items-center justify-between gap-4 rounded-xl border p-4">
+                    <div className="flex min-w-0 items-center gap-3">
+                        <Avatar className="size-12 shrink-0">
+                            <AvatarImage
+                                src={
+                                    student.image
+                                        .secureUrl ??
+                                    undefined
+                                }
+                                alt={student.name}
+                            />
+                            <AvatarFallback className="text-sm font-medium">
+                                {studentInitials}
+                            </AvatarFallback>
+                        </Avatar>
+
+                        <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <p className="truncate font-semibold">
+                                    {student.name}
+                                </p>
+                                <Badge
+                                    variant="secondary"
+                                    className="gap-1"
+                                >
+                                    <BookOpen className="size-3" />
+                                    Student
+                                </Badge>
+                            </div>
+
+                            <div className="text-muted-foreground mt-1 flex items-center gap-1.5 text-sm">
+                                <Phone className="size-3.5" />
+                                <span>
+                                    {student.mobile}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="pt-2">
+                    <CardTitle className="text-lg">
+                        Join Another Course
+                    </CardTitle>
+                    <CardDescription className="mt-1">
+                        Select a new course and provide the
+                        enrollment details for this student.
+                    </CardDescription>
+                </div>
             </CardHeader>
 
             <CardContent>
@@ -116,6 +170,7 @@ export function UpdateEnrollmentForm({
                                 />
                             )}
                         />
+
                         <form.AppField
                             name="courseRange"
                             children={(field) => (
@@ -147,12 +202,13 @@ export function UpdateEnrollmentForm({
                     </FieldGroup>
                 </form>
             </CardContent>
+
             <CardFooter>
                 <SubmitButton
                     form={formId}
                     isPending={isPending}
                 >
-                    Update
+                    Confirm
                 </SubmitButton>
             </CardFooter>
         </Card>

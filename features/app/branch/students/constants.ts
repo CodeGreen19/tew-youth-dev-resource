@@ -91,6 +91,12 @@ const MONTH_NAMES = [
     "Dec",
 ]
 
+export function getDuration(duration: CourseDuration) {
+    return COURSE_DURATION_OPTIONS.find(
+        (v) => v.value === duration,
+    )?.label
+}
+
 export function getCourseRangeOptions(
     duration: CourseDuration,
     currentYear = new Date().getFullYear(),

@@ -25,6 +25,11 @@ import {
 import { useRouter } from "next/navigation"
 
 import { Student } from "../../types"
+import {
+    CourseDuration,
+    getCourseRangeLabel,
+    getDuration,
+} from "../../constants"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -84,6 +89,33 @@ export const studentColumns = columnHelper.columns([
                 title="Course"
             />
         ),
+    }),
+    columnHelper.accessor("courseDuration", {
+        header: "Duration",
+        cell: ({ row }) => {
+            return (
+                <Badge>
+                    {getDuration(
+                        row.original
+                            .courseDuration as CourseDuration,
+                    )}
+                </Badge>
+            )
+        },
+    }),
+    columnHelper.accessor("courseRange", {
+        header: "Course Range",
+        cell: ({ row }) => {
+            return (
+                <Badge variant={"ghost"}>
+                    {getCourseRangeLabel(
+                        row.original.courseRange,
+                        row.original
+                            .courseDuration as CourseDuration,
+                    )}
+                </Badge>
+            )
+        },
     }),
 
     columnHelper.accessor("paymentStatus", {
@@ -149,6 +181,15 @@ export const studentColumns = columnHelper.columns([
                                     }
                                 >
                                     Update Student
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.push(
+                                            `/dashboard/students/${row.original.id}/join-another-course`,
+                                        )
+                                    }
+                                >
+                                    Join Another Course
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>

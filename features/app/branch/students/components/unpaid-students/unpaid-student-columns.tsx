@@ -31,6 +31,11 @@ import { useMutation } from "@tanstack/react-query"
 import { acceptPayment } from "../../actions"
 import { UnpaidStudent } from "../../types"
 import { DeleteStudentDialog } from "./delete-student-dialog"
+import {
+    CourseDuration,
+    getCourseRangeLabel,
+    getDuration,
+} from "../../constants"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -73,6 +78,33 @@ export const unpaidStudentColumns = columnHelper.columns([
                 title="Course"
             />
         ),
+    }),
+    columnHelper.accessor("courseDuration", {
+        header: "Duration",
+        cell: ({ row }) => {
+            return (
+                <Badge>
+                    {getDuration(
+                        row.original
+                            .courseDuration as CourseDuration,
+                    )}
+                </Badge>
+            )
+        },
+    }),
+    columnHelper.accessor("courseRange", {
+        header: "Course Range",
+        cell: ({ row }) => {
+            return (
+                <Badge variant={"ghost"}>
+                    {getCourseRangeLabel(
+                        row.original.courseRange,
+                        row.original
+                            .courseDuration as CourseDuration,
+                    )}
+                </Badge>
+            )
+        },
     }),
 
     columnHelper.accessor("paymentStatus", {
@@ -170,6 +202,15 @@ export const unpaidStudentColumns = columnHelper.columns([
                                     }
                                 >
                                     Update enrollment
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.push(
+                                            `/dashboard/unpaid-students/${row.original.id}/join-another-course`,
+                                        )
+                                    }
+                                >
+                                    Join Another Course
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
 

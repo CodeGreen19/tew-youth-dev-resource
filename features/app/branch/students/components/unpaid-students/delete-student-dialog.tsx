@@ -1,9 +1,10 @@
 "use client"
 
-import React, { Dispatch, SetStateAction } from "react"
-import { Loader2, Trash2 } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
+import { Trash2 } from "lucide-react"
+import { Dispatch, SetStateAction } from "react"
 
+import { SubmitButton } from "@/components/shared/submit-button"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,9 +15,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { UnpaidStudent } from "../../types"
 import { deleteStudent } from "../../actions"
-import { SubmitButton } from "@/components/shared/submit-button"
+import { UnpaidStudent } from "../../types"
 
 export function DeleteStudentDialog({
     deleteDialogInfo,
@@ -37,9 +37,16 @@ export function DeleteStudentDialog({
     const open = !!deleteDialogInfo
 
     function handleDelete() {
-        if (!deleteDialogInfo?.id) return
+        if (
+            !deleteDialogInfo?.id ||
+            !deleteDialogInfo.student
+        )
+            return
 
-        mutation.mutate({ studentId: deleteDialogInfo.id })
+        mutation.mutate({
+            enrollmentId: deleteDialogInfo.id,
+            studentId: deleteDialogInfo.student?.id,
+        })
     }
 
     return (
@@ -58,21 +65,50 @@ export function DeleteStudentDialog({
                     </div>
 
                     <AlertDialogTitle>
-                        Delete student?
+                        Remove enrollment?
                     </AlertDialogTitle>
 
-                    <AlertDialogDescription>
-                        This will permanently delete{" "}
-                        <span className="font-medium text-foreground">
-                            {
-                                deleteDialogInfo?.student
-                                    ?.name
-                            }
-                        </span>{" "}
-                        and the associated student
-                        information. This action cannot be
-                        undone.
-                    </AlertDialogDescription>
+                    <AlertDialogDescription
+                        render={
+                            <div className="space-y-3">
+                                <p>
+                                    Are you sure you want to
+                                    remove the enrollment
+                                    for{" "}
+                                    <span className="font-medium text-foreground">
+                                        {
+                                            deleteDialogInfo
+                                                ?.student
+                                                ?.name
+                                        }
+                                    </span>
+                                    ?
+                                </p>
+
+                                <div className="rounded-lg border bg-muted/50 p-3 text-sm">
+                                    <p className="font-medium text-foreground">
+                                        What happens next?
+                                    </p>
+                                    <p className="text-muted-foreground mt-1">
+                                        This enrollment and
+                                        its associated
+                                        information will be
+                                        permanently removed.
+                                        If this is the
+                                        student&apos;s only
+                                        enrollment, the
+                                        student record may
+                                        also be removed.
+                                    </p>
+                                </div>
+
+                                <p className="text-muted-foreground text-xs">
+                                    This action cannot be
+                                    undone.
+                                </p>
+                            </div>
+                        }
+                    ></AlertDialogDescription>
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
@@ -83,21 +119,20 @@ export function DeleteStudentDialog({
                     </AlertDialogCancel>
 
                     <AlertDialogAction
-                        nativeButton={false}
                         render={
                             <SubmitButton
                                 variant="destructive"
                                 isPending={
                                     mutation.isPending
                                 }
-                                onClick={(event) => {
+                                onClick={() => {
                                     handleDelete()
                                 }}
                             >
-                                Delete student
+                                Remove enrollment
                             </SubmitButton>
                         }
-                    ></AlertDialogAction>
+                    />
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

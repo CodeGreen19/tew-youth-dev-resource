@@ -1,8 +1,8 @@
 "use server"
 import { withPermission } from "@/lib/dal"
 import {
-    courseInformationSchema,
-    CourseInformationSchemaType,
+    enrollmentInformationSchema,
+    EnrollmentInformationSchemaType,
     studentSchema,
     StudentSchemaType,
     updateStudentSchema,
@@ -248,12 +248,12 @@ export const updateEnrollment = withPermission(
     { students: ["update"] },
     async (
         _,
-        inputs: CourseInformationSchemaType & {
+        inputs: EnrollmentInformationSchemaType & {
             enrollmentId: string
         },
     ) => {
         const { success, data } =
-            courseInformationSchema.safeParse(inputs)
+            enrollmentInformationSchema.safeParse(inputs)
 
         if (!success) {
             throw new ValidationError()
@@ -271,13 +271,92 @@ export const updateEnrollment = withPermission(
         }
     },
 )
+export const joinAnotherCourse = withPermission(
+    { students: ["update"] },
+    async (
+        _,
+        inputs: EnrollmentInformationSchemaType & {
+            studentId: string
+        },
+    ) => {
+        const { success, data } =
+            enrollmentInformationSchema.safeParse(inputs)
+
+        if (!success) {
+            throw new ValidationError()
+        }
+
+        const student = await db.query.students.findFirst({
+            where: { id: inputs.studentId },
+        })
+        if (!student) {
+            throw new NotFoundError()
+        }
+        const isExist =
+            await db.query.enrollments.findFirst({
+                where: {
+                    AND: [
+                        {
+                            studentId: inputs.studentId,
+                            courseId: data.courseId,
+                            courseRange: data.courseRange,
+                            courseDuration:
+                                data.courseDuration,
+                        },
+                    ],
+                },
+            })
+
+        console.log("isExist ===>", isExist)
+
+        if (isExist) {
+            throw new Error(
+                "He/She is already enrolled in this course, try different one",
+            )
+        }
+        // enroll in a course
+        const numbers = await getNextEnrollmentNumbers()
+
+        await db.insert(enrollments).values({
+            ...data,
+            studentId: inputs.studentId,
+            ...numbers,
+        })
+
+        updateTag("students")
+        updateTag("paid-students")
+
+        return {
+            message:
+                "Student has enrolled in new course successfully",
+        }
+    },
+)
 
 export const deleteStudent = withPermission(
     { students: ["delete"] },
-    async (_, { studentId }: { studentId: string }) => {
-        await db
-            .delete(students)
-            .where(eq(students.id, studentId))
+    async (
+        _,
+        {
+            studentId,
+            enrollmentId,
+        }: { studentId: string; enrollmentId: string },
+    ) => {
+        const enrolls = await db.query.enrollments.findMany(
+            { where: { studentId }, columns: { id: true } },
+        )
+        if (enrolls.length === 1) {
+            //delete enrollment with students
+            await db
+                .delete(students)
+                .where(eq(students.id, studentId))
+        } else {
+            //delete enrollment only
+            await db
+                .delete(enrollments)
+                .where(eq(enrollments.id, enrollmentId))
+        }
+
         updateTag("students")
         updateTag("paid-students")
         return {
