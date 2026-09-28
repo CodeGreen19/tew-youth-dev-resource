@@ -34,6 +34,7 @@ export const getStudents = withPermission(
             with: {
                 student: {
                     columns: {
+                        id: true,
                         name: true,
                         email: true,
                         image: true,
@@ -49,7 +50,7 @@ export const getUnpaidStudents = withPermission(
     async ({ org }) => {
         "use cache"
 
-        cacheTag(`unpaid-students`)
+        cacheTag("students", `unpaid-students`)
 
         const feeField = {
             "3_months": "threeMonthsFee",
@@ -110,7 +111,7 @@ export const getStudentByEnrolledId = withPermission(
     { students: ["view"] },
     async ({ org }, { id }: { id: string }) => {
         "use cache"
-        cacheTag(`student-enrolled:${id}`)
+        cacheTag("students", `student-enrolled:${id}`)
 
         const enrollment =
             await db.query.enrollments.findFirst({
@@ -134,14 +135,21 @@ export const getStudentByEnrolledId = withPermission(
             throw new NotFoundError()
         }
 
-        return student
+        return {
+            ...student,
+            enrollment: {
+                ...enrollment,
+                course: { name: enrollment.course?.name },
+                student: undefined,
+            },
+        }
     },
 )
 export const getEnrollmentById = withPermission(
     { students: ["view"] },
     async ({ org }, { id }: { id: string }) => {
         "use cache"
-        cacheTag(`enrollment:${id}`)
+        cacheTag("students", `enrollment:${id}`)
 
         const enrollment =
             await db.query.enrollments.findFirst({
@@ -158,3 +166,33 @@ export const getEnrollmentById = withPermission(
         return enrollment
     },
 )
+export const getStudentDetailsByEnrollmentId =
+    withPermission(
+        { students: ["view"] },
+        async (_, { id }: { id: string }) => {
+            "use cache"
+            cacheTag("students", `detailed-student:${id}`)
+            const res =
+                await db.query.enrollments.findFirst({
+                    where: { id },
+                    columns: { studentId: true },
+                })
+            if (!res) {
+                throw new NotFoundError()
+            }
+
+            const student =
+                await db.query.students.findFirst({
+                    where: { id: res.studentId },
+                    with: {
+                        enrollments: true,
+                        qualifications: true,
+                    },
+                })
+            if (!student) {
+                throw new NotFoundError()
+            }
+
+            return student
+        },
+    )

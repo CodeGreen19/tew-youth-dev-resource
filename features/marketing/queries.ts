@@ -1,8 +1,9 @@
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { db } from "@/drizzle/db"
+import { cacheLife, cacheTag } from "next/cache"
 
-export async function getSession() {
-    return await auth.api.getSession({
-        headers: await headers(),
-    })
+export async function getCourses() {
+    "use cache"
+    cacheLife("max")
+    cacheTag("hero-courses")
+    return db.query.courses.findMany()
 }

@@ -1,6 +1,8 @@
 import {
+    getCourseInfo,
     getEnrollmentById,
     getStudentByEnrolledId,
+    getStudentDetailsByEnrollmentId,
     getStudents,
     getUnpaidStudents,
 } from "./queries"
@@ -19,3 +21,9 @@ export type StudentByEnrolledId = Awaited<
 export type EnrollmentById = Awaited<
     ReturnType<typeof getEnrollmentById>
 >
+export type StudentDetailsByEnrollmentId = Awaited<
+    ReturnType<typeof getStudentDetailsByEnrollmentId>
+>
+export type Course = Awaited<
+    ReturnType<typeof getCourseInfo>
+>[number]

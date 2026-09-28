@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toast"
 import { TanstackQueryProvider } from "@/lib/tanstack-query/tanstack-query-provider"
 import { cn } from "@/lib/utils"
 import "./globals.css"
+import { Metadata } from "next"
 
 const nunitoSansHeading = Nunito_Sans({
     subsets: ["latin"],

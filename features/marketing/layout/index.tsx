@@ -1,7 +1,9 @@
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 import { Suspense } from "react"
-import { getSession } from "../queries"
 import { Navbar } from "./navbar"
 import { NavbarSkeleton } from "./navbar-skeleton"
+import { Footer } from "./footer"
 
 export function MarketingLayot(props: LayoutProps<"/">) {
     return (
@@ -10,11 +12,16 @@ export function MarketingLayot(props: LayoutProps<"/">) {
                 <NavbarShell />
             </Suspense>
             {props.children}
+            <Suspense>
+                <Footer />
+            </Suspense>
         </div>
     )
 }
 
 export async function NavbarShell() {
-    const res = await getSession()
+    const res = await auth.api.getSession({
+        headers: await headers(),
+    })
     return <Navbar res={res} />
 }

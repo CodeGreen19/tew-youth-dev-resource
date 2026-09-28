@@ -188,6 +188,15 @@ export const unpaidStudentColumns = columnHelper.columns([
                                 <DropdownMenuItem
                                     onClick={() =>
                                         router.push(
+                                            `/dashboard/unpaid-students/${row.original.id}/details`,
+                                        )
+                                    }
+                                >
+                                    Student Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.push(
                                             `/dashboard/unpaid-students/${row.original.id}/update-student`,
                                         )
                                     }

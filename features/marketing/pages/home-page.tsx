@@ -1,12 +1,22 @@
-import React from "react"
+import { Suspense } from "react"
+import { AboutUs } from "../components/home/about-us"
+import { Courses } from "../components/home/courses"
+import { Hero } from "../components/home/hero"
+import { Features } from "../components/home/features"
+import { FAQ } from "../components/home/faq"
+import { ContactUs } from "../components/home/contact-us"
 
 export function HomePage() {
     return (
-        <div className="max-w-7xl m-auto px-6 lg:px-0 pt-10">
-            <h1 className="text-4xl font-semibold ">
-                The Earn Way Youth Development Resource
-            </h1>
-            <div className="h-[200vh]"></div>
+        <div>
+            <Hero />
+            <Suspense>
+                <Courses />
+            </Suspense>
+            <AboutUs />
+            <Features />
+            <FAQ />
+            <ContactUs />
         </div>
     )
 }

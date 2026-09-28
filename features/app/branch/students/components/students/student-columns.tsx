@@ -176,6 +176,15 @@ export const studentColumns = columnHelper.columns([
                                 <DropdownMenuItem
                                     onClick={() =>
                                         router.push(
+                                            `/dashboard/students/${row.original.id}/details`,
+                                        )
+                                    }
+                                >
+                                    Student Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        router.push(
                                             `/dashboard/students/${row.original.id}/update-student`,
                                         )
                                     }
