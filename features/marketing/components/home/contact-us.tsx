@@ -1,17 +1,52 @@
 import Image from "next/image"
+import Link from "next/link"
 import {
     ArrowUpRight,
     Mail,
     MapPin,
     Phone,
+    type LucideIcon,
 } from "lucide-react"
+import contactUs from "@/public/contact-us.jpg"
+import { ScrollReveal } from "./scroll-reveal"
+
+interface ContactMethod {
+    label: string
+    value: string
+    href: string
+    icon: LucideIcon
+}
+
+const contactMethods: ContactMethod[] = [
+    {
+        label: "Call us",
+        value: "+880 1XXX-XXXXXX",
+        href: "tel:+8801XXXXXXXXX",
+        icon: Phone,
+    },
+    {
+        label: "Email us",
+        value: "info@example.com",
+        href: "mailto:info@example.com",
+        icon: Mail,
+    },
+    {
+        label: "Visit us",
+        value: "Bangladesh",
+        href: "https://maps.google.com/?q=Bangladesh",
+        icon: MapPin,
+    },
+]
 
 export function ContactUs() {
     return (
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
-            <div className="relative min-h-[560px] overflow-hidden rounded-[2rem] border">
+        <section
+            id="home-contact-us"
+            className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
+        >
+            <div className="relative min-h-140 overflow-hidden rounded-[2rem] border">
                 <Image
-                    src="/images/contact-us.jpg"
+                    src={contactUs}
                     alt="Students learning together"
                     fill
                     className="object-cover transition-transform duration-700 hover:scale-105"
@@ -20,15 +55,13 @@ export function ContactUs() {
 
                 <div className="absolute inset-0 bg-background/75 backdrop-blur-[2px]" />
 
-                <div className="relative flex min-h-[560px] items-center justify-center px-6 py-16 sm:px-10 lg:px-16">
+                <div className="relative flex min-h-140 items-center justify-center px-6 py-16 sm:px-10 lg:px-16">
                     <div className="w-full max-w-4xl text-center">
-                        <div className="mx-auto flex size-12 items-center justify-center rounded-2xl border bg-background">
-                            <Mail className="size-5" />
+                        <div className="mb-4 flex items-center justify-center gap-2 text-sm font-medium text-primary">
+                            <span className="h-px w-7 bg-primary" />
+                            <span>Contact Us</span>
+                            <span className="h-px w-7 bg-primary" />
                         </div>
-
-                        <p className="mt-5 text-sm font-medium text-muted-foreground">
-                            Contact us
-                        </p>
 
                         <h2 className="mx-auto mt-2 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
                             Let's build opportunities
@@ -43,62 +76,57 @@ export function ContactUs() {
                             team is ready to hear from you.
                         </p>
 
-                        <div className="mx-auto mt-10 grid max-w-3xl gap-3 sm:grid-cols-3">
-                            <div className="group rounded-2xl border bg-background/90 p-5 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex size-9 items-center justify-center rounded-xl border bg-muted">
-                                        <Phone className="size-4" />
-                                    </div>
+                        <ScrollReveal>
+                            <div className="mx-auto mt-10 grid max-w-3xl gap-3 sm:grid-cols-3">
+                                {contactMethods.map(
+                                    (
+                                        {
+                                            label,
+                                            value,
+                                            href,
+                                            icon: Icon,
+                                        },
+                                        index,
+                                    ) => (
+                                        <Link
+                                            key={index}
+                                            href={href}
+                                            target={
+                                                href.startsWith(
+                                                    "http",
+                                                )
+                                                    ? "_blank"
+                                                    : undefined
+                                            }
+                                            rel={
+                                                href.startsWith(
+                                                    "http",
+                                                )
+                                                    ? "noopener noreferrer"
+                                                    : undefined
+                                            }
+                                            className="group rounded-2xl border bg-background/90 p-5 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex size-9 items-center justify-center rounded-xl border bg-muted">
+                                                    <Icon className="size-4" />
+                                                </div>
 
-                                    <ArrowUpRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                                </div>
+                                                <ArrowUpRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                                            </div>
 
-                                <p className="mt-5 text-xs font-medium text-muted-foreground">
-                                    Call us
-                                </p>
+                                            <p className="mt-5 text-xs font-medium text-muted-foreground">
+                                                {label}
+                                            </p>
 
-                                <p className="mt-1 text-sm font-medium">
-                                    +880 1XXX-XXXXXX
-                                </p>
+                                            <p className="mt-1 truncate text-sm font-medium">
+                                                {value}
+                                            </p>
+                                        </Link>
+                                    ),
+                                )}
                             </div>
-
-                            <div className="group rounded-2xl border bg-background/90 p-5 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex size-9 items-center justify-center rounded-xl border bg-muted">
-                                        <Mail className="size-4" />
-                                    </div>
-
-                                    <ArrowUpRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                                </div>
-
-                                <p className="mt-5 text-xs font-medium text-muted-foreground">
-                                    Email us
-                                </p>
-
-                                <p className="mt-1 truncate text-sm font-medium">
-                                    info@example.com
-                                </p>
-                            </div>
-
-                            <div className="group rounded-2xl border bg-background/90 p-5 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex size-9 items-center justify-center rounded-xl border bg-muted">
-                                        <MapPin className="size-4" />
-                                    </div>
-
-                                    <ArrowUpRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                                </div>
-
-                                <p className="mt-5 text-xs font-medium text-muted-foreground">
-                                    Visit us
-                                </p>
-
-                                <p className="mt-1 text-sm font-medium">
-                                    Bangladesh
-                                </p>
-                            </div>
-                        </div>
-
+                        </ScrollReveal>
                         <p className="mt-10 text-xs text-muted-foreground">
                             We look forward to connecting
                             with you.

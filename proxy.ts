@@ -7,7 +7,12 @@ const AUTH_ROUTES = [
     "/forgot-password",
     "/reset-password",
 ]
-const PUBLIC_ROUTES = ["/", "/apply-branch"]
+const PUBLIC_ROUTES = [
+    "/",
+    "/apply-branch",
+    "/terms",
+    "/privacy",
+]
 
 export async function proxy(request: NextRequest) {
     const session = await auth.api.getSession({

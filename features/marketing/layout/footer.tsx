@@ -1,13 +1,27 @@
 "use client"
 
 import Link from "next/link"
-import { Mail } from "lucide-react"
+import { Logo } from "@/components/shared/logo"
+import { HugeiconsIcon } from "@hugeicons/react"
+import {
+    Facebook01Icon,
+    InstagramIcon,
+    TiktokIcon,
+    WhatsappIcon,
+    Youtube,
+} from "@hugeicons/core-free-icons"
+import { ScrollReveal } from "../components/home/scroll-reveal"
 
 const socialLinks = [
-    { label: "Facebook", href: "#", icon: Mail },
-    { label: "Instagram", href: "#", icon: Mail },
-    { label: "LinkedIn", href: "#", icon: Mail },
-    { label: "GitHub", href: "#", icon: Mail },
+    {
+        label: "Facebook",
+        href: "#",
+        icon: Facebook01Icon,
+    },
+    { label: "Instagram", href: "#", icon: InstagramIcon },
+    { label: "Tiktok", href: "#", icon: TiktokIcon },
+    { label: "Whatsapp", href: "#", icon: WhatsappIcon },
+    { label: "Youtube", href: "#", icon: Youtube },
 ]
 
 export function Footer() {
@@ -16,17 +30,15 @@ export function Footer() {
             <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
                 <div className="flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
                     <div className="space-y-2">
-                        <Link
-                            href="/"
-                            className="inline-flex items-center gap-2 text-lg font-semibold tracking-tight"
-                        >
-                            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                                <Mail className="size-4" />
+                        <div className="inline-flex flex-col lg:flex-row items-center gap-2 text-lg font-semibold tracking-tight">
+                            <Logo scrolled />
+                            <span>
+                                The Earn Way Youth
+                                Devlopment Resource
                             </span>
-                            Your Company
-                        </Link>
+                        </div>
 
-                        <p className="max-w-sm text-sm leading-5 text-muted-foreground">
+                        <p className="max-w-xs text-sm leading-5 text-muted-foreground">
                             Empowering communities through
                             accessible skills, training, and
                             opportunity.
@@ -35,19 +47,26 @@ export function Footer() {
 
                     <div className="flex items-center gap-1">
                         {socialLinks.map(
-                            ({
-                                label,
-                                href,
-                                icon: Icon,
-                            }) => (
-                                <Link
+                            (
+                                { label, href, icon: Icon },
+                                index,
+                            ) => (
+                                <ScrollReveal
                                     key={label}
-                                    href={href}
-                                    aria-label={label}
-                                    className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                                    delay={index * 100}
                                 >
-                                    <Icon className="size-4" />
-                                </Link>
+                                    <Link
+                                        href={href}
+                                        aria-label={label}
+                                        className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                                    >
+                                        <HugeiconsIcon
+                                            icon={Icon}
+                                            size={20}
+                                            className="size-5"
+                                        />
+                                    </Link>
+                                </ScrollReveal>
                             ),
                         )}
                     </div>
@@ -55,8 +74,9 @@ export function Footer() {
 
                 <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t pt-5 text-xs text-muted-foreground sm:flex-row">
                     <p>
-                        © {new Date().getFullYear()} Your
-                        Company. All rights reserved.
+                        © {new Date().getFullYear()} The
+                        Earn Way Youth Development Resource.
+                        All rights reserved.
                     </p>
 
                     <div className="flex items-center gap-4">

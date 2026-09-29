@@ -1,7 +1,7 @@
 import { GENDER } from "@/features/marketing/constants"
 import {
     avatarObjSchema,
-    avaterObjDefaults,
+    avatarObjDefaults,
 } from "@/features/app/schemas"
 import { z } from "zod"
 
@@ -115,7 +115,7 @@ export const orgUserFullDefaults: OrgUserFullSchemaType = {
     phoneNumber: "",
     fatherName: "",
     motherName: "",
-    profileFile: avaterObjDefaults,
+    profileFile: avatarObjDefaults,
     gender: "Male",
 
     // Optional Fields

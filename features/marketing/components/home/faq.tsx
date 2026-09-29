@@ -7,6 +7,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { HelpCircle } from "lucide-react"
+import { ScrollReveal } from "./scroll-reveal"
 
 const faqs = [
     {
@@ -50,10 +51,12 @@ export function FAQ() {
         <section className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
             <div className="text-center">
                 <div className="mb-4 flex items-center justify-center gap-2 text-sm font-medium text-foreground">
-                    <span className="h-px w-7 bg-foreground" />
-                    <HelpCircle className="size-4" />
-                    <span>Frequently asked questions</span>
-                    <span className="h-px w-7 bg-foreground" />
+                    <span className="h-px w-7 bg-primary" />
+
+                    <span className="text-primary">
+                        Frequently asked questions
+                    </span>
+                    <span className="h-px w-7 bg-primary" />
                 </div>
 
                 <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
@@ -69,23 +72,29 @@ export function FAQ() {
             </div>
 
             <div className="mt-10 overflow-hidden rounded-3xl border bg-card sm:mt-12">
-                <Accordion className="w-full px-5 sm:px-8">
-                    {faqs.map((faq, index) => (
-                        <AccordionItem
-                            key={faq.question}
-                            value={`item-${index}`}
-                            className="border-b last:border-b-0"
-                        >
-                            <AccordionTrigger className="py-5 text-left text-sm font-medium hover:no-underline sm:py-6 sm:text-base">
-                                {faq.question}
-                            </AccordionTrigger>
+                <ScrollReveal>
+                    <Accordion className="w-full px-5 sm:px-8">
+                        {faqs.map((faq, index) => (
+                            <ScrollReveal
+                                key={faq.question}
+                                delay={index * 80}
+                            >
+                                <AccordionItem
+                                    value={`item-${index}`}
+                                    className="border-b last:border-b-0"
+                                >
+                                    <AccordionTrigger className="py-5 text-left text-sm font-medium hover:no-underline sm:py-6 sm:text-base">
+                                        {faq.question}
+                                    </AccordionTrigger>
 
-                            <AccordionContent className="max-w-3xl pb-5 text-sm leading-6 text-muted-foreground sm:pb-6">
-                                {faq.answer}
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
+                                    <AccordionContent className="max-w-3xl pb-5 text-sm leading-6 text-muted-foreground sm:pb-6">
+                                        {faq.answer}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </ScrollReveal>
+                        ))}
+                    </Accordion>
+                </ScrollReveal>
             </div>
 
             <div className="mt-6 text-center">

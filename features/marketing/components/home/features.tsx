@@ -4,6 +4,7 @@ import {
     FileCheck2,
     GraduationCap,
 } from "lucide-react"
+import { ScrollReveal } from "./scroll-reveal"
 
 const features = [
     {
@@ -34,9 +35,11 @@ export function Features() {
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
             <div className="mx-auto max-w-2xl text-center">
                 <div className="mb-4 flex items-center justify-center gap-2 text-sm font-medium text-foreground">
-                    <span className="h-px w-7 bg-foreground" />
-                    <span>What we provide</span>
-                    <span className="h-px w-7 bg-foreground" />
+                    <span className="h-px w-7 bg-primary" />
+                    <span className="text-primary">
+                        What we provide
+                    </span>
+                    <span className="h-px w-7 bg-primary" />
                 </div>
 
                 <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
@@ -56,49 +59,56 @@ export function Features() {
                     const Icon = feature.icon
 
                     return (
-                        <article
+                        <ScrollReveal
+                            delay={index * 100}
                             key={feature.number}
-                            className={[
-                                "group relative overflow-hidden rounded-3xl border bg-card p-6 transition-all duration-500",
-                                "hover:-translate-y-1 hover:shadow-xl",
-                                "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4",
-                                "duration-500 fill-mode-both",
-                                index === 0 && "delay-0",
-                                index === 1 && "delay-100",
-                                index === 2 && "delay-200",
-                            ]
-                                .filter(Boolean)
-                                .join(" ")}
                         >
-                            <div className="absolute right-5 top-4 select-none text-6xl font-semibold tracking-tighter text-muted/60 transition-transform duration-500 group-hover:scale-110">
-                                {feature.number}
-                            </div>
-
-                            <div className="relative">
-                                <div className="flex size-12 items-center justify-center rounded-2xl border bg-muted transition-transform duration-500 group-hover:scale-105">
-                                    <Icon className="size-5" />
+                            <article
+                                className={[
+                                    "group relative overflow-hidden rounded-3xl border bg-card p-6 transition-all duration-500",
+                                    "hover:-translate-y-1 hover:shadow-xl",
+                                    "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4",
+                                    "duration-500 fill-mode-both",
+                                    index === 0 &&
+                                        "delay-0",
+                                    index === 1 &&
+                                        "delay-100",
+                                    index === 2 &&
+                                        "delay-200",
+                                ]
+                                    .filter(Boolean)
+                                    .join(" ")}
+                            >
+                                <div className="absolute right-5 top-4 select-none text-6xl font-semibold tracking-tighter text-muted/60 transition-transform duration-500 group-hover:scale-110">
+                                    {feature.number}
                                 </div>
 
-                                <div className="mt-8">
-                                    <h3 className="text-xl font-semibold tracking-tight">
-                                        {feature.title}
-                                    </h3>
+                                <div className="relative">
+                                    <div className="flex size-12 text-primary items-center justify-center rounded-2xl border bg-muted transition-transform duration-500 group-hover:scale-105">
+                                        <Icon className="size-5" />
+                                    </div>
 
-                                    <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                                        {
-                                            feature.description
-                                        }
-                                    </p>
-                                </div>
+                                    <div className="mt-8">
+                                        <h3 className="text-xl font-semibold tracking-tight">
+                                            {feature.title}
+                                        </h3>
 
-                                <div className="mt-8 flex items-center gap-2 text-xs font-medium text-muted-foreground">
-                                    <span className="h-px w-8 bg-border transition-all duration-500 group-hover:w-12" />
-                                    <span>
-                                        Built for trust
-                                    </span>
+                                        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                                            {
+                                                feature.description
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-8 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                                        <span className="h-px w-8 bg-border transition-all duration-500 group-hover:w-12" />
+                                        <span>
+                                            Built for trust
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
+                            </article>
+                        </ScrollReveal>
                     )
                 })}
             </div>

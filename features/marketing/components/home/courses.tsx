@@ -2,6 +2,7 @@ import Image from "next/image"
 import { BookOpen, Clock3 } from "lucide-react"
 
 import { getCourses } from "../../queries"
+import { ScrollReveal } from "./scroll-reveal"
 
 const statusStyles = {
     active: "bg-emerald-500/10 text-emerald-600",
@@ -13,15 +14,19 @@ export async function Courses() {
     const courses = await getCourses()
 
     return (
-        <section className="mx-auto min-h-screen max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+        <section
+            id="home-courses"
+            className="mx-auto min-h-screen max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
+        >
             <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12 lg:mb-14">
-                <div className="mb-3 flex items-center justify-center gap-2 text-sm font-medium text-primary">
-                    <BookOpen className="size-4" />
-                    <span>Our courses</span>
+                <div className="mb-4 text-primary flex items-center justify-center gap-2 text-sm font-medium">
+                    <span className="h-px w-7  bg-primary" />
+                    <span>Our Courses</span>
+                    <span className="h-px w-7  bg-primary" />
                 </div>
 
                 <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-                    Teach skills that move you forward.
+                    Teach skills that move them forward.
                 </h1>
 
                 <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
@@ -34,76 +39,72 @@ export async function Courses() {
             {courses.length > 0 ? (
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {courses.map((course, index) => (
-                        <article
+                        <ScrollReveal
                             key={course.id}
-                            className={[
-                                "group overflow-hidden rounded-2xl border bg-card",
-                                "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3",
-                                "duration-500 fill-mode-both",
-                                index === 0 && "delay-0",
-                                index === 1 && "delay-75",
-                                index === 2 && "delay-100",
-                                index === 3 && "delay-150",
-                                index === 4 && "delay-200",
-                                index === 5 && "delay-300",
-                            ]
-                                .filter(Boolean)
-                                .join(" ")}
+                            delay={Math.min(
+                                index * 75,
+                                300,
+                            )}
                         >
-                            <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-                                <Image
-                                    src={
-                                        course.banner
-                                            .secureUrl
-                                    }
-                                    alt={course.name}
-                                    fill
-                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                                />
+                            <article className="group overflow-hidden rounded-2xl border bg-card">
+                                <div className="relative aspect-video overflow-hidden bg-muted">
+                                    <Image
+                                        src={
+                                            course.banner
+                                                .secureUrl
+                                        }
+                                        alt={course.name}
+                                        fill
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                                    />
 
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
 
-                                <div className="absolute left-3 top-3">
-                                    <span
-                                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium backdrop-blur-md ${statusStyles[course.status]}`}
-                                    >
-                                        {course.status ===
-                                        "up-coming"
-                                            ? "Upcoming"
-                                            : course.status ===
-                                                "in-active"
-                                              ? "Inactive"
-                                              : "Active"}
-                                    </span>
+                                    <div className="absolute left-3 top-3">
+                                        <span
+                                            className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium backdrop-blur-md ${statusStyles[course.status]}`}
+                                        >
+                                            {course.status ===
+                                            "up-coming"
+                                                ? "Upcoming"
+                                                : course.status ===
+                                                    "in-active"
+                                                  ? "Inactive"
+                                                  : "Active"}
+                                        </span>
+                                    </div>
+
+                                    <div className="absolute bottom-3 left-3">
+                                        <span className="rounded-md bg-black/50 px-2 py-1 text-[11px] font-medium tracking-wide text-white backdrop-blur-sm">
+                                            {course.code}
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div className="absolute bottom-3 left-3">
-                                    <span className="rounded-md bg-black/50 px-2 py-1 text-[11px] font-medium tracking-wide text-white backdrop-blur-sm">
-                                        {course.code}
-                                    </span>
+                                <div className="p-4 sm:p-5">
+                                    <h2 className="line-clamp-2 text-base font-semibold leading-6 tracking-tight sm:text-lg">
+                                        {course.name}
+                                    </h2>
+
+                                    {course.description && (
+                                        <p className="mt-2 line-clamp-2 text-sm leading-5 text-muted-foreground">
+                                            {
+                                                course.description
+                                            }
+                                        </p>
+                                    )}
+
+                                    <div className="mt-4 flex items-center gap-2 border-t pt-3 text-xs text-muted-foreground">
+                                        <Clock3 className="size-3.5" />
+                                        <span>
+                                            Professional
+                                            course
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className="p-4 sm:p-5">
-                                <h2 className="line-clamp-2 text-base font-semibold leading-6 tracking-tight sm:text-lg">
-                                    {course.name}
-                                </h2>
-
-                                {course.description && (
-                                    <p className="mt-2 line-clamp-2 text-sm leading-5 text-muted-foreground">
-                                        {course.description}
-                                    </p>
-                                )}
-
-                                <div className="mt-4 flex items-center gap-2 border-t pt-3 text-xs text-muted-foreground">
-                                    <Clock3 className="size-3.5" />
-                                    <span>
-                                        Professional course
-                                    </span>
-                                </div>
-                            </div>
-                        </article>
+                            </article>
+                        </ScrollReveal>
                     ))}
                 </div>
             ) : (

@@ -3,7 +3,10 @@ import { ChevronRight } from "lucide-react"
 
 export function Hero() {
     return (
-        <section className="relative isolate flex h-dvh min-h-150 items-center justify-center overflow-hidden border-b">
+        <section
+            id="#home"
+            className="relative isolate flex h-dvh min-h-150 items-center justify-center overflow-hidden border-b"
+        >
             <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
                 <div className="absolute -left-24 top-16 size-64 rounded-full bg-primary/15 blur-3xl animate-[float_9s_ease-in-out_infinite]" />
                 <div className="absolute -right-20 top-1/3 size-80 rounded-full bg-primary/10 blur-3xl animate-[float_12s_ease-in-out_infinite_reverse]" />

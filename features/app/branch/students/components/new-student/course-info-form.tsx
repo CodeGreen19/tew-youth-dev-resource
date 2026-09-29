@@ -9,11 +9,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
-import {
-    CourseInformationSchemaType,
-    StudentSchemaType,
-    courseInformationSchema,
-} from "../../schemas"
+
 import {
     COURSE_DURATION_OPTIONS,
     MEDIUM_OPTIONS,
@@ -23,6 +19,10 @@ import {
     CourseDuration,
     getCourseRangeOptions,
 } from "../../constants"
+import {
+    enrollmentInformationSchema,
+    EnrollmentInformationSchemaType,
+} from "../../schemas"
 
 export function CourseInformationForm({
     onSuccess,
@@ -30,19 +30,19 @@ export function CourseInformationForm({
     existedValues,
     courses,
 }: {
-    onSuccess: (v: CourseInformationSchemaType) => void
+    onSuccess: (v: EnrollmentInformationSchemaType) => void
     formId: string
-    existedValues: StudentSchemaType
+    existedValues: EnrollmentInformationSchemaType
     courses: { label: string; value: string }[]
 }) {
-    const defaultValues: CourseInformationSchemaType = {
+    const defaultValues: EnrollmentInformationSchemaType = {
         ...existedValues,
     }
 
     const form = useAppForm({
         defaultValues,
         validators: {
-            onChange: courseInformationSchema,
+            onChange: enrollmentInformationSchema,
         },
         onSubmit: async ({ value }) => {
             onSuccess(value)
