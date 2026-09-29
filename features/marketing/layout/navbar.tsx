@@ -172,7 +172,7 @@ function MobileNavbarSheet({
                 nativeButton={false}
                 render={
                     <HugeiconsIcon
-                        className="transition-all"
+                        className="transition-all lg:hidden"
                         icon={MenuTwoLineIcon}
                         size={scrolled ? 0 : 25}
                     />

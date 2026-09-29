@@ -34,6 +34,11 @@ import {
     rejectApplication,
 } from "../actions"
 import { BranchApplication } from "../types"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Field } from "@/components/ui/field"
+import { Checkbox } from "@/components/ui/checkbox"
+import { toast } from "@/components/ui/toast"
 
 type BranchStatus = "pending" | "approved" | "rejected"
 type Action = "approve" | "reject"
@@ -88,6 +93,11 @@ export function ApproveBranch({
     const [action, setAction] = useState<Action | null>(
         null,
     )
+    const [oneTimePaymentAmount, setOneTimePaymentAmount] =
+        useState<string>("")
+    const [paymentRequired, setPaymentRequired] =
+        useState<boolean>(true)
+    const [error, setError] = useState<string>("")
 
     const approveMutation = useMutation({
         mutationFn: approveApplication,
@@ -247,6 +257,56 @@ export function ApproveBranch({
                             : "This action changes the application status. Review the submitted information before continuing."}
                     </div>
 
+                    {action === "approve" && (
+                        <div>
+                            <div className="flex items-center justify-start flex-row gap-3">
+                                <Checkbox
+                                    checked={
+                                        paymentRequired
+                                    }
+                                    onCheckedChange={(
+                                        v,
+                                    ) => {
+                                        setError("")
+                                        setPaymentRequired(
+                                            v,
+                                        )
+                                    }}
+                                />
+                                <Label>
+                                    Payment Required
+                                </Label>
+                            </div>
+                            {paymentRequired && (
+                                <Field>
+                                    <Label>
+                                        One Time Payable
+                                        Amount
+                                    </Label>
+                                    <Input
+                                        value={
+                                            oneTimePaymentAmount
+                                        }
+                                        onChange={(e) => {
+                                            setError("")
+                                            setOneTimePaymentAmount(
+                                                e.target
+                                                    .value,
+                                            )
+                                        }}
+                                        type="number"
+                                    />
+                                </Field>
+                            )}
+                            {error && (
+                                <span className="text-destructive">
+                                    You must provide at
+                                    least 100 tk payable
+                                    amount
+                                </span>
+                            )}
+                        </div>
+                    )}
                     <DialogFooter className="gap-2 sm:gap-2">
                         <DialogClose
                             render={
@@ -265,8 +325,22 @@ export function ApproveBranch({
                             isPending={isActionPending}
                             onClick={() => {
                                 if (action === "approve") {
+                                    const amount = Number(
+                                        oneTimePaymentAmount,
+                                    )
+                                    if (
+                                        paymentRequired &&
+                                        amount < 100
+                                    ) {
+                                        setError(
+                                            "You must provide at least 100 tk payable amount",
+                                        )
+                                        return
+                                    }
                                     approveMutation.mutate({
                                         applicationId,
+                                        oneTimePaymentAmount:
+                                            amount,
                                     })
                                 } else {
                                     rejectMutation.mutate({

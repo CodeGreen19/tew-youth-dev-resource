@@ -10,17 +10,27 @@ import { message } from "@/utils/message"
 import { eq } from "drizzle-orm"
 import { updateTag } from "next/cache"
 import { createUniqueOrgSlug } from "./utils"
+import { sendEmailBranchApproved } from "@/lib/resend/emails"
 
 export const approveApplication = withPermission(
     { branch_application: ["update"] },
 
     async (
         _,
-        { applicationId }: { applicationId: string },
+        {
+            applicationId,
+            oneTimePaymentAmount,
+        }: {
+            applicationId: string
+            oneTimePaymentAmount: number
+        },
     ) => {
         const updatedRows = await db
             .update(branchApplications)
-            .set({ status: "approved" })
+            .set({
+                status: "approved",
+                oneTimePaymentAmount,
+            })
             .where(eq(branchApplications.id, applicationId))
             .returning({ id: branchApplications.id })
 
@@ -123,6 +133,15 @@ export const createNewBranchWorkspace = withPermission(
                         applicationId,
                     ),
                 )
+
+            //send email
+            await sendEmailBranchApproved({
+                branchName: branchName,
+                email,
+                firstName: ownerName,
+                loginUrl: `${process.env.BETTER_AUTH_URL}/login`,
+                password,
+            })
         } catch (error) {
             // Rollback user creation if organization setup or DB update fails
             if (newUserId) {

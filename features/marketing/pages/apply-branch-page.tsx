@@ -71,7 +71,7 @@ export function ApplyBranchPage() {
 
     return (
         <div className="space-y-8  mt-6 pb-10">
-            <div className="h-10"></div>
+            <div className="h-10 lg:h-20"></div>
             <div className="max-w-7xl m-auto">
                 <FormSteps steps={formSteps} />
             </div>

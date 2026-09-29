@@ -1,4 +1,5 @@
 import {
+    boolean,
     index,
     integer,
     jsonb,
@@ -63,6 +64,12 @@ export const branchApplications = snakeCase.table(
         organizationId: text(),
 
         rejectionReason: text(),
+        //payments
+        oneTimePaymentAmount: integer()
+            .notNull()
+            .default(0),
+        isOneTimePaid: boolean().default(false),
+        paymentTransactionId: varchar(),
         createdAt,
         updatedAt,
     },

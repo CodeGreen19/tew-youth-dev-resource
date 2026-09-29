@@ -6,3 +6,4 @@ allowBuilds:
   msw: false
   esbuild: false
   core-js: false
+  ngrok: false

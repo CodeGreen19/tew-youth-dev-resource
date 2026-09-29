@@ -42,6 +42,8 @@ async function getOrgAndMember({
         headers,
     })
 
+    console.log("org->>>>", org)
+
     if (!org) {
         throw new NotFoundError("Org not found")
     }
