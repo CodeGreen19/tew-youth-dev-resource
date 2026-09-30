@@ -5,10 +5,7 @@ import {
     PageTitle,
 } from "@/components/shared/page"
 import { StudentDetails } from "../components/student-details"
-import {
-    getCourseInfo,
-    getStudentDetailsByEnrollmentId,
-} from "../queries"
+import { getStudentDetailsByEnrollmentId } from "../queries"
 
 export async function StudentDetailsPage({
     backTo,
@@ -20,7 +17,6 @@ export async function StudentDetailsPage({
     const student = await getStudentDetailsByEnrollmentId({
         id,
     })
-    const courses = await getCourseInfo()
     return (
         <Page>
             <PageHeader>
@@ -33,7 +29,6 @@ export async function StudentDetailsPage({
                     backTo={backTo}
                     enrollmentId={id}
                     student={student}
-                    courses={courses}
                 />
             </PageContent>
         </Page>

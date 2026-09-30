@@ -56,7 +56,7 @@ export const students = snakeCase.table(
 
         email: varchar("email", {
             length: 255,
-        }).unique(),
+        }),
 
         religion: varchar("religion", {
             length: 50,
@@ -215,6 +215,8 @@ export const enrollments = snakeCase.table(
         paymentStatus: paymentStatusEnum("payment_status")
             .notNull()
             .default("pending"),
+
+        paymentTransactionId: varchar(),
 
         createdAt,
         updatedAt,

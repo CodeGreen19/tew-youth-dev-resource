@@ -1,38 +1,51 @@
+import { company_client_config } from "@/utils/client-config"
 import { jsPDF } from "jspdf"
-import {
-    CourseDuration,
-    getCourseRangeLabel,
-    getDuration,
-} from "../constants"
-import {
-    Course,
-    StudentDetailsByEnrollmentId,
-} from "../types"
+
+export type AdmissionFormData = {
+    student: {
+        name: string
+        fatherName: string
+        motherName: string
+        mobile: string
+        gender: string
+        dateOfBirth: string
+        nationality: string
+        religion: string
+        bloodGroup: string
+        email: string
+    }
+    course: {
+        duration: string
+        range: string
+        trade: string
+        medium: string
+    }
+    academic: {
+        board: string
+        passingYear: string
+        roll: string
+        result: string
+    }
+}
 
 export const admissionFormPDF = (
-    data: StudentDetailsByEnrollmentId,
-    courses: Course[],
+    data: AdmissionFormData,
 ) => {
     const doc = new jsPDF("p", "mm", "a4")
 
-    // Add the header image
-    const img = new Image()
-    img.src = "/logo.png" // Path to the image
-    doc.addImage(img, "PNG", 85, 10, 40, 40) // Adjust positioning and size
-    // for signature
-    const img2 = new Image()
-    img2.src = "/signature.png" // Path to the image
-    doc.addImage(img2, "PNG", 132, 253, 38, 17)
+    const logo = new Image()
+    logo.src = "/logo.png"
+
+    const signature = new Image()
+    signature.src = "/signature.png"
+
+    doc.addImage(logo, "PNG", 85, 10, 40, 40)
+    doc.addImage(signature, "PNG", 132, 253, 38, 17)
 
     doc.setGState(doc.GState({ opacity: 0.2 }))
-
-    // Add the image to cover the whole page as a watermark
-    doc.addImage(img, "PNG", 30, 80, 140, 140)
-
-    // Reset transparency for further elements
+    doc.addImage(logo, "PNG", 30, 80, 140, 140)
     doc.setGState(doc.GState({ opacity: 1 }))
 
-    // Add the header text
     doc.setFontSize(16)
     doc.setTextColor(0, 0, 0)
     doc.setFont("helvetica", "bold")
@@ -42,16 +55,11 @@ export const admissionFormPDF = (
 
     doc.setFontSize(10)
     doc.setFont("helvetica", "normal")
+    doc.text(company_client_config.COMPANY_NAME, 105, 62, {
+        align: "center",
+    })
     doc.text(
-        "The Earn Way Youth Development Resource",
-        105,
-        62,
-        {
-            align: "center",
-        },
-    )
-    doc.text(
-        "Sohidul Islam Market, Damurhuda, Chuadanga",
+        company_client_config.COMPANY_ADDRESS,
         105,
         68,
         {
@@ -59,10 +67,8 @@ export const admissionFormPDF = (
         },
     )
 
-    // Add a line separator below the header
     doc.line(15, 75, 195, 75)
 
-    // Add Personal Details section
     doc.setFontSize(12)
     doc.setFont("helvetica", "bold")
     doc.text("Personal Details", 15, 85)
@@ -71,87 +77,95 @@ export const admissionFormPDF = (
 
     doc.setFontSize(10)
     doc.setFont("helvetica", "normal")
-    doc.text(`Name: ${data.name}`, 15, 95)
-    doc.text(`Father's Name: ${data.fatherName}`, 105, 95)
+    doc.text(`Name: ${data.student.name}`, 15, 95)
+    doc.text(
+        `Father's Name: ${data.student.fatherName}`,
+        105,
+        95,
+    )
 
-    doc.text(`Mother's Name: ${data.motherName}`, 15, 105)
-    doc.text(`Mobile: ${data.mobile}`, 105, 105)
+    doc.text(
+        `Mother's Name: ${data.student.motherName}`,
+        15,
+        105,
+    )
+    doc.text(`Mobile: ${data.student.mobile}`, 105, 105)
 
-    doc.text(`Gender: ${data.gender}`, 15, 115)
-    doc.text(`Date of Birth: ${data.dateOfBirth}`, 105, 115)
+    doc.text(`Gender: ${data.student.gender}`, 15, 115)
+    doc.text(
+        `Date of Birth: ${data.student.dateOfBirth}`,
+        105,
+        115,
+    )
 
-    doc.text(`Nationality: ${data.nationality}`, 15, 125)
-    doc.text(`Religion: ${data.religion}`, 105, 125)
+    doc.text(
+        `Nationality: ${data.student.nationality}`,
+        15,
+        125,
+    )
+    doc.text(`Religion: ${data.student.religion}`, 105, 125)
 
-    doc.text(`Blood Group: ${data.bloodGroup}`, 15, 135)
-    doc.text(`Email: ${data.email || "N/A"}`, 105, 135)
+    doc.text(
+        `Blood Group: ${data.student.bloodGroup}`,
+        15,
+        135,
+    )
+    doc.text(
+        `Email: ${data.student.email || "N/A"}`,
+        105,
+        135,
+    )
 
-    // Add Course Details section
     doc.setFontSize(12)
     doc.setFont("helvetica", "bold")
     doc.text("Course Details", 15, 145)
     doc.line(15, 147, 46, 147)
 
-    const enrollment = data.enrollments[0]
-    const duration =
-        enrollment.courseDuration as CourseDuration
-    const courseDuration = getDuration(duration)
-    const courseRange = getCourseRangeLabel(
-        enrollment.courseRange,
-        duration,
-    )
-    const course = courses.find(
-        (c) => c.id === enrollment.courseId,
-    )?.name
-
     doc.setFontSize(10)
     doc.setFont("helvetica", "normal")
-    doc.text(`Course Duration: ${courseDuration}`, 15, 155)
-    doc.text(`Course Range: ${courseRange}`, 105, 155)
+    doc.text(
+        `Course Duration: ${data.course.duration}`,
+        15,
+        155,
+    )
+    doc.text(`Course Range: ${data.course.range}`, 105, 155)
 
-    doc.text(`Course Trade: ${course}`, 15, 165)
-    doc.text(`Medium: ${enrollment.medium}`, 105, 165)
+    doc.text(`Course Trade: ${data.course.trade}`, 15, 165)
+    doc.text(`Medium: ${data.course.medium}`, 105, 165)
 
-    // Add Academic Details section
     doc.setFontSize(12)
     doc.setFont("helvetica", "bold")
     doc.text("Academic Details", 15, 175)
     doc.line(15, 177, 49, 177)
 
-    const qualification = data.qualifications[0]
-
     doc.setFontSize(10)
     doc.setFont("helvetica", "normal")
     doc.text(
-        `Passed Board: ${qualification.institution}`,
+        `Passed Board: ${data.academic.board}`,
         15,
         185,
     )
     doc.text(
-        `Passed Year: ${qualification.passingYear}`,
+        `Passed Year: ${data.academic.passingYear}`,
         105,
         185,
     )
 
+    doc.text(`Passed Roll: ${data.academic.roll}`, 15, 195)
     doc.text(
-        `Passed Roll: ${qualification.rollId}`,
-        15,
-        195,
-    )
-    doc.text(
-        `Passed Result: ${qualification.result}`,
+        `Passed Result: ${data.academic.result}`,
         105,
         195,
     )
 
-    // Add footer lines for signature
     doc.setFontSize(10)
     doc.setFont("helvetica", "normal")
     doc.text("Student's Signature", 15, 275)
-
     doc.text("Authority's Signature", 135, 275)
-    doc.line(15, 271, 48, 271) // Adjusted line width for student's signature
-    doc.line(135, 271, 168, 271) // Adjusted line width for authority's signature
+
+    doc.line(15, 271, 48, 271)
+    doc.line(135, 271, 168, 271)
+
     doc.setFontSize(11)
     doc.text(
         "NB: Please note that all payments made upon admission are non-refundable.",
@@ -159,8 +173,34 @@ export const admissionFormPDF = (
         289,
     )
 
-    // Save the PDF
     doc.save(
-        `${data.name.toLocaleLowerCase()}-admission-form.pdf`,
+        `${data.student.name.toLocaleLowerCase()}-admission-form.pdf`,
     )
 }
+
+// admissionFormPDF({
+//     student: {
+//         name: "John Doe",
+//         fatherName: "John's Father",
+//         motherName: "John's Mother",
+//         mobile: "01700000000",
+//         gender: "Male",
+//         dateOfBirth: "01 January 2000",
+//         nationality: "Bangladeshi",
+//         religion: "Islam",
+//         bloodGroup: "O+",
+//         email: "john@example.com",
+//     },
+//     course: {
+//         duration: "6 Months",
+//         range: "January 2026 – June 2026",
+//         trade: "Computer Office Application",
+//         medium: "Bangla & English",
+//     },
+//     academic: {
+//         board: "Dhaka",
+//         passingYear: "2024",
+//         roll: "123456",
+//         result: "4.50",
+//     },
+// })

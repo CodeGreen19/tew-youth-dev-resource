@@ -25,11 +25,6 @@ import {
 import { useRouter } from "next/navigation"
 
 import { Student } from "../../types"
-import {
-    CourseDuration,
-    getCourseRangeLabel,
-    getDuration,
-} from "../../constants"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -94,11 +89,8 @@ export const studentColumns = columnHelper.columns([
         header: "Duration",
         cell: ({ row }) => {
             return (
-                <Badge>
-                    {getDuration(
-                        row.original
-                            .courseDuration as CourseDuration,
-                    )}
+                <Badge variant={"secondary"}>
+                    {row.original.courseDuration}
                 </Badge>
             )
         },
@@ -108,11 +100,7 @@ export const studentColumns = columnHelper.columns([
         cell: ({ row }) => {
             return (
                 <Badge variant={"ghost"}>
-                    {getCourseRangeLabel(
-                        row.original.courseRange,
-                        row.original
-                            .courseDuration as CourseDuration,
-                    )}
+                    {row.original.courseRange}
                 </Badge>
             )
         },

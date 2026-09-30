@@ -25,6 +25,9 @@ import { updateTag } from "next/cache"
 import { message } from "@/utils/message"
 import { cleanupUploads } from "@/lib/cloudinary/cleanup-uploads"
 import { getNextEnrollmentNumbers } from "./utils"
+import { createSSLSession } from "@/lib/ssl-commerz/actions"
+import { redirect } from "next/navigation"
+import { company_config } from "@/utils/config"
 
 export const createStudent = withPermission(
     { students: ["create"] },
@@ -36,13 +39,18 @@ export const createStudent = withPermission(
             throw new ValidationError()
         }
 
-        const existEmail =
-            await db.query.students.findFirst({
-                where: { email: data.email },
-            })
+        console.log("entered=>>>", data)
+        if (data.email) {
+            const existEmail =
+                await db.query.students.findFirst({
+                    where: { email: data.email },
+                })
 
-        if (existEmail) {
-            throw new Error("Email already exists")
+            console.log("exist=>>>", existEmail)
+
+            if (existEmail) {
+                throw new Error("Email already exists")
+            }
         }
         const existPhoneNumber =
             await db.query.students.findFirst({
@@ -64,6 +72,7 @@ export const createStudent = withPermission(
                         ...data,
                         image,
                         organizationId: org.id,
+                        email: data.email ?? undefined,
                     })
                     .returning()
 
@@ -375,16 +384,52 @@ export const acceptPayment = withPermission(
             paidAmount,
         }: { enrollmentId: string; paidAmount: number },
     ) => {
+        const student = await db.query.students.findFirst({
+            where: { enrollments: { id: enrollmentId } },
+        })
+        if (!student) {
+            throw new NotFoundError()
+        }
+
+        const companyBranch =
+            company_config.COMPANY_BRANCH_ID ===
+            student.organizationId
+        if (companyBranch || paidAmount === 0) {
+            await db
+                .update(enrollments)
+                .set({ paymentStatus: "paid", paidAmount })
+                .where(eq(enrollments.id, enrollmentId))
+            updateTag("students")
+            updateTag("paid-students")
+
+            return message("Payment Successfull")
+        }
+
+        const orderId = crypto.randomUUID().slice(0, 13)
+        const session = await createSSLSession({
+            orderId,
+            amount: paidAmount,
+            customerName: student.name,
+            customerEmail:
+                student.email || `${orderId}@gmail.com`,
+            customerPhone: student.mobile,
+            address: student.nationality,
+            city: "Dummy City",
+            postcode: "5555",
+            type: "student",
+        })
+        console.log(session)
         await db
             .update(enrollments)
-            .set({ paymentStatus: "paid", paidAmount })
+            .set({
+                paymentTransactionId: orderId,
+                paidAmount,
+            })
             .where(eq(enrollments.id, enrollmentId))
 
         updateTag("students")
         updateTag("paid-students")
 
-        return {
-            message: "Student updated successfully",
-        }
+        redirect(session.GatewayPageURL)
     },
 )

@@ -168,7 +168,7 @@ export function AcademicInformationForm({
                                                             children={(
                                                                 field,
                                                             ) => (
-                                                                <field.TextField
+                                                                <field.NumberField
                                                                     label="Passing Year"
                                                                     placeholder="Enter passing year"
                                                                 />

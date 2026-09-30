@@ -2,6 +2,12 @@ import { db } from "@/drizzle/db"
 import { withPermission } from "@/lib/dal"
 import { NotFoundError } from "@/utils/error-constructor"
 import { cacheTag } from "next/cache"
+import {
+    CourseDuration,
+    feeField,
+    getCourseRangeLabel,
+    getDuration,
+} from "./constants"
 
 export async function getCourseInfo() {
     "use cache"
@@ -18,7 +24,7 @@ export const getStudents = withPermission(
         "use cache"
         cacheTag("students")
 
-        return await db.query.enrollments.findMany({
+        const res = await db.query.enrollments.findMany({
             where: {
                 paymentStatus: "paid",
                 student: { organizationId: org.id },
@@ -43,6 +49,17 @@ export const getStudents = withPermission(
                 course: { columns: { name: true } },
             },
         })
+
+        return res.map((each) => ({
+            ...each,
+            courseDuration: getDuration(
+                each.courseDuration as CourseDuration,
+            ),
+            courseRange: getCourseRangeLabel(
+                each.courseRange,
+                each.courseDuration as CourseDuration,
+            ),
+        }))
     },
 )
 export const getUnpaidStudents = withPermission(
@@ -50,16 +67,7 @@ export const getUnpaidStudents = withPermission(
     async ({ org }) => {
         "use cache"
 
-        cacheTag("students", `unpaid-students`)
-
-        const feeField = {
-            "3_months": "threeMonthsFee",
-            "6_months": "sixMonthsFee",
-            "1_year": "oneYearFee",
-            "2_years": "twoYearsFee",
-            "3_years": "threeYearsFee",
-            "4_years": "fourYearsFee",
-        } as const
+        cacheTag(`unpaid-students`)
 
         const res = await db.query.enrollments.findMany({
             where: {
@@ -102,6 +110,13 @@ export const getUnpaidStudents = withPermission(
             return {
                 ...enrollment,
                 price,
+                courseDuration: getDuration(
+                    enrollment.courseDuration as CourseDuration,
+                ),
+                courseRange: getCourseRangeLabel(
+                    enrollment.courseRange,
+                    enrollment.courseDuration as CourseDuration,
+                ),
             }
         })
     },
@@ -111,7 +126,7 @@ export const getStudentByEnrolledId = withPermission(
     { students: ["view"] },
     async ({ org }, { id }: { id: string }) => {
         "use cache"
-        cacheTag("students", `student-enrolled:${id}`)
+        cacheTag(`enrolled-student:${id}`)
 
         const enrollment =
             await db.query.enrollments.findFirst({
@@ -149,7 +164,7 @@ export const getEnrollmentById = withPermission(
     { students: ["view"] },
     async ({ org }, { id }: { id: string }) => {
         "use cache"
-        cacheTag("students", `enrollment:${id}`)
+        cacheTag(`enrollment:${id}`)
 
         const enrollment =
             await db.query.enrollments.findFirst({
@@ -166,33 +181,55 @@ export const getEnrollmentById = withPermission(
         return enrollment
     },
 )
+
 export const getStudentDetailsByEnrollmentId =
     withPermission(
         { students: ["view"] },
-        async (_, { id }: { id: string }) => {
+        async ({ org }, { id }: { id: string }) => {
             "use cache"
-            cacheTag("students", `detailed-student:${id}`)
-            const res =
+            cacheTag(`detailed-student:${id}`)
+            const enrollment =
                 await db.query.enrollments.findFirst({
                     where: { id },
                     columns: { studentId: true },
                 })
-            if (!res) {
+            if (!enrollment) {
                 throw new NotFoundError()
             }
 
             const student =
                 await db.query.students.findFirst({
-                    where: { id: res.studentId },
+                    where: { id: enrollment.studentId },
                     with: {
-                        enrollments: true,
                         qualifications: true,
+                        enrollments: {
+                            with: {
+                                course: {
+                                    columns: { name: true },
+                                },
+                            },
+                        },
                     },
                 })
             if (!student) {
                 throw new NotFoundError()
             }
 
-            return student
+            return {
+                ...student,
+                enrollments: student.enrollments.map(
+                    (res) => ({
+                        ...res,
+                        courseDuration: getDuration(
+                            res.courseDuration as CourseDuration,
+                        ),
+                        courseRange: getCourseRangeLabel(
+                            res.courseRange,
+                            res.courseDuration as CourseDuration,
+                        ),
+                    }),
+                ),
+                branchName: org.name,
+            }
         },
     )

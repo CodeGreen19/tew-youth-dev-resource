@@ -2,6 +2,7 @@ export type NavItem = {
     title: string
     url?: string
     items?: NavItem[]
+    disabled?: boolean
 }
 
 export type NavDataType = {
@@ -47,10 +48,6 @@ export const navData: NavDataType = {
                 {
                     title: "New Student",
                     url: "/dashboard/new-student",
-                },
-                {
-                    title: "Join Another Course",
-                    url: "/dashboard/join-another-course",
                 },
             ],
         },

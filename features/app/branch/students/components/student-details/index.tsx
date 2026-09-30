@@ -27,17 +27,16 @@ import {
     StudentDetailsByEnrollmentId,
 } from "../../types"
 import { registrationCardPDF } from "../../pdf/registration-card-pdf"
+import DownloadButtons from "./download-buttons"
 
 export function StudentDetails({
     student,
     enrollmentId,
     backTo,
-    courses,
 }: {
     student: StudentDetailsByEnrollmentId
     enrollmentId: string
     backTo: string
-    courses: Course[]
 }) {
     return (
         <Card>
@@ -216,31 +215,14 @@ export function StudentDetails({
                                             />
                                         </div>
 
-                                        <div className="divide-y rounded-lg  flex gap-4">
-                                            <Button
-                                                onClick={() => {
-                                                    admissionFormPDF(
-                                                        student,
-                                                        courses,
-                                                    )
-                                                }}
-                                            >
-                                                <Download />{" "}
-                                                Admission
-                                                Form
-                                            </Button>
-                                            <Button
-                                                onClick={() => {
-                                                    registrationCardPDF(
-                                                        student,
-                                                        "fdasdfasd",
-                                                    )
-                                                }}
-                                            >
-                                                <Download />{" "}
-                                                Registration
-                                            </Button>
-                                        </div>
+                                        <DownloadButtons
+                                            student={
+                                                student
+                                            }
+                                            enrollment={
+                                                enrollment
+                                            }
+                                        />
                                     </div>
                                 )
                             },

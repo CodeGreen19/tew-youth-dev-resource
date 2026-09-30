@@ -20,30 +20,18 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
-import { Fragment, useState } from "react"
-
-import { SubmitButton } from "@/components/shared/submit-button"
-import { useMutation } from "@tanstack/react-query"
-import { acceptPayment } from "../../actions"
-import { UnpaidStudent } from "../../types"
-import { DeleteStudentDialog } from "./delete-student-dialog"
-import {
-    CourseDuration,
-    getCourseRangeLabel,
-    getDuration,
-} from "../../constants"
+import { EnrollmentBranchById } from "../types"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
-    UnpaidStudent
+    EnrollmentBranchById
 >()
 
-export const unpaidStudentColumns = columnHelper.columns([
-    createSelectColumn<UnpaidStudent>(),
+export const enrollmentsColumns = columnHelper.columns([
+    createSelectColumn<EnrollmentBranchById>(),
     columnHelper.accessor("student.image", {
         header: "Image",
         cell: ({ row }) => {
@@ -69,6 +57,23 @@ export const unpaidStudentColumns = columnHelper.columns([
             />
         ),
     }),
+    columnHelper.accessor("registrationNumber", {
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Registration No."
+            />
+        ),
+    }),
+
+    columnHelper.accessor("rollNumber", {
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Roll No."
+            />
+        ),
+    }),
 
     columnHelper.accessor("course.name", {
         id: "course",
@@ -82,19 +87,13 @@ export const unpaidStudentColumns = columnHelper.columns([
     columnHelper.accessor("courseDuration", {
         header: "Duration",
         cell: ({ row }) => {
-            return (
-                <Badge>{row.original.courseDuration}</Badge>
-            )
+            return <Badge>afdsd</Badge>
         },
     }),
     columnHelper.accessor("courseRange", {
         header: "Course Range",
         cell: ({ row }) => {
-            return (
-                <Badge variant={"ghost"}>
-                    {row.original.courseRange}
-                </Badge>
-            )
+            return <Badge variant={"ghost"}>sfdasd</Badge>
         },
     }),
 
@@ -123,34 +122,11 @@ export const unpaidStudentColumns = columnHelper.columns([
             )
         },
     }),
-    columnHelper.display({
-        id: "pay",
-        cell: ({ row }) => {
-            const { isPending, mutate } = useMutation({
-                mutationFn: acceptPayment,
-            })
-            return (
-                <SubmitButton
-                    isPending={isPending}
-                    onClick={() =>
-                        mutate({
-                            enrollmentId: row.original.id,
-                            paidAmount: row.original.price,
-                        })
-                    }
-                >
-                    Pay {row.original.price} BDT
-                </SubmitButton>
-            )
-        },
-    }),
 
     columnHelper.display({
         id: "actions",
         cell: ({ row }) => {
             const router = useRouter()
-            const [deleteDialogInfo, setDeleteDialogInfo] =
-                useState<UnpaidStudent | null>(null)
 
             return (
                 <div>
@@ -179,7 +155,7 @@ export const unpaidStudentColumns = columnHelper.columns([
                                 <DropdownMenuItem
                                     onClick={() =>
                                         router.push(
-                                            `/dashboard/unpaid-students/${row.original.id}/details`,
+                                            `/dashboard/students/${row.original.id}/details`,
                                         )
                                     }
                                 >
@@ -188,7 +164,7 @@ export const unpaidStudentColumns = columnHelper.columns([
                                 <DropdownMenuItem
                                     onClick={() =>
                                         router.push(
-                                            `/dashboard/unpaid-students/${row.original.id}/update-student`,
+                                            `/dashboard/students/${row.original.id}/update-student`,
                                         )
                                     }
                                 >
@@ -197,46 +173,15 @@ export const unpaidStudentColumns = columnHelper.columns([
                                 <DropdownMenuItem
                                     onClick={() =>
                                         router.push(
-                                            `/dashboard/unpaid-students/${row.original.id}/update-enrollment`,
-                                        )
-                                    }
-                                >
-                                    Update enrollment
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            `/dashboard/unpaid-students/${row.original.id}/join-another-course`,
+                                            `/dashboard/students/${row.original.id}/join-another-course`,
                                         )
                                     }
                                 >
                                     Join Another Course
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
-
-                            <DropdownMenuGroup>
-                                <Fragment>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                        onClick={() =>
-                                            setDeleteDialogInfo(
-                                                row.original,
-                                            )
-                                        }
-                                        variant="destructive"
-                                    >
-                                        Delete
-                                    </DropdownMenuItem>
-                                </Fragment>
-                            </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <DeleteStudentDialog
-                        deleteDialogInfo={deleteDialogInfo}
-                        setDeleteDialogInfo={
-                            setDeleteDialogInfo
-                        }
-                    />
                 </div>
             )
         },

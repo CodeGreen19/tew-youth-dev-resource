@@ -94,7 +94,7 @@ const MONTH_NAMES = [
 export function getDuration(duration: CourseDuration) {
     return COURSE_DURATION_OPTIONS.find(
         (v) => v.value === duration,
-    )?.label
+    )?.label!
 }
 
 export function getCourseRangeOptions(
@@ -282,3 +282,12 @@ export const INSTITUTION_OPTIONS = [
         value: "other",
     },
 ]
+
+export const feeField = {
+    "3_months": "threeMonthsFee",
+    "6_months": "sixMonthsFee",
+    "1_year": "oneYearFee",
+    "2_years": "twoYearsFee",
+    "3_years": "threeYearsFee",
+    "4_years": "fourYearsFee",
+} as const

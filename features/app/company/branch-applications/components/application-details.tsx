@@ -90,6 +90,20 @@ export function ApplicationDetails({
                         label="Applied On"
                         value={application.createdAt.toLocaleDateString()}
                     />
+                    <Info
+                        label="Payment Amount"
+                        value={
+                            application.oneTimePaymentAmount
+                        }
+                    />
+                    <Info
+                        label="Is Paid"
+                        value={
+                            application.isOneTimePaid
+                                ? "Paid"
+                                : "Pending"
+                        }
+                    />
                 </CardContent>
             </Card>
 

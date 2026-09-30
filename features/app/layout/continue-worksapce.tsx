@@ -16,30 +16,34 @@ export async function ContinueWorkspace() {
     if (!org) {
         redirect("/")
     }
-    const application =
-        await db.query.branchApplications.findFirst({
-            where: { organizationId: org.id },
-            columns: {
-                oneTimePaymentAmount: true,
-                isOneTimePaid: true,
-            },
-        })
-    if (!application) {
-        redirect("/")
-    }
 
-    if (
-        !application.isOneTimePaid &&
-        application.oneTimePaymentAmount !== 0
-    ) {
-        return (
-            <PaymentDialog
-                orgId={org.id}
-                payableAmount={
-                    application.oneTimePaymentAmount
-                }
-            />
-        )
+    const companyOrg = org.id === process.env.COMPANY_ORG_ID
+    if (!companyOrg) {
+        const application =
+            await db.query.branchApplications.findFirst({
+                where: { organizationId: org.id },
+                columns: {
+                    oneTimePaymentAmount: true,
+                    isOneTimePaid: true,
+                },
+            })
+        if (!application) {
+            redirect("/")
+        }
+
+        if (
+            !application.isOneTimePaid &&
+            application.oneTimePaymentAmount !== 0
+        ) {
+            return (
+                <PaymentDialog
+                    orgId={org.id}
+                    payableAmount={
+                        application.oneTimePaymentAmount
+                    }
+                />
+            )
+        }
     }
 
     return (

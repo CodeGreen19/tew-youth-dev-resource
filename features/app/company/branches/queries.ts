@@ -37,3 +37,33 @@ export const getBranchById = withPermission(
         return { ...branch, email }
     },
 )
+
+export const getEnrollmentsBranchId = withPermission(
+    { branches: ["view"] },
+    async (_, { id }: { id: string }) => {
+        "use cache"
+        cacheTag(
+            "branch-enrollments",
+            `branch-enrollments:${id}`,
+        )
+
+        const org = await db.query.organizations.findFirst({
+            where: { id },
+        })
+
+        if (!org) {
+            throw new NotFoundError()
+        }
+
+        const students =
+            await db.query.enrollments.findMany({
+                where: {
+                    student: { organizationId: org.id },
+                    paymentStatus: "paid",
+                },
+                with: { student: true, course: true },
+            })
+
+        return students
+    },
+)

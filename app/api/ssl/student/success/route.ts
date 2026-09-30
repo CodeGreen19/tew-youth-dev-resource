@@ -1,5 +1,8 @@
 import { db } from "@/drizzle/db"
-import { branchApplications } from "@/drizzle/schema"
+import {
+    branchApplications,
+    enrollments,
+} from "@/drizzle/schema"
 import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
 import { NextRequest } from "next/server"
@@ -9,8 +12,8 @@ export async function GET(req: NextRequest) {
 
     if (search.get("status") === "success") {
         await db
-            .update(branchApplications)
-            .set({ isOneTimePaid: true })
+            .update(enrollments)
+            .set({ paymentStatus: "paid" })
             .where(
                 eq(
                     branchApplications.paymentTransactionId,
