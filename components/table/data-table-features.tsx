@@ -1,6 +1,9 @@
 import {
     columnFilteringFeature,
+    columnFacetingFeature,
     columnVisibilityFeature,
+    createFacetedRowModel,
+    createFacetedUniqueValues,
     createFilteredRowModel,
     createPaginatedRowModel,
     createSortedRowModel,
@@ -17,6 +20,7 @@ import {
 // register is tree-shaken out of the bundle.
 export const features = tableFeatures({
     columnFilteringFeature,
+    columnFacetingFeature,
     columnVisibilityFeature,
     rowPaginationFeature,
     rowSelectionFeature,
@@ -24,8 +28,14 @@ export const features = tableFeatures({
     filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(),
+    facetedRowModel: createFacetedRowModel(),
+    facetedUniqueValues: createFacetedUniqueValues(),
+
     filterFns: { includesString: filterFn_includesString },
-    sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+    sortFns: {
+        alphanumeric: sortFn_alphanumeric,
+        text: sortFn_text,
+    },
 })
 
 // Pass this as the first generic argument to `ColumnDef`, `Column`, `Table`,

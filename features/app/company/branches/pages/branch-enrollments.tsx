@@ -7,6 +7,7 @@ import {
 import { DataTable } from "@/components/table/data-table"
 import { enrollmentsColumns } from "../components/enrollments-columns"
 import { getEnrollmentsBranchId } from "../queries"
+import { SelectedEnrollmentsAction } from "../components/selected-enrollments-action"
 
 export async function BranchEnrollmentsPage({
     id,
@@ -18,7 +19,7 @@ export async function BranchEnrollmentsPage({
         <Page>
             <PageHeader>
                 <PageTitle backTo="/dashboard/branches">
-                    Enrollments
+                    Enrollments ({enrollments.length})
                 </PageTitle>
             </PageHeader>
             <PageContent>
@@ -26,6 +27,14 @@ export async function BranchEnrollmentsPage({
                     searchBy="name"
                     columns={enrollmentsColumns}
                     data={enrollments}
+                    BulkActionComponent={
+                        SelectedEnrollmentsAction
+                    }
+                    advancedFilteraccessorKeys={[
+                        "course",
+                        "courseDuration",
+                        "courseRange",
+                    ]}
                 />
             </PageContent>
         </Page>

@@ -4,7 +4,7 @@ import { FileQuestion } from "lucide-react"
 
 export default function NotFound() {
     return (
-        <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 text-center">
+        <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 text-center">
             <div className="max-w-md space-y-6">
                 <div className="flex justify-center">
                     <div className="rounded-full bg-muted p-4 text-muted-foreground animate-pulse">
@@ -32,15 +32,6 @@ export default function NotFound() {
                             </Link>
                         }
                         variant="default"
-                    ></Button>
-                    <Button
-                        nativeButton={false}
-                        render={
-                            <Link href="javascript:history.back()">
-                                Go Back
-                            </Link>
-                        }
-                        variant="outline"
                     ></Button>
                 </div>
             </div>

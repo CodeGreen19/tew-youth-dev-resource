@@ -217,6 +217,7 @@ export const enrollments = snakeCase.table(
             .default("pending"),
 
         paymentTransactionId: varchar(),
+        result: varchar(),
 
         createdAt,
         updatedAt,

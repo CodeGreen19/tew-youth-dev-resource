@@ -2,6 +2,11 @@ import { db } from "@/drizzle/db"
 import { withPermission } from "@/lib/dal"
 import { NotFoundError } from "@/utils/error-constructor"
 import { cacheTag } from "next/cache"
+import {
+    CourseDuration,
+    getCourseRangeLabel,
+    getDuration,
+} from "../../branch/students/constants"
 
 export const getBranches = withPermission(
     { branches: ["view"] },
@@ -64,6 +69,15 @@ export const getEnrollmentsBranchId = withPermission(
                 with: { student: true, course: true },
             })
 
-        return students
+        return students.map((s) => ({
+            ...s,
+            courseRange: getCourseRangeLabel(
+                s.courseRange,
+                s.courseDuration as CourseDuration,
+            ),
+            courseDuration: getDuration(
+                s.courseDuration as CourseDuration,
+            ),
+        }))
     },
 )

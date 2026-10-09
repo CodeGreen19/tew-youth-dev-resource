@@ -2,8 +2,6 @@
 
 import { createColumnHelper } from "@tanstack/react-table"
 
-import { MoreHorizontal } from "lucide-react"
-
 import { createSelectColumn } from "@/components/table/columns/create-select-column"
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
 import { DataTableFeatures } from "@/components/table/data-table-features"
@@ -13,16 +11,6 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useRouter } from "next/navigation"
 import { EnrollmentBranchById } from "../types"
 
 const columnHelper = createColumnHelper<
@@ -50,6 +38,7 @@ export const enrollmentsColumns = columnHelper.columns([
     }),
 
     columnHelper.accessor("student.name", {
+        id: "name",
         header: ({ column }) => (
             <DataTableColumnHeader
                 column={column}
@@ -85,16 +74,28 @@ export const enrollmentsColumns = columnHelper.columns([
         ),
     }),
     columnHelper.accessor("courseDuration", {
-        header: "Duration",
-        cell: ({ row }) => {
-            return <Badge>afdsd</Badge>
-        },
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Duration"
+            />
+        ),
     }),
     columnHelper.accessor("courseRange", {
-        header: "Course Range",
-        cell: ({ row }) => {
-            return <Badge variant={"ghost"}>sfdasd</Badge>
-        },
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Course Range"
+            />
+        ),
+    }),
+    columnHelper.accessor("result", {
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Result"
+            />
+        ),
     }),
 
     columnHelper.accessor("paymentStatus", {
@@ -104,6 +105,7 @@ export const enrollmentsColumns = columnHelper.columns([
                 title="Payment Status"
             />
         ),
+
         cell: ({ row }) => {
             const status = row.original.paymentStatus
 
@@ -119,70 +121,6 @@ export const enrollmentsColumns = columnHelper.columns([
                 >
                     {status}
                 </Badge>
-            )
-        },
-    }),
-
-    columnHelper.display({
-        id: "actions",
-        cell: ({ row }) => {
-            const router = useRouter()
-
-            return (
-                <div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger
-                            render={
-                                <Button
-                                    variant="ghost"
-                                    className="h-8 w-8 p-0"
-                                />
-                            }
-                        >
-                            <span className="sr-only">
-                                Open menu
-                            </span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuGroup>
-                                <DropdownMenuLabel>
-                                    Actions
-                                </DropdownMenuLabel>
-                            </DropdownMenuGroup>
-
-                            <DropdownMenuGroup>
-                                <DropdownMenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            `/dashboard/students/${row.original.id}/details`,
-                                        )
-                                    }
-                                >
-                                    Student Details
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            `/dashboard/students/${row.original.id}/update-student`,
-                                        )
-                                    }
-                                >
-                                    Update Student
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            `/dashboard/students/${row.original.id}/join-another-course`,
-                                        )
-                                    }
-                                >
-                                    Join Another Course
-                                </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
             )
         },
     }),

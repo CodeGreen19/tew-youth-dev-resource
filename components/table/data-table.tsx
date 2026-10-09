@@ -20,6 +20,7 @@ import {
 
 import { Input } from "@/components/ui/input"
 import React from "react"
+import { DataTableAdvancedFilter } from "./data-table-advanced-filter"
 import {
     features,
     type DataTableFeatures,
@@ -35,6 +36,7 @@ interface DataTableProps<TData extends RowData> {
     BulkActionComponent?: React.ComponentType<{
         data: TData[]
     }>
+    advancedFilteraccessorKeys?: string[]
 }
 
 export function DataTable<TData extends RowData>({
@@ -43,6 +45,7 @@ export function DataTable<TData extends RowData>({
     searchBy,
     searchPlaceholder,
     BulkActionComponent,
+    advancedFilteraccessorKeys,
 }: DataTableProps<TData>) {
     const [sorting, setSorting] =
         React.useState<SortingState>([])
@@ -73,7 +76,7 @@ export function DataTable<TData extends RowData>({
     })
 
     return (
-        <div>
+        <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between  gap-2 py-4">
                 <Input
                     placeholder={
@@ -94,7 +97,14 @@ export function DataTable<TData extends RowData>({
                     }
                     className="max-w-sm"
                 />
-
+                {advancedFilteraccessorKeys && (
+                    <DataTableAdvancedFilter
+                        table={table}
+                        advancedFilteraccessorKeys={
+                            advancedFilteraccessorKeys
+                        }
+                    />
+                )}
                 <DataTableViewOptions table={table} />
             </div>
             <div className="overflow-hidden  border-y">
