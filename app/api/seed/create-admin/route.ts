@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
     }
     await auth.api.signUpEmail({
         body: {
-            name: "ahmed",
-            email: "ahmed@gmail.com",
-            password: "ahmed123",
+            name: "TEW",
+            email: "tew@gmail.com",
+            password: "tewpassword",
         },
 
         headers: await headers(),

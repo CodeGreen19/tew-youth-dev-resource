@@ -12,6 +12,9 @@ export async function ContinueWorkspace() {
     const listOrg = await auth.api.listOrganizations({
         headers,
     })
+
+    console.log("working...", listOrg)
+
     const org = listOrg[0]
     if (!org) {
         redirect("/")

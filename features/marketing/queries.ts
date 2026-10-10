@@ -3,7 +3,7 @@ import { cacheLife, cacheTag } from "next/cache"
 
 export async function getCourses() {
     "use cache"
-    cacheLife("max")
+    cacheLife("default")
     cacheTag("hero-courses")
     return db.query.courses.findMany()
 }

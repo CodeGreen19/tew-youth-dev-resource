@@ -26,7 +26,6 @@ export function FallbackAppLayout() {
                     <Suspense>
                         <ContinueWorkspace />
                     </Suspense>
-                    skeleton will be shown here ....
                 </div>
             </SidebarInset>
         </SidebarProvider>

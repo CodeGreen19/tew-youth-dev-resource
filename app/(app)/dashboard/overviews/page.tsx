@@ -1,9 +1,5 @@
-import { ChartAreaInteractive } from "./test"
+import { OverviewsPage } from "@/features/app/shared/overviews/pages/overviews-page"
 
-export default function OverViews() {
-    return (
-        <div>
-            <ChartAreaInteractive />
-        </div>
-    )
+export default function page() {
+    return <OverviewsPage />
 }

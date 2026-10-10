@@ -10,14 +10,12 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { auth } from "@/lib/auth"
-import { cn } from "@/lib/utils"
-import { ChevronRight, Menu } from "lucide-react"
+import { MenuTwoLineIcon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { NavMenu } from "./nav-menu"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { MenuTwoLineIcon } from "@hugeicons/core-free-icons"
 
 const navOptions: {
     label: string
@@ -25,7 +23,7 @@ const navOptions: {
 }[] = [
     {
         label: "Home",
-        href: "#home-courses",
+        href: "/",
     },
     {
         label: "Courses",
@@ -41,7 +39,7 @@ const navOptions: {
     },
     {
         label: "Results",
-        href: "/results",
+        href: "/",
     },
 ]
 export function Navbar({
@@ -105,10 +103,6 @@ export function Navbar({
                             </Button>
                         ))}
                     </div>
-                </div>
-
-                <div className="hidden">
-                    <NavMenu />
                 </div>
 
                 {res ? (

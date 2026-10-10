@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
+import Link from "next/link"
 
 export function Hero() {
     return (
@@ -37,6 +38,10 @@ export function Hero() {
 
                 <div className="mt-9 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
                     <Button
+                        nativeButton={false}
+                        render={
+                            <Link href={"/apply-branch"} />
+                        }
                         size="lg"
                         className="px-8 shadow-lg shadow-primary/20"
                     >

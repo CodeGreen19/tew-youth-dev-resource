@@ -15,10 +15,10 @@ export async function GET(req: NextRequest) {
 
     const metadata = { someKey: "someValue" }
     try {
-        const resOrg = await auth.api.createOrganization({
+        await auth.api.createOrganization({
             body: {
-                name: "My Organization", // required, The organization name.
-                slug: "my-org", // required, The organization slug.
+                name: "TEWYDR Organization", // required, The organization name.
+                slug: "tewydr-org", // required, The organization slug.
                 logo: "https://res.cloudinary.com/ddyrlplxn/image/upload/v1788849883/Testing/file_snoepb.png", // The organization logo.
                 metadata, // The metadata of the organization.
                 keepCurrentActiveOrganization: false, // Whether to keep the current active organization active after creating a new one.

@@ -74,7 +74,18 @@ export function AddCourseForm() {
                         <form.AppField
                             name="banner"
                             children={(field) => (
-                                <field.FileField label="Banner" />
+                                <field.FileField
+                                    accept={{
+                                        "image/jpeg": [
+                                            ".jpeg",
+                                            ".jpg",
+                                        ],
+                                        "image/png": [
+                                            ".png",
+                                        ],
+                                    }}
+                                    label="Banner"
+                                />
                             )}
                         />
                         <form.AppField
